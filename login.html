@@ -2,48 +2,82 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>System Access | Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WCU Access | Login</title>
     <style>
-        body { background: #1a1a1a; color: #39C5BB; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        body {
+            background: #0a0a0a;
+            color: #39C5BB;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+        }
         .login-box {
-            background: #222;
+            background: rgba(20, 20, 20, 0.9);
             padding: 40px;
+            width: 300px;
             border: 1px solid #39C5BB;
-            box-shadow: 0 0 30px rgba(57, 197, 187, 0.3);
+            box-shadow: 0 0 25px rgba(57, 197, 187, 0.2);
             text-align: center;
+            position: relative;
+        }
+        .login-box::before {
+            content: "SYSTEM LOCKED";
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0a0a0a;
+            padding: 0 10px;
+            color: #e91e63;
+            font-weight: bold;
         }
         input {
             background: #111;
-            border: 1px solid #39C5BB;
-            color: #39C5BB;
-            padding: 10px;
+            border: 1px solid #333;
+            border-left: 2px solid #39C5BB;
+            color: white;
+            padding: 12px;
             margin: 10px 0;
-            width: 100%;
-            display: block;
+            width: 90%;
+            outline: none;
         }
+        input:focus { border-color: #e91e63; }
+        
         button {
             background: #39C5BB;
-            color: #111;
+            color: #000;
             border: none;
-            padding: 10px 20px;
+            padding: 12px;
+            width: 100%;
             font-weight: bold;
             cursor: pointer;
             margin-top: 20px;
+            text-transform: uppercase;
+            transition: 0.3s;
         }
-        button:hover { background: #e91e63; color: white; }
+        button:hover { background: #e91e63; color: white; box-shadow: 0 0 15px #e91e63; }
+        
+        .back-link { display: block; margin-top: 20px; color: #666; text-decoration: none; font-size: 0.8rem; }
+        .back-link:hover { color: white; }
     </style>
 </head>
 <body>
 
 <div class="login-box">
-    <h3>[ ACCESS REQUIRED ]</h3>
-    <p>Bitte Identität bestätigen</p>
+    <h2 style="margin-bottom: 30px;">IDENTITY CHECK</h2>
+    
     <form action="downloads.html">
         <input type="text" placeholder="USER_ID" required>
-        <input type="password" placeholder="PASSCODE" required>
-        <button type="submit">INITIALIZE LOGIN</button>
+        <input type="password" placeholder="PASSWORD" required>
+        <button type="submit">Connect to Server</button>
     </form>
-    <p style="font-size: 0.7rem; color: #666; margin-top: 20px;">System: Vocaloid_OS_v2.1</p>
+    
+    <a href="index.html" class="back-link">< Zurück zur Startseite</a>
 </div>
 
 </body>
