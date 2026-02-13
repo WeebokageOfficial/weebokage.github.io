@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>System Access | Login</title>
+    <style>
+        body { background: #1a1a1a; color: #39C5BB; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-box {
+            background: #222;
+            padding: 40px;
+            border: 1px solid #39C5BB;
+            box-shadow: 0 0 30px rgba(57, 197, 187, 0.3);
+            text-align: center;
+        }
+        input {
+            background: #111;
+            border: 1px solid #39C5BB;
+            color: #39C5BB;
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            display: block;
+        }
+        button {
+            background: #39C5BB;
+            color: #111;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover { background: #e91e63; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="login-box">
+    <h3>[ ACCESS REQUIRED ]</h3>
+    <p>Bitte Identität bestätigen</p>
+    <form action="downloads.html">
+        <input type="text" placeholder="USER_ID" required>
+        <input type="password" placeholder="PASSCODE" required>
+        <button type="submit">INITIALIZE LOGIN</button>
+    </form>
+    <p style="font-size: 0.7rem; color: #666; margin-top: 20px;">System: Vocaloid_OS_v2.1</p>
+</div>
+
+</body>
+</html>
