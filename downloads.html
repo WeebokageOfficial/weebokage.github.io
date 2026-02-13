@@ -2,48 +2,83 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Downloads | Database</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WCU | Database</title>
     <style>
-        body { background: #1a1a1a; color: white; font-family: sans-serif; margin: 0; }
-        nav { background: #222; padding: 15px; text-align: center; border-bottom: 2px solid #39C5BB; }
-        nav a { color: #39C5BB; text-decoration: none; margin: 0 20px; }
-        .container { max-width: 900px; margin: 40px auto; padding: 20px; }
-        .file-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .file-card {
-            background: #252525;
-            border-left: 5px solid #e91e63;
+        body { background: #121212; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; }
+        
+        nav { background: #1a1a1a; padding: 15px; border-bottom: 2px solid #e91e63; display: flex; justify-content: space-between; align-items: center; }
+        .nav-brand { color: #39C5BB; font-weight: bold; margin-left: 20px; }
+        .logout { color: #e91e63; text-decoration: none; margin-right: 20px; border: 1px solid #e91e63; padding: 5px 15px; border-radius: 5px; transition: 0.3s; }
+        .logout:hover { background: #e91e63; color: white; }
+
+        .container { max-width: 1000px; margin: 40px auto; padding: 20px; }
+        
+        h1 { color: #39C5BB; border-left: 5px solid #39C5BB; padding-left: 15px; }
+
+        .file-list { margin-top: 30px; }
+        
+        .file-item {
+            background: #1e1e1e;
             padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border: 1px solid #333;
+            transition: 0.2s;
         }
-        .dl-btn { background: #39C5BB; color: #111; text-decoration: none; padding: 5px 15px; border-radius: 5px; font-size: 0.9rem; }
+        .file-item:hover { border-color: #39C5BB; background: #252525; }
+        
+        .file-info strong { display: block; font-size: 1.1rem; margin-bottom: 5px; color: white; }
+        .file-info span { color: #888; font-size: 0.9rem; }
+        
+        .dl-btn {
+            background: #39C5BB;
+            color: black;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .dl-btn:hover { background: white; }
     </style>
 </head>
 <body>
 
 <nav>
-    <a href="index.html">Home</a>
-    <a href="login.html">Logout</a>
+    <div class="nav-brand">WEEBOKAGE DATABASE</div>
+    <a href="index.html" class="logout">LOGOUT</a>
 </nav>
 
 <div class="container">
-    <h1 style="color: #39C5BB;">Verfügbare Datenpakete</h1>
-    <div class="file-grid">
-        <div class="file-card">
-            <span>The Curse of Isekai - Skript</span>
+    <h1>Verfügbare Dateien</h1>
+    <p>Willkommen im internen Bereich. Folgende Skripte und Assets stehen zum Download bereit.</p>
+
+    <div class="file-list">
+        <div class="file-item">
+            <div class="file-info">
+                <strong>The Curse of Isekai - Chapter 1 (PDF)</strong>
+                <span>Size: 2.4 MB | Uploaded: 2026-02-01</span>
+            </div>
             <a href="#" class="dl-btn">Download</a>
         </div>
-        <div class="file-card">
-            <span>Miku: Reborn Wallpaper Pack</span>
+
+        <div class="file-item">
+            <div class="file-info">
+                <strong>Project Miku - Blueprints (PNG)</strong>
+                <span>Size: 15 MB | Concept Art</span>
+            </div>
             <a href="#" class="dl-btn">Download</a>
         </div>
-        <div class="file-card">
-            <span>Story-Timeline (PDF)</span>
-            <a href="#" class="dl-btn">Download</a>
-        </div>
-        <div class="file-card">
-            <span>Charakter-Designs</span>
+
+        <div class="file-item">
+            <div class="file-info">
+                <strong>WCU Timeline Overview (Docs)</strong>
+                <span>Exklusive Lore-Details</span>
+            </div>
             <a href="#" class="dl-btn">Download</a>
         </div>
     </div>
