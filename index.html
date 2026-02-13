@@ -2,164 +2,71 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weebokage | Profile & Downloads</title>
+    <title>Weebokage | Home</title>
     <style>
-        :root {
-            --primary-color: #6a1b9a; /* Deep Purple */
-            --secondary-color: #1a1a1a;
-            --text-color: #ffffff;
-            --accent-color: #e91e63;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: 'Segoe UI', sans-serif;
             margin: 0;
-            line-height: 1.6;
+            border-top: 10px solid #39C5BB;
         }
-
-        header {
-            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-
         nav {
-            display: flex;
-            justify-content: center;
-            background: #333;
-            padding: 10px;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: bold;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-
-        section {
-            background: #252525;
-            padding: 2rem;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border-left: 5px solid var(--primary-color);
-        }
-
-        h2 {
-            color: var(--accent-color);
-        }
-
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            max-width: 300px;
-        }
-
-        input {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-        }
-
-        button {
-            padding: 10px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background-color: var(--accent-color);
-        }
-
-        .download-item {
-            background: #333;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        footer {
+            background: #222;
+            padding: 15px;
             text-align: center;
-            padding: 20px;
-            font-size: 0.8rem;
-            opacity: 0.6;
+            border-bottom: 2px solid #39C5BB;
         }
+        nav a {
+            color: #39C5BB;
+            text-decoration: none;
+            margin: 0 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .hero {
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(180deg, #1a1a1a 0%, #252525 100%);
+        }
+        .miku-text { color: #39C5BB; text-shadow: 0 0 10px #39C5BB; }
+        .container { max-width: 800px; margin: auto; padding: 20px; line-height: 1.8; }
+        .profile-card {
+            background: #333;
+            border: 2px solid #39C5BB;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(57, 197, 187, 0.2);
+        }
+        h2 { border-bottom: 2px solid #e91e63; display: inline-block; padding-bottom: 5px; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>WEEBOKAGE</h1>
-    <p>Writing | Anime | Religion | Gaming</p>
-</header>
-
 <nav>
-    <a href="#about">Über mich</a>
-    <a href="#login">Login</a>
-    <a href="#downloads">Downloads</a>
+    <a href="index.html">Home</a>
+    <a href="login.html">Login</a>
+    <a href="downloads.html">Library</a>
 </nav>
 
-<div class="container">
-
-    <section id="about">
-        <h2>Salam & Willkommen!</h2>
-        <p>Ich bin <strong>Hassan</strong>, 22 Jahre alt und leidenschaftlicher Geschichtenerzähler. Wenn ich nicht gerade in der Welt der Animes versinke oder mich mit religiösen Themen auseinandersetze, schreibe ich an meinen eigenen Epen.</p>
-        <p>Aktuell arbeite ich an Projekten wie:</p>
-        <ul>
-            <li><strong>The Curse of Isekai:</strong> Eine Reise durch Dimensionen mit Rohan Nakamura.</li>
-            <li><strong>Hatsune Miku - Reborn:</strong> Eine Sci-Fi Vision im Jahr 2157.</li>
-        </ul>
-        <p>Hier auf meiner Seite findest du exklusive Einblicke und Dateien zu meinen Werken.</p>
-    </section>
-
-    <section id="login">
-        <h2>Mitglieder-Login</h2>
-        <p>Logge dich ein, um Zugriff auf die Download-Area zu erhalten.</p>
-        <form class="login-form">
-            <input type="text" placeholder="Benutzername" required>
-            <input type="password" placeholder="Passwort" required>
-            <button type="submit">Einloggen</button>
-        </form>
-    </section>
-
-    <section id="downloads">
-        <h2>Download Area</h2>
-        <p><em>Hinweis: Du musst eingeloggt sein, um die Dateien herunterzuladen.</em></p>
-        
-        <div class="download-item">
-            <span>Kapitel 1: The Curse of Isekai (PDF)</span>
-            <button disabled>Download</button>
-        </div>
-        
-        <div class="download-item">
-            <span>Konzeptzeichnungen: Miku Android (PNG)</span>
-            <button disabled>Download</button>
-        </div>
-    </section>
-
+<div class="hero">
+    <h1 class="miku-text">WEEBOKAGE 01</h1>
+    <p>Digital Voice & Eternal Stories</p>
 </div>
 
-<footer>
-    &copy; 2026 Weebokage. Alle Rechte vorbehalten.
-</footer>
+<div class="container">
+    <div class="profile-card">
+        <h2>Über mich</h2>
+        <p>Salam! Ich bin <strong>Hassan</strong>. Willkommen in meinem digitalen Archiv.</p>
+        <p>Ich bin 22 Jahre alt und verliere mich gerne in der Welt von Animes, Religion und epischen Geschichten. Wenn ich nicht gerade an meinen Welten baue, beschäftige ich mich mit der Zukunft der KI und Musik.</p>
+        
+        <h3>Meine Projekte</h3>
+        <ul>
+            <li><strong>The Curse of Isekai:</strong> Die Reise von Rohan Nakamura.</li>
+            <li><strong>Hatsune Miku - Reborn:</strong> Eine Vision aus dem Jahr 2157.</li>
+        </ul>
+    </div>
+</div>
 
 </body>
 </html>
