@@ -71,6 +71,15 @@
         </div>
     </nav>
 
+    <div class="theme-switch-wrapper">
+    <span class="icon-label icon-miku" onclick="setTheme('miku')">🩵</span>
+    <label class="switch">
+        <input type="checkbox" id="theme-toggle" onclick="themeToggle()">
+        <span class="slider"></span>
+    </label>
+    <span class="icon-label icon-teto" onclick="setTheme('teto')">🥖</span>
+</div>
+    
     <div class="container">
         <!-- THE NEW PRETTY BLOG EDITOR -->
         <div class="card" style="border-top: 5px solid var(--miku-pink); padding: 40px;">
