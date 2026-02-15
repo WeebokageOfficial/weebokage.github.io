@@ -27,7 +27,7 @@ body {
 
 nav {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     padding: 20px 10%;
     background: rgba(0,0,0,0.5);
     backdrop-filter: blur(10px);
@@ -35,6 +35,9 @@ nav {
     position: sticky;
     top: 0;
     z-index: 100;
+    .links {
+    display: flex;
+    gap: 30px;
 }
 
 .logo { font-weight: 700; color: var(--miku-teal); letter-spacing: 2px; }
