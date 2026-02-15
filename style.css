@@ -7,7 +7,12 @@
     --miku-black: #0a0b10;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* 1. Global Reset */
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
 
 body {
     background: linear-gradient(rgba(10, 11, 16, 0.85), rgba(10, 11, 16, 0.85)), 
@@ -18,15 +23,16 @@ body {
     color: white;
     font-family: 'Poppins', sans-serif;
     min-height: 100vh;
+    overflow-x: hidden; /* Prevents side-scrolling */
 }
 
-/* Navigation - Centered */
+/* 2. Navigation */
 nav {
     display: flex;
     justify-content: center;
     padding: 20px;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(12px);
     border-bottom: 2px solid var(--miku-teal);
     position: sticky;
     top: 0;
@@ -36,20 +42,26 @@ nav {
 nav a {
     color: white;
     text-decoration: none;
-    margin: 0 15px;
+    margin: 0 20px;
     font-weight: bold;
-    transition: 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: 0.3s ease;
 }
 
-nav a:hover { color: var(--miku-teal); text-shadow: 0 0 10px var(--miku-teal); }
+nav a:hover { 
+    color: var(--miku-teal); 
+    text-shadow: 0 0 10px var(--miku-teal-glow); 
+}
 
+/* 3. Main Layout */
 .container {
     max-width: 900px;
     margin: 40px auto;
     padding: 0 20px;
 }
 
-/* Fixed Profile Card */
+/* 4. Profile Card (The Fixed Version) */
 .profile-card {
     display: flex;
     align-items: center;
@@ -60,62 +72,113 @@ nav a:hover { color: var(--miku-teal); text-shadow: 0 0 10px var(--miku-teal); }
     padding: 40px;
     border-radius: 25px;
     margin-bottom: 50px;
+    width: 100%;
 }
 
 .profile-avatar {
-    width: 150px !important;   /* Force size */
-    height: 150px !important;  /* Force size */
-    min-width: 150px;
+    width: 150px !important;   
+    height: 150px !important;  
+    min-width: 150px; /* Prevents shrinking */
+    max-width: 150px; /* Prevents exploding */
     border-radius: 50%;
     border: 3px solid var(--miku-teal);
     box-shadow: 0 0 20px var(--miku-teal-glow);
     object-fit: cover;
+    flex-shrink: 0; /* Safety: prevents flexbox from squishing it */
 }
 
 .profile-info h1 {
     font-size: 2.5rem;
     color: var(--miku-teal);
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
-.profile-tags { display: flex; gap: 10px; margin: 15px 0; }
+.profile-tags { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 10px; 
+    margin: 15px 0; 
+}
+
 .tag {
-    background: rgba(255, 102, 153, 0.2);
+    background: rgba(255, 102, 153, 0.15);
     color: var(--miku-pink);
-    padding: 5px 12px;
-    border-radius: 15px;
-    font-size: 0.8rem;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
     border: 1px solid var(--miku-pink);
 }
 
-/* Blog Cards */
+/* 5. Content Cards & Blog Posts */
 .card {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 25px;
+    padding: 30px;
     border-radius: 20px;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    border-color: var(--miku-teal-glow);
 }
 
 .miku-img {
     width: 100%;
+    height: auto;
     border-radius: 15px;
-    margin: 15px 0;
+    margin: 20px 0;
     border: 1px solid var(--miku-teal-glow);
 }
 
+/* 6. Buttons */
 .btn {
     display: inline-block;
     background: var(--miku-teal);
-    color: black;
-    padding: 10px 20px;
+    color: #000;
+    padding: 12px 25px;
     border-radius: 50px;
     text-decoration: none;
     font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-/* Mobile Fix */
-@media (max-width: 650px) {
-    .profile-card { flex-direction: column; text-align: center; }
+.btn:hover { 
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px var(--miku-teal-glow);
+}
+
+/* 7. Credits Page List Styling */
+.card ul {
+    list-style: none;
+    padding-top: 10px;
+}
+
+.card ul li {
+    margin: 15px 0;
+    padding-left: 15px;
+    border-left: 3px solid var(--miku-teal);
+}
+
+/* 8. Mobile Responsiveness */
+@media (max-width: 700px) {
+    .profile-card { 
+        flex-direction: column; 
+        text-align: center; 
+        padding: 30px 20px;
+    }
+    
+    .profile-avatar {
+        width: 120px !important;
+        height: 120px !important;
+        min-width: 120px;
+    }
+
+    .profile-info h1 {
+        font-size: 2rem;
+    }
 }
