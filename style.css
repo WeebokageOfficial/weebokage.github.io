@@ -1,184 +1,166 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
 
+/* MIKU THEME (Default) */
 :root {
-    --miku-teal: #39C5BB;
-    --miku-teal-glow: rgba(57, 197, 187, 0.4);
-    --miku-pink: #ff6699;
-    --miku-black: #0a0b10;
+    --primary: #39C5BB;
+    --primary-glow: rgba(57, 197, 187, 0.4);
+    --accent: #ff6699;
+    --bg-overlay: rgba(10, 11, 16, 0.85);
+    --bg-image: url('assets/wallpaper.jpg');
+    --pfp-image: url('assets/mikukage.png');
 }
 
-/* 1. Global Reset */
-* { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
+/* TETO THEME */
+[data-theme='teto'] {
+    --primary: #FF2D55;
+    --primary-glow: rgba(255, 45, 85, 0.4);
+    --accent: #4A4A4A;
+    --bg-overlay: rgba(20, 5, 5, 0.9);
+    --bg-image: url('assets/wallpaper2.png');
+    --pfp-image: url('assets/tetokage.png');
 }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    background: linear-gradient(rgba(10, 11, 16, 0.85), rgba(10, 11, 16, 0.85)), 
-                url('assets/wallpaper.jpg');
+    background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), var(--bg-image);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     color: white;
     font-family: 'Poppins', sans-serif;
     min-height: 100vh;
-    overflow-x: hidden; /* Prevents side-scrolling */
+    transition: background 0.5s ease-in-out;
 }
 
-/* 2. Navigation */
+/* Navigation */
 nav {
     display: flex;
     justify-content: center;
     padding: 20px;
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(12px);
-    border-bottom: 2px solid var(--miku-teal);
+    border-bottom: 2px solid var(--primary);
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 999;
 }
 
 nav a {
     color: white;
     text-decoration: none;
-    margin: 0 20px;
+    margin: 0 15px;
     font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: 0.3s ease;
+    transition: 0.3s;
 }
 
-nav a:hover { 
-    color: var(--miku-teal); 
-    text-shadow: 0 0 10px var(--miku-teal-glow); 
+nav a:hover { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
+
+/* THEME TOGGLE SWITCH (Top Right) */
+.theme-switch-wrapper {
+    position: fixed;
+    top: 18px;
+    right: 25px;
+    display: flex;
+    align-items: center;
+    z-index: 1001;
+    gap: 10px;
 }
 
-/* 3. Main Layout */
-.container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 0 20px;
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
 }
 
-/* 4. Profile Card (The Fixed Version) */
+.switch input { opacity: 0; width: 0; height: 0; }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #333;
+    transition: .4s;
+    border-radius: 34px;
+    border: 2px solid var(--primary);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px; width: 20px;
+    left: 4px; bottom: 3px;
+    background-color: var(--primary);
+    transition: .4s;
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--primary-glow);
+}
+
+input:checked + .slider:before { transform: translateX(28px); }
+
+.icon-label { font-size: 1.2rem; cursor: pointer; filter: grayscale(1); transition: 0.3s; }
+[data-theme='miku'] .icon-miku { filter: grayscale(0) drop-shadow(0 0 5px var(--primary)); }
+[data-theme='teto'] .icon-teto { filter: grayscale(0) drop-shadow(0 0 5px var(--primary)); }
+
+/* Layout Elements */
+.container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+
 .profile-card {
     display: flex;
     align-items: center;
     gap: 30px;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(15px);
-    border: 1px solid var(--miku-teal);
+    border: 1px solid var(--primary);
     padding: 40px;
     border-radius: 25px;
     margin-bottom: 50px;
-    width: 100%;
 }
 
 .profile-avatar {
-    width: 150px !important;   
-    height: 150px !important;  
-    min-width: 150px; /* Prevents shrinking */
-    max-width: 150px; /* Prevents exploding */
+    width: 150px; height: 150px;
+    min-width: 150px;
     border-radius: 50%;
-    border: 3px solid var(--miku-teal);
-    box-shadow: 0 0 20px var(--miku-teal-glow);
-    object-fit: cover;
-    flex-shrink: 0; /* Safety: prevents flexbox from squishing it */
+    border: 3px solid var(--primary);
+    box-shadow: 0 0 20px var(--primary-glow);
+    background-image: var(--pfp-image);
+    background-size: cover;
+    background-position: center;
+    transition: 0.5s ease-in-out;
 }
 
-.profile-info h1 {
-    font-size: 2.5rem;
-    color: var(--miku-teal);
-    margin-bottom: 5px;
-}
-
-.profile-tags { 
-    display: flex; 
-    flex-wrap: wrap; 
-    gap: 10px; 
-    margin: 15px 0; 
-}
+.profile-info h1 { font-size: 2.5rem; color: var(--primary); transition: 0.3s; }
 
 .tag {
-    background: rgba(255, 102, 153, 0.15);
-    color: var(--miku-pink);
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
     padding: 5px 15px;
     border-radius: 20px;
     font-size: 0.75rem;
+    border: 1px solid var(--primary);
     font-weight: bold;
-    border: 1px solid var(--miku-pink);
 }
 
-/* 5. Content Cards & Blog Posts */
 .card {
     background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: 5px solid var(--accent);
     padding: 30px;
     border-radius: 20px;
     margin-bottom: 30px;
-    transition: transform 0.3s ease;
 }
 
-.card:hover {
-    border-color: var(--miku-teal-glow);
-}
-
-.miku-img {
-    width: 100%;
-    height: auto;
-    border-radius: 15px;
-    margin: 20px 0;
-    border: 1px solid var(--miku-teal-glow);
-}
-
-/* 6. Buttons */
 .btn {
-    display: inline-block;
-    background: var(--miku-teal);
+    background: var(--primary);
     color: #000;
     padding: 12px 25px;
     border-radius: 50px;
     text-decoration: none;
     font-weight: bold;
     border: none;
-    cursor: pointer;
     transition: 0.3s;
 }
 
-.btn:hover { 
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px var(--miku-teal-glow);
-}
-
-/* 7. Credits Page List Styling */
-.card ul {
-    list-style: none;
-    padding-top: 10px;
-}
-
-.card ul li {
-    margin: 15px 0;
-    padding-left: 15px;
-    border-left: 3px solid var(--miku-teal);
-}
-
-/* 8. Mobile Responsiveness */
-@media (max-width: 700px) {
-    .profile-card { 
-        flex-direction: column; 
-        text-align: center; 
-        padding: 30px 20px;
-    }
-    
-    .profile-avatar {
-        width: 120px !important;
-        height: 120px !important;
-        min-width: 120px;
-    }
-
-    .profile-info h1 {
-        font-size: 2rem;
-    }
-}
+@media (max-width: 700px) { .profile-card { flex-direction: column; text-align: center; } .theme-switch-wrapper { top: auto; bottom: 20px; right: 20px; } }
