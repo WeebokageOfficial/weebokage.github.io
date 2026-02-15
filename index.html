@@ -1,155 +1,31 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weebokage | Profile & WCU</title>
-    <style>
-        :root {
-            --miku-teal: #39C5BB;
-            --miku-pink: #e91e63;
-            --dark-bg: #121212;
-            --card-bg: #1e1e1e;
-        }
-        body {
-            background-color: var(--dark-bg);
-            color: white;
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            overflow-x: hidden;
-        }
-        
-        /* Navigation */
-        nav {
-            background: rgba(0,0,0,0.9);
-            padding: 15px;
-            text-align: center;
-            border-bottom: 2px solid var(--miku-teal);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        nav a {
-            color: var(--miku-teal);
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: 0.3s;
-        }
-        nav a:hover { color: var(--miku-pink); text-shadow: 0 0 8px var(--miku-pink); }
-
-        /* Hero Header */
-        header {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('assets/bg-miku.jpg');
-            background-size: cover;
-            background-position: center;
-            padding: 80px 20px;
-            text-align: center;
-            border-bottom: 1px solid var(--miku-teal);
-        }
-        h1 { font-size: 3rem; margin: 0; text-shadow: 0 0 10px var(--miku-teal); }
-        .subtitle { color: var(--miku-pink); font-size: 1.2rem; margin-top: 10px; }
-
-        /* Profil Section */
-        .container { max-width: 900px; margin: 40px auto; padding: 20px; }
-        
-        .profile-section {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 15px;
-            border: 1px solid var(--miku-teal);
-            box-shadow: 0 0 20px rgba(57, 197, 187, 0.1);
-        }
-        .profile-img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: 3px solid var(--miku-teal);
-            object-fit: cover;
-        }
-        
-        /* Projekte Grid */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
-        }
-        .project-card {
-            background: var(--card-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            border-top: 3px solid var(--miku-pink);
-            transition: transform 0.3s;
-        }
-        .project-card:hover { transform: translateY(-5px); }
-        .project-img { width: 100%; height: 180px; object-fit: cover; }
-        .p-content { padding: 20px; }
-        .tag { background: var(--miku-teal); color: black; padding: 2px 8px; font-size: 0.8rem; border-radius: 4px; font-weight: bold; }
-
-        footer { text-align: center; padding: 30px; opacity: 0.6; font-size: 0.9rem; border-top: 1px solid #333; margin-top: 50px;}
-
-        @media (max-width: 768px) {
-            .profile-section { flex-direction: column; text-align: center; }
-        }
-    </style>
+    <title>Weebokage | Home</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="login.html">Admin</a>
+    </nav>
 
-<nav>
-    <a href="index.html">Startseite</a>
-    <a href="login.html">Login</a>
-    <a href="downloads.html">Database</a>
-</nav>
+    <div class="container">
+        <h1>Welcome to Weebokage 01</h1>
+        <img src="https://path-to-your-miku-image.jpg" alt="Miku" class="miku-img">
+        
+        <div class="card">
+            <h2>About Me</h2>
+            <p>Hey! I'm the owner of Weebokage. This is my personal space for projects and files.</p>
+        </div>
 
-<header>
-    <h1>WEEBOKAGE</h1>
-    <div class="subtitle">Writing | Anime | Religion | Gaming</div>
-</header>
-
-<div class="container">
-    
-    <div class="profile-section">
-        <img src="assets/profile.jpg" alt="Hassan Avatar" class="profile-img">
-        <div>
-            <h2 style="color: var(--miku-teal);">Salam, ich bin Hassan.</h2>
-            <p>Willkommen in meinem digitalen Archiv. Ich bin 22 Jahre alt, MFA und Autor. Hier verbinde ich meine Leidenschaft für Anime und Gaming mit ernsten Themen wie Religion und Philosophie.</p>
-            <p>Das hier ist der Hub für das <strong>Weebokage Cinematic Universe (WCU)</strong>.</p>
+        <h2>Latest Updates</h2>
+        <!-- This is your blog section -->
+        <div class="card">
+            <h3>Update #1: Website Launch!</h3>
+            <p>October 24, 2023 - Just set up the Miku-themed GitHub Pages site.</p>
         </div>
     </div>
-
-    <h2 style="margin-top: 50px; border-bottom: 2px solid var(--miku-pink); display: inline-block;">Meine Werke</h2>
-    
-    <div class="projects-grid">
-        <div class="project-card">
-            <img src="assets/story1.jpg" alt="The Curse of Isekai Cover" class="project-img">
-            <div class="p-content">
-                <span class="tag">ISEKAI</span>
-                <h3>The Curse of Isekai</h3>
-                <p>Die zentrale Storyline über Rohan Nakamura, seine Reise durch die Dimensionen und den Kampf gegen Nohar und Oblivion.</p>
-            </div>
-        </div>
-
-        <div class="project-card">
-            <img src="assets/story2.jpg" alt="Miku Reborn Cover" class="project-img">
-            <div class="p-content">
-                <span class="tag">SCI-FI / 2157</span>
-                <h3>Hatsune Miku: Reborn</h3>
-                <p>Das Jahr 2157. Dr. Akihiro Kendo und "Project Miku" – die Erschaffung einer künstlichen Legende.</p>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<footer>
-    &copy; 2026 Weebokage.com | Designed for the Future.
-</footer>
-
 </body>
 </html>
