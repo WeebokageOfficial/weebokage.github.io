@@ -5,13 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WEEBOKAGE | Home</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
+
+    <div class="theme-switch-wrapper">
+        <span style="cursor:pointer" onclick="setTheme('miku')">🩵</span>
+        <label class="switch">
+            <input type="checkbox" id="theme-toggle" onclick="themeToggle()">
+            <span class="slider"></span>
+        </label>
+        <span style="cursor:pointer" onclick="setTheme('teto')">🥖</span>
+    </div>
+
     <nav>
         <div class="links">
             <a href="index.html">Home</a>
@@ -20,60 +28,43 @@
         </div>
     </nav>
     
-    <div class="theme-switch-wrapper">
-    <span class="icon-label icon-miku" onclick="setTheme('miku')">🩵</span>
-    <label class="switch">
-        <input type="checkbox" id="theme-toggle" onclick="themeToggle()">
-        <span class="slider"></span>
-    </label>
-    <span class="icon-label icon-teto" onclick="setTheme('teto')">🥖</span>
-</div>
-    
     <div class="container">
-        <!-- PROFILE INTRO CARD -->
+        <!-- PROFILE SECTION -->
         <div class="profile-card">
-    <!-- This div will now automatically swap between Miku and Teto PFPs -->
-    <div class="profile-avatar"></div>
-    
-    <div class="profile-info">
-        <h1>Weebokage</h1>
-        ...
-            <!-- Added width and height attributes as a safety backup -->
-            <img src="assets/mikukage.png" alt="Weebokage" class="profile-avatar" width="150" height="150">
-            
+            <div class="profile-avatar"></div>
             <div class="profile-info">
                 <h1>Weebokage</h1>
-                <p>
-                    Author, Anime/Manga Fan, Certified Gamer, Practicing Muslim. 
-                    Welcome to my personal digital space.
-                </p>
-                
+                <p>Author, Anime/Manga Fan, Certified Gamer, Practicing Muslim. Welcome to my personal digital space.</p>
                 <div class="profile-tags">
                     <span class="tag">DEVELOPER</span>
                     <span class="tag">VOCALOID</span>
                     <span class="tag">ARCHIVIST</span>
                 </div>
-
-                <div style="margin-top: 20px;">
-                    <a href="https://www.youtube.com/@Weebokage/featured" target="_blank" class="btn" style="background: #FF0000; color: white; border: none;">
-                        <i class="fab fa-youtube"></i> YouTube
-                    </a>
-                </div>
+                <a href="https://www.youtube.com/@Weebokage/featured" target="_blank" class="btn" style="background:#ff0000; color:white;">
+                    <i class="fab fa-youtube"></i> YouTube
+                </a>
             </div>
         </div>
 
-        <div class="hero" style="text-align: center; margin-top: 40px; margin-bottom: 20px;">
-            <h2 style="color: var(--miku-teal); letter-spacing: 2px; text-transform: uppercase;">Latest Updates</h2>
-            <div style="width: 60px; height: 4px; background: var(--miku-teal); margin: 10px auto; border-radius: 2px;"></div>
-        </div>
-
-        <!-- This is where the Firebase posts will show up -->
+        <!-- BLOG SECTION -->
+        <h2 style="color: var(--primary); margin-bottom: 25px; letter-spacing: 2px;">LATEST UPDATES</h2>
         <div id="blog-feed">
-            <div class="card"><p style="text-align:center;">Synchronizing with Archive...</p></div>
+            <!-- Posts load here -->
         </div>
     </div>
 
     <script>
+        // THEME LOGIC
+        const toggle = document.getElementById('theme-toggle');
+        function themeToggle() { setTheme(toggle.checked ? 'teto' : 'miku'); }
+        function setTheme(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            localStorage.setItem('theme', t);
+            toggle.checked = (t === 'teto');
+        }
+        setTheme(localStorage.getItem('theme') || 'miku');
+
+        // FIREBASE LOGIC
         const firebaseConfig = {
             apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo",
             authDomain: "weebokage-296c0.firebaseapp.com",
@@ -82,51 +73,24 @@
             messagingSenderId: "192569800499",
             appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046"
         };
-        
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        db.collection("posts").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+        db.collection("posts").orderBy("timestamp", "desc").onSnapshot((snaps) => {
             const feed = document.getElementById('blog-feed');
-            feed.innerHTML = ""; 
-
-            if (snapshot.empty) {
-                feed.innerHTML = '<div class="card"><p style="text-align:center;">No entries found in the archive.</p></div>';
-                return;
-            }
-
-            snapshot.forEach((doc) => {
-                const post = doc.data();
-                const date = post.timestamp ? new Date(post.timestamp.seconds * 1000).toLocaleDateString() : "Just now";
-                
+            feed.innerHTML = "";
+            snaps.forEach((doc) => {
+                const p = doc.data();
+                const d = p.timestamp ? new Date(p.timestamp.seconds * 1000).toLocaleDateString() : "Just now";
                 feed.innerHTML += `
                     <div class="card">
-                        <span style="color: var(--miku-pink); font-size: 0.8rem; font-weight:bold; letter-spacing: 1px;">${date}</span>
-                        <h2 style="margin-top: 5px; color: var(--miku-teal);">${post.title}</h2>
-                        ${post.image ? `<img src="${post.image}" class="miku-img" onerror="this.style.display='none'">` : ''}
-                        <p style="white-space: pre-wrap; margin-top: 10px; line-height: 1.6;">${post.content}</p>
-                    </div>
-                `;
+                        <span style="color:var(--accent); font-size:0.8rem; font-weight:bold;">${d}</span>
+                        <h2 style="margin-top:5px;">${p.title}</h2>
+                        ${p.image ? `<img src="${p.image}" class="miku-img">` : ''}
+                        <p style="white-space:pre-wrap; margin-top:10px;">${p.content}</p>
+                    </div>`;
             });
         });
     </script>
-    <script>
-    const toggle = document.getElementById('theme-toggle');
-    
-    function themeToggle() {
-        const newTheme = toggle.checked ? 'teto' : 'miku';
-        setTheme(newTheme);
-    }
-
-    function setTheme(themeName) {
-        document.documentElement.setAttribute('data-theme', themeName);
-        localStorage.setItem('theme', themeName);
-        toggle.checked = (themeName === 'teto');
-    }
-
-    // Initial Load
-    const savedTheme = localStorage.getItem('theme') || 'miku';
-    setTheme(savedTheme);
-</script>
 </body>
 </html>
