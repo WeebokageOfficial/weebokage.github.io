@@ -1,88 +1,44 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WCU | Database</title>
-    <style>
-        body { background: #121212; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; }
-        
-        nav { background: #1a1a1a; padding: 15px; border-bottom: 2px solid #e91e63; display: flex; justify-content: space-between; align-items: center; }
-        .nav-brand { color: #39C5BB; font-weight: bold; margin-left: 20px; }
-        .logout { color: #e91e63; text-decoration: none; margin-right: 20px; border: 1px solid #e91e63; padding: 5px 15px; border-radius: 5px; transition: 0.3s; }
-        .logout:hover { background: #e91e63; color: white; }
-
-        .container { max-width: 1000px; margin: 40px auto; padding: 20px; }
-        
-        h1 { color: #39C5BB; border-left: 5px solid #39C5BB; padding-left: 15px; }
-
-        .file-list { margin-top: 30px; }
-        
-        .file-item {
-            background: #1e1e1e;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #333;
-            transition: 0.2s;
-        }
-        .file-item:hover { border-color: #39C5BB; background: #252525; }
-        
-        .file-info strong { display: block; font-size: 1.1rem; margin-bottom: 5px; color: white; }
-        .file-info span { color: #888; font-size: 0.9rem; }
-        
-        .dl-btn {
-            background: #39C5BB;
-            color: black;
-            padding: 10px 20px;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 5px;
-            display: inline-block;
-        }
-        .dl-btn:hover { background: white; }
-    </style>
+    <title>Downloads | Weebokage</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <script>
+        // Security Check
+        if(localStorage.getItem("isLoggedIn") !== "true") {
+            window.location.href = "login.html";
+        }
+    </script>
 
-<nav>
-    <div class="nav-brand">WEEBOKAGE DATABASE</div>
-    <a href="index.html" class="logout">LOGOUT</a>
-</nav>
+    <nav>
+        <a href="index.html">Home</a>
+        <button onclick="logout()" style="background:none; border:none; color:var(--miku-pink); cursor:pointer;">Logout</button>
+    </nav>
 
-<div class="container">
-    <h1>Verfügbare Dateien</h1>
-    <p>Willkommen im internen Bereich. Folgende Skripte und Assets stehen zum Download bereit.</p>
-
-    <div class="file-list">
-        <div class="file-item">
-            <div class="file-info">
-                <strong>The Curse of Isekai - Chapter 1 (PDF)</strong>
-                <span>Size: 2.4 MB | Uploaded: 2026-02-01</span>
-            </div>
-            <a href="#" class="dl-btn">Download</a>
+    <div class="container">
+        <h1>Private Downloads</h1>
+        
+        <div class="card">
+            <h3>Project File #1</h3>
+            <p>Description of your Google Drive file goes here.</p>
+            <a href="YOUR_GOOGLE_DRIVE_LINK_HERE" target="_blank" class="drive-btn">Download from Drive</a>
         </div>
 
-        <div class="file-item">
-            <div class="file-info">
-                <strong>Project Miku - Blueprints (PNG)</strong>
-                <span>Size: 15 MB | Concept Art</span>
-            </div>
-            <a href="#" class="dl-btn">Download</a>
-        </div>
-
-        <div class="file-item">
-            <div class="file-info">
-                <strong>WCU Timeline Overview (Docs)</strong>
-                <span>Exklusive Lore-Details</span>
-            </div>
-            <a href="#" class="dl-btn">Download</a>
+        <div class="card">
+            <h3>Music Assets</h3>
+            <p>A collection of Miku samples.</p>
+            <a href="YOUR_SECOND_LINK_HERE" target="_blank" class="drive-btn">Download Folder</a>
         </div>
     </div>
-</div>
 
+    <script>
+        function logout() {
+            localStorage.removeItem("isLoggedIn");
+            window.location.href = "index.html";
+        }
+    </script>
 </body>
 </html>
