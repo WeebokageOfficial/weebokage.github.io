@@ -160,5 +160,23 @@
             firebase.auth().signOut().then(() => { window.location.href = "index.html"; });
         }
     </script>
+    <script>
+    const toggle = document.getElementById('theme-toggle');
+    
+    function themeToggle() {
+        const newTheme = toggle.checked ? 'teto' : 'miku';
+        setTheme(newTheme);
+    }
+
+    function setTheme(themeName) {
+        document.documentElement.setAttribute('data-theme', themeName);
+        localStorage.setItem('theme', themeName);
+        toggle.checked = (themeName === 'teto');
+    }
+
+    // Initial Load
+    const savedTheme = localStorage.getItem('theme') || 'miku';
+    setTheme(savedTheme);
+</script>
 </body>
 </html>
