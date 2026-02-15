@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
+
+:root {
+    --miku-teal: #39C5BB;
+    --miku-teal-glow: rgba(57, 197, 187, 0.5);
+    --miku-pink: #ff6699;
+    --miku-black: #0a0b10;
+    --glass: rgba(255, 255, 255, 0.05);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: radial-gradient(circle at top right, #1a1a2e, var(--miku-black));
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* Background "01" Watermark */
+body::before {
+    content: "01";
+    position: fixed;
+    bottom: -50px;
+    right: 20px;
+    font-size: 20rem;
+    font-weight: 800;
+    color: rgba(57, 197, 187, 0.03);
+    z-index: -1;
+}
+
+/* Navigation */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--miku-teal-glow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--miku-teal);
+    text-shadow: 0 0 10px var(--miku-teal-glow);
+}
+
+nav .links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 25px;
+    transition: 0.3s;
+    font-weight: 400;
+}
+
+nav .links a:hover {
+    color: var(--miku-pink);
+    text-shadow: 0 0 8px var(--miku-pink);
+}
+
+/* Container & Cards */
+.container {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 60px;
+    animation: fadeInDown 1s ease;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    background: linear-gradient(to right, var(--miku-teal), var(--miku-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.card {
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    transition: transform 0.3s ease, border 0.3s ease;
+    animation: fadeInUp 0.8s ease backwards;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border: 1px solid var(--miku-teal);
+    box-shadow: 0 10px 30px rgba(57, 197, 187, 0.1);
+}
+
+/* Blog Styling */
+.post-date {
+    color: var(--miku-pink);
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.miku-img {
+    width: 100%;
+    border-radius: 15px;
+    margin: 20px 0;
+    border: 2px solid var(--miku-teal-glow);
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    background: linear-gradient(45deg, var(--miku-teal), #2da9a1);
+    color: var(--miku-black);
+    padding: 12px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: 0.4s ease;
+    box-shadow: 0 5px 15px var(--miku-teal-glow);
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px var(--miku-teal);
+    background: var(--miku-pink);
+}
+
+/* Form Styling */
+input {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--miku-teal-glow);
+    border-radius: 10px;
+    color: white;
+    outline: none;
+}
+
+input:focus {
+    border-color: var(--miku-pink);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
