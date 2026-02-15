@@ -2,31 +2,71 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>WEEBOKAGE | Official</title>
+    <title>WEEBOKAGE | Home</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <nav>
-        <div class="logo">WEEBOKAGE.COM</div>
-        <div>
+        <div class="logo">WEEBOKAGE</div>
+        <div class="links">
             <a href="index.html">Home</a>
-            <a href="login.html" class="btn">Admin Login</a>
+            <a href="login.html">Admin</a>
         </div>
     </nav>
 
     <div class="container">
-        <div class="card" style="text-align: center;">
-            <h1>Initializing Digital Space...</h1>
-            <p>Welcome to my personal archive. Stay tuned for updates.</p>
+        <div class="hero">
+            <h1>DIGITAL ARCHIVE 01</h1>
+            <p>Welcome to the official portal of Weebokage.</p>
         </div>
 
-        <!-- BLOG POST 1 -->
-        <div class="card">
-            <span style="color: var(--miku-pink); font-size: 0.8rem;">FEB 2024</span>
-            <h2>Vocaloid System Update</h2>
-            <img src="https://images3.alphacoders.com/132/1328654.png" class="miku-img">
-            <p>The new UI is now live. Using a Firebase-backed secure terminal for asset management.</p>
+        <!-- This is where the Firebase posts will show up -->
+        <div id="blog-feed">
+            <div class="card"><p style="text-align:center;">Synchronizing with Archive...</p></div>
         </div>
     </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo",
+            authDomain: "weebokage-296c0.firebaseapp.com",
+            projectId: "weebokage-296c0",
+            storageBucket: "weebokage-296c0.firebasestorage.app",
+            messagingSenderId: "192569800499",
+            appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Fetch posts in real-time
+        db.collection("posts").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+            const feed = document.getElementById('blog-feed');
+            feed.innerHTML = ""; // Clear the loading message
+
+            if (snapshot.empty) {
+                feed.innerHTML = '<div class="card"><p>No posts found. Log in to create one!</p></div>';
+                return;
+            }
+
+            snapshot.forEach((doc) => {
+                const post = doc.data();
+                const date = post.timestamp ? new Date(post.timestamp.seconds * 1000).toLocaleDateString() : "Just now";
+                
+                // Create the Miku-themed post card
+                feed.innerHTML += `
+                    <div class="card">
+                        <span style="color: var(--miku-pink); font-size: 0.8rem; font-weight:bold;">${date}</span>
+                        <h2 style="margin-top: 5px;">${post.title}</h2>
+                        ${post.image ? `<img src="${post.image}" class="miku-img" onerror="this.style.display='none'">` : ''}
+                        <p style="white-space: pre-wrap;">${post.content}</p>
+                    </div>
+                `;
+            });
+        });
+    </script>
 </body>
 </html>
