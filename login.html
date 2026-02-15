@@ -5,9 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terminal Access | WEEBOKAGE</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <style>
+        /* Specific styling for the pretty inputs */
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--miku-teal);
+            opacity: 0.6;
+            transition: 0.3s;
+        }
+
+        /* The glassmorphic input */
+        .pretty-input {
+            width: 100%;
+            padding: 15px 15px 15px 45px !important; /* Space for the icon */
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(57, 197, 187, 0.3) !important;
+            border-radius: 12px !important;
+            color: white !important;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s ease-in-out !important;
+            outline: none !important;
+        }
+
+        /* Glow effect when clicking the box */
+        .pretty-input:focus {
+            background: rgba(57, 197, 187, 0.1) !important;
+            border-color: var(--miku-teal) !important;
+            box-shadow: 0 0 20px rgba(57, 197, 187, 0.4) !important;
+            transform: translateY(-2px);
+        }
+
+        /* Make icon glow when input is focused */
+        .pretty-input:focus + i {
+            color: var(--miku-pink);
+            opacity: 1;
+            text-shadow: 0 0 10px var(--miku-pink);
+        }
+
+        .login-card {
+            border-top: 5px solid var(--miku-teal);
+            padding: 50px;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            background: rgba(10, 11, 16, 0.7);
+        }
+    </style>
 </head>
 <body>
     <nav>
@@ -18,31 +75,36 @@
         </div>
     </nav>
 
-    <div class="container" style="max-width: 500px; margin-top: 10vh;">
-        <!-- LOGIN CARD -->
-        <div class="card" style="border-top: 5px solid var(--miku-teal); padding: 50px; text-align: center;">
+    <div class="container" style="max-width: 450px; margin-top: 10vh;">
+        <div class="card login-card">
             <div style="margin-bottom: 30px;">
-                <h1 style="color: var(--miku-teal); font-size: 2rem; letter-spacing: 4px; text-transform: uppercase;">System Auth</h1>
-                <div style="width: 40px; height: 2px; background: var(--miku-pink); margin: 10px auto; box-shadow: 0 0 10px var(--miku-pink);"></div>
+                <h1 style="color: var(--miku-teal); font-size: 1.8rem; letter-spacing: 4px; text-transform: uppercase;">System Auth</h1>
+                <div style="width: 50px; height: 2px; background: var(--miku-pink); margin: 10px auto; box-shadow: 0 0 10px var(--miku-pink);"></div>
+            </div>
+
+            <!-- USERNAME/EMAIL FIELD -->
+            <div class="input-group">
+                <input type="text" id="email" class="pretty-input" placeholder="Vocaloid ID (Email)">
+                <i class="fas fa-user"></i>
+            </div>
+
+            <!-- PASSWORD FIELD -->
+            <div class="input-group">
+                <input type="password" id="pass" class="pretty-input" placeholder="Access Key">
+                <i class="fas fa-lock"></i>
             </div>
             
-            <p style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 25px; letter-spacing: 1px;">INITIALIZE SECURE CONNECTION</p>
-
-            <input type="text" id="email" placeholder="Vocaloid ID (Email)" style="margin-bottom: 15px;">
-            <input type="password" id="pass" placeholder="Password">
-            
-            <button onclick="login()" id="loginBtn" class="btn" style="width: 100%; margin-top: 30px; letter-spacing: 2px; text-shadow: 0 0 5px rgba(0,0,0,0.5);">
+            <button onclick="login()" id="loginBtn" class="btn" style="width: 100%; margin-top: 20px; letter-spacing: 2px;">
                 INITIALIZE
             </button>
             
-            <p id="err" style="color: var(--miku-pink); display: none; margin-top: 20px; font-size: 0.8rem; border: 1px solid var(--miku-pink); padding: 10px; background: rgba(255,102,153,0.1); border-radius: 5px;"></p>
+            <p id="err" style="color: var(--miku-pink); display: none; margin-top: 20px; font-size: 0.8rem; border: 1px solid var(--miku-pink); padding: 10px; background: rgba(255,102,153,0.1); border-radius: 8px;"></p>
         </div>
 
-        <p style="text-align: center; opacity: 0.3; font-size: 0.7rem; margin-top: 20px; letter-spacing: 2px;">WEEBOKAGE SECURE TERMINAL v2.0</p>
+        <p style="text-align: center; opacity: 0.3; font-size: 0.6rem; margin-top: 30px; letter-spacing: 3px; color: white;">01_ENCRYPT_SYSTEM_ACTIVE</p>
     </div>
 
     <script>
-        // CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo",
             authDomain: "weebokage-296c0.firebaseapp.com",
@@ -71,21 +133,11 @@
                 .catch((error) => {
                     btn.innerText = "INITIALIZE";
                     errBox.style.display = "block";
-                    
-                    if (error.code === "auth/invalid-credential") {
-                        errBox.innerText = "ACCESS DENIED: WRONG CREDENTIALS";
-                    } else {
-                        errBox.innerText = "ERROR: " + error.message;
-                    }
+                    errBox.innerText = "ACCESS DENIED: UNKNOWN IDENTITY";
                 });
         }
 
-        // Allow pressing Enter to login
-        document.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                login();
-            }
-        });
+        document.addEventListener('keypress', (e) => { if (e.key === 'Enter') login(); });
     </script>
 </body>
 </html>
