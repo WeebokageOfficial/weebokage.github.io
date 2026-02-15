@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Terminal Access</title>
+    <title>Terminal Access | WEEBOKAGE</title>
     <link rel="stylesheet" href="style.css">
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -11,40 +11,56 @@
 <body>
     <div class="container" style="max-width: 400px; margin-top: 100px;">
         <div class="card" style="text-align: center;">
-            <h2 style="margin-bottom: 20px;">SYSTEM AUTH</h2>
+            <h2 style="margin-bottom: 20px; color: var(--miku-teal);">SYSTEM AUTH</h2>
+            <!-- Note: You must enter the FULL email you created in Firebase -->
             <input type="text" id="email" placeholder="Vocaloid ID (Email)">
             <input type="password" id="pass" placeholder="Password">
-            <button onclick="login()" class="btn" style="width: 100%; margin-top: 20px;">INITIALIZE</button>
-            <p id="err" style="color: var(--miku-pink); display: none; margin-top: 15px; font-size: 0.8rem;"></p>
+            
+            <button onclick="login()" id="loginBtn" class="btn" style="width: 100%; margin-top: 20px;">INITIALIZE</button>
+            
+            <p id="err" style="color: var(--miku-pink); display: none; margin-top: 15px; font-size: 0.8rem; border: 1px solid var(--miku-pink); padding: 10px;"></p>
         </div>
     </div>
 
     <script>
-        // PASTE YOUR FIREBASE CONFIG FROM SETTINGS HERE
+        // Config fixed (removed the extra }; that was breaking it)
         const firebaseConfig = {
-  apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo",
-  authDomain: "weebokage-296c0.firebaseapp.com",
-  projectId: "weebokage-296c0",
-  storageBucket: "weebokage-296c0.firebasestorage.app",
-  messagingSenderId: "192569800499",
-  appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046"
-};
+            apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo",
+            authDomain: "weebokage-296c0.firebaseapp.com",
+            projectId: "weebokage-296c0",
+            storageBucket: "weebokage-296c0.firebasestorage.app",
+            messagingSenderId: "192569800499",
+            appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046"
         };
 
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
 
         function login() {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('pass').value;
-            
+            const errBox = document.getElementById('err');
+            const btn = document.getElementById('loginBtn');
+
+            btn.innerText = "AUTHENTICATING...";
+
             firebase.auth().signInWithEmailAndPassword(email, pass)
                 .then(() => {
                     localStorage.setItem("miku_auth", "true");
                     window.location.href = "downloads.html";
                 })
                 .catch((error) => {
-                    document.getElementById('err').style.display = "block";
-                    document.getElementById('err').innerText = "ERROR: " + error.message;
+                    btn.innerText = "INITIALIZE";
+                    errBox.style.display = "block";
+                    
+                    // Specific error messages to help you debug
+                    if (error.code === "auth/operation-not-allowed") {
+                        errBox.innerText = "ERROR: You need to enable Email/Password in Firebase Authentication > Sign-in Method!";
+                    } else if (error.code === "auth/invalid-credential") {
+                        errBox.innerText = "ERROR: Wrong email or password.";
+                    } else {
+                        errBox.innerText = "ERROR: " + error.message;
+                    }
                 });
         }
     </script>
