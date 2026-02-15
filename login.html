@@ -2,87 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal Access | WEEBOKAGE</title>
+    <title>Terminal Access</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Specific styling for the login box to make it look like a floating terminal */
-        .login-box {
-            max-width: 400px;
-            margin: 15vh auto;
-            text-align: center;
-            border-top: 4px solid var(--miku-teal);
-        }
-        .status-light {
-            width: 10px;
-            height: 10px;
-            background: var(--miku-pink);
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 10px;
-            box-shadow: 0 0 10px var(--miku-pink);
-        }
-    </style>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 </head>
 <body>
-
-    <div class="container">
-        <div class="card login-box">
-            <div style="margin-bottom: 20px;">
-                <span class="status-light" id="status-indicator"></span>
-                <span style="letter-spacing: 3px; font-size: 0.8rem; color: var(--miku-teal);">SYSTEM AUTHENTICATION</span>
-            </div>
-            
-            <h2 style="margin-bottom: 30px; font-weight: 300;">Vocaloid ID <span style="color:var(--miku-teal)">01</span></h2>
-            
-            <input type="text" id="username" placeholder="Username" autocomplete="off">
-            <input type="password" id="password" placeholder="Password">
-            
-            <button class="btn" onclick="checkLogin()" style="width: 100%; margin-top: 20px;">ACCESS ARCHIVE</button>
-            
-            <p id="error" style="color: var(--miku-pink); margin-top: 20px; display: none; font-size: 0.9rem; font-weight: bold;">
-                [!] ACCESS DENIED: INVALID CREDENTIALS
-            </p>
+    <div class="container" style="max-width: 400px; margin-top: 100px;">
+        <div class="card" style="text-align: center;">
+            <h2 style="margin-bottom: 20px;">SYSTEM AUTH</h2>
+            <input type="text" id="email" placeholder="Vocaloid ID (Email)">
+            <input type="password" id="pass" placeholder="Password">
+            <button onclick="login()" class="btn" style="width: 100%; margin-top: 20px;">INITIALIZE</button>
+            <p id="err" style="color: var(--miku-pink); display: none; margin-top: 15px; font-size: 0.8rem;"></p>
         </div>
     </div>
 
     <script>
-        // This function checks your specific credentials
-        function checkLogin() {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            const errorMsg = document.getElementById('error');
-            const statusLight = document.getElementById('status-indicator');
+        // PASTE YOUR FIREBASE CONFIG FROM SETTINGS HERE
+        const firebaseConfig = {
+  apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo",
+  authDomain: "weebokage-296c0.firebaseapp.com",
+  projectId: "weebokage-296c0",
+  storageBucket: "weebokage-296c0.firebasestorage.app",
+  messagingSenderId: "192569800499",
+  appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046"
+};
+        };
 
-            // YOUR REQUESTED CREDENTIALS
-            if(user === "weebokage" && pass === "Nanek250103!") {
-                
-                // Change status light to teal (success)
-                statusLight.style.background = "var(--miku-teal)";
-                statusLight.style.boxShadow = "0 0 10px var(--miku-teal)";
-                
-                // Save login state so the downloads page lets you in
-                localStorage.setItem("isLoggedIn", "true");
-                
-                // Small delay for "cool" effect before redirecting
-                setTimeout(() => {
+        firebase.initializeApp(firebaseConfig);
+
+        function login() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+            
+            firebase.auth().signInWithEmailAndPassword(email, pass)
+                .then(() => {
+                    localStorage.setItem("miku_auth", "true");
                     window.location.href = "downloads.html";
-                }, 800);
-
-            } else {
-                // Show error and shake the status light
-                errorMsg.style.display = "block";
-                statusLight.style.background = "#ff0000";
-                statusLight.style.boxShadow = "0 0 10px #ff0000";
-            }
+                })
+                .catch((error) => {
+                    document.getElementById('err').style.display = "block";
+                    document.getElementById('err').innerText = "ERROR: " + error.message;
+                });
         }
-
-        // Allow pressing "Enter" to login
-        document.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                checkLogin();
-            }
-        });
     </script>
 </body>
 </html>
