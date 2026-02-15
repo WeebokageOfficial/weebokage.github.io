@@ -113,13 +113,43 @@ input:checked + .slider:before { transform: translateX(22px); }
 }
 
 /* BLOG CARDS */
+/* Einheitliches Karten-Design wie im Login-Terminal */
 .card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-left: 5px solid var(--accent);
+    background: rgba(10, 11, 16, 0.7); /* Dunklerer Hintergrund für besseren Kontrast */
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--primary); /* Der Rahmen nutzt jetzt die Theme-Farbe */
+    box-shadow: 0 0 15px var(--primary-glow); /* Sanfter Glow-Effekt */
     padding: 30px;
     border-radius: 20px;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover-Effekt: Der Glow wird stärker, wenn man mit der Maus drüberfährt */
+.card:hover {
+    box-shadow: 0 0 25px var(--primary);
+    transform: translateY(-3px);
+}
+
+/* Titel innerhalb der Karten */
+.card h2 {
+    color: var(--primary) !important; /* Titel leuchten immer in der Theme-Farbe */
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 1.3rem;
+}
+
+/* Listen-Styling für die Credits */
+.card ul {
+    list-style: none;
+}
+
+.card ul li {
+    margin: 12px 0;
+    padding-left: 15px;
+    border-left: 2px solid var(--primary); /* Kleine Akzent-Linie in Theme-Farbe */
+    font-size: 0.95rem;
 }
 
 .miku-img { width: 100%; border-radius: 15px; margin-top: 15px; border: 1px solid var(--primary-glow); }
