@@ -2,35 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Downloads | Weebokage</title>
+    <title>Archive | Weebokage</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <script>
-        // Security Check
-        if(localStorage.getItem("isLoggedIn") !== "true") {
-            window.location.href = "login.html";
-        }
+        if(localStorage.getItem("isLoggedIn") !== "true") { window.location.href = "login.html"; }
     </script>
 
     <nav>
-        <a href="index.html">Home</a>
-        <button onclick="logout()" style="background:none; border:none; color:var(--miku-pink); cursor:pointer;">Logout</button>
+        <div class="logo">ADMIN ARCHIVE</div>
+        <div class="links">
+            <a href="index.html">Home</a>
+            <a href="#" onclick="logout()" style="color: var(--miku-pink);">Logout</a>
+        </div>
     </nav>
 
     <div class="container">
-        <h1>Private Downloads</h1>
+        <h2 style="margin-bottom: 30px;">Cloud Assets</h2>
         
         <div class="card">
-            <h3>Project File #1</h3>
-            <p>Description of your Google Drive file goes here.</p>
-            <a href="YOUR_GOOGLE_DRIVE_LINK_HERE" target="_blank" class="drive-btn">Download from Drive</a>
+            <h3>Drive Archive: Project Alpha</h3>
+            <p style="margin: 10px 0; opacity: 0.8;">A collection of high-resolution textures and assets.</p>
+            <a href="YOUR_GOOGLE_DRIVE_LINK" target="_blank" class="btn">ACCESS DRIVE</a>
         </div>
 
-        <div class="card">
-            <h3>Music Assets</h3>
-            <p>A collection of Miku samples.</p>
-            <a href="YOUR_SECOND_LINK_HERE" target="_blank" class="drive-btn">Download Folder</a>
+        <div class="card" style="animation-delay: 0.2s;">
+            <h3>Private Documents</h3>
+            <p style="margin: 10px 0; opacity: 0.8;">Spreadsheets and project tracking.</p>
+            <a href="YOUR_GOOGLE_DRIVE_LINK" target="_blank" class="btn">OPEN FOLDER</a>
         </div>
     </div>
 
