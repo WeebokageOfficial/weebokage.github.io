@@ -9,12 +9,20 @@
 }
 
 body {
-    background-color: var(--miku-black);
-    background-image: radial-gradient(circle at top right, #1a2e2e, #0a0b10);
+    /* This creates a dark tint over your image so the text stays readable */
+    background: linear-gradient(rgba(10, 11, 16, 0.8), rgba(10, 11, 16, 0.8)), 
+                url('assets/wallpaper.jpg'); /* Your image path here */
+    
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* This makes the wallpaper stay still while scrolling */
+    background-repeat: no-repeat;
+    
     color: white;
     font-family: 'Poppins', sans-serif;
     margin: 0;
     min-height: 100vh;
+}
 }
 
 nav {
