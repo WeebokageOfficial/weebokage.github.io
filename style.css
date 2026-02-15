@@ -2,189 +2,120 @@
 
 :root {
     --miku-teal: #39C5BB;
+    --miku-teal-glow: rgba(57, 197, 187, 0.4);
     --miku-pink: #ff6699;
     --miku-black: #0a0b10;
-    --glass: rgba(255, 255, 255, 0.03);
-    --glow: 0 0 15px rgba(57, 197, 187, 0.4);
 }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    /* This creates a dark tint over your image so the text stays readable */
-    background: linear-gradient(rgba(10, 11, 16, 0.8), rgba(10, 11, 16, 0.8)), 
-                url('assets/wallpaper.jpg'); /* Your image path here */
-    
+    background: linear-gradient(rgba(10, 11, 16, 0.85), rgba(10, 11, 16, 0.85)), 
+                url('assets/wallpaper.jpg');
     background-size: cover;
     background-position: center;
-    background-attachment: fixed; /* This makes the wallpaper stay still while scrolling */
-    background-repeat: no-repeat;
-    
+    background-attachment: fixed;
     color: white;
     font-family: 'Poppins', sans-serif;
-    margin: 0;
     min-height: 100vh;
 }
-}
 
+/* Navigation - Centered */
 nav {
     display: flex;
     justify-content: center;
-    padding: 20px 10%;
-    background: rgba(0,0,0,0.5);
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--miku-teal);
+    border-bottom: 2px solid var(--miku-teal);
     position: sticky;
     top: 0;
-    z-index: 100;
-    .links {
-    display: flex;
-    gap: 30px;
+    z-index: 1000;
 }
 
-.logo { font-weight: 700; color: var(--miku-teal); letter-spacing: 2px; }
-nav a { color: white; text-decoration: none; margin-left: 20px; transition: 0.3s; }
-nav a:hover { color: var(--miku-pink); text-shadow: 0 0 10px var(--miku-pink); }
-
-.container { max-width: 900px; margin: 40px auto; padding: 20px; }
-
-/* The Glass Card */
-.card {
-    background: var(--glass);
-    border: 1px solid rgba(255,255,255,0.1);
-    backdrop-filter: blur(12px);
-    padding: 30px;
-    border-radius: 20px;
-    margin-bottom: 30px;
-    animation: slideUp 0.6s ease-out;
-}
-
-.card:hover { border-color: var(--miku-teal); box-shadow: var(--glow); }
-
-h1, h2 { color: var(--miku-teal); }
-
-.miku-img {
-    width: 100%;
-    border-radius: 15px;
-    border: 1px solid var(--miku-teal);
-    margin: 20px 0;
-}
-
-/* Premium Buttons */
-.btn {
-    background: linear-gradient(45deg, var(--miku-teal), #2da9a1);
-    color: #000;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 50px;
-    font-weight: 700;
-    cursor: pointer;
+nav a {
+    color: white;
     text-decoration: none;
-    display: inline-block;
+    margin: 0 15px;
+    font-weight: bold;
     transition: 0.3s;
 }
 
-.btn:hover { background: var(--miku-pink); transform: scale(1.05); box-shadow: 0 0 20px var(--miku-pink); }
+nav a:hover { color: var(--miku-teal); text-shadow: 0 0 10px var(--miku-teal); }
 
-input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    background: rgba(0,0,0,0.5);
-    border: 1px solid var(--miku-teal);
-    border-radius: 8px;
-    color: white;
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
 }
 
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Profile Card Specifics */
+/* Fixed Profile Card */
 .profile-card {
     display: flex;
     align-items: center;
     gap: 30px;
-    background: rgba(57, 197, 187, 0.05); /* Very light Miku teal */
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
     border: 1px solid var(--miku-teal);
     padding: 40px;
-    border-radius: 30px;
+    border-radius: 25px;
     margin-bottom: 50px;
-    position: relative;
-    overflow: hidden;
-}
-
-/* The big "01" behind the profile */
-.profile-card::after {
-    content: "01";
-    position: absolute;
-    right: -10px;
-    bottom: -30px;
-    font-size: 12rem;
-    font-weight: 900;
-    color: rgba(57, 197, 187, 0.05);
-    z-index: 0;
 }
 
 .profile-avatar {
-    width: 150px;
-    height: 150px;
+    width: 150px !important;   /* Force size */
+    height: 150px !important;  /* Force size */
+    min-width: 150px;
     border-radius: 50%;
     border: 3px solid var(--miku-teal);
     box-shadow: 0 0 20px var(--miku-teal-glow);
     object-fit: cover;
-    z-index: 1;
-}
-
-.profile-info {
-    z-index: 1;
 }
 
 .profile-info h1 {
     font-size: 2.5rem;
-    margin: 0;
-    background: linear-gradient(to right, var(--miku-teal), var(--miku-pink));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--miku-teal);
+    margin-bottom: 10px;
 }
 
-.profile-info p {
-    font-size: 1.1rem;
-    color: #ccc;
-    margin-top: 10px;
-    max-width: 500px;
-}
-
-.profile-tags {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
+.profile-tags { display: flex; gap: 10px; margin: 15px 0; }
 .tag {
-    background: rgba(255, 102, 153, 0.2); /* Miku pink transparent */
+    background: rgba(255, 102, 153, 0.2);
     color: var(--miku-pink);
     padding: 5px 12px;
-    border-radius: 20px;
+    border-radius: 15px;
     font-size: 0.8rem;
-    font-weight: bold;
     border: 1px solid var(--miku-pink);
 }
 
-/* Mobile responsive for the profile */
-@media (max-width: 600px) {
-    .profile-card {
-        flex-direction: column;
-        text-align: center;
-        padding: 30px 20px;
-    }
-}
-    .card ul {
-    list-style: none;
-    padding: 0;
+/* Blog Cards */
+.card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 25px;
+    border-radius: 20px;
+    margin-bottom: 25px;
 }
 
-.card ul li {
-    margin: 10px 0;
-    padding-left: 20px;
-    border-left: 2px solid var(--miku-teal);
+.miku-img {
+    width: 100%;
+    border-radius: 15px;
+    margin: 15px 0;
+    border: 1px solid var(--miku-teal-glow);
+}
+
+.btn {
+    display: inline-block;
+    background: var(--miku-teal);
+    color: black;
+    padding: 10px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Mobile Fix */
+@media (max-width: 650px) {
+    .profile-card { flex-direction: column; text-align: center; }
 }
