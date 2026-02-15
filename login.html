@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login | Weebokage</title>
+    <title>Access Terminal | Weebokage</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container" style="text-align: center;">
-        <h1>Admin Access</h1>
-        <div class="card">
-            <input type="text" id="username" placeholder="Username"><br>
-            <input type="password" id="password" placeholder="Password"><br>
-            <button class="drive-btn" onclick="checkLogin()">Unlock Downloads</button>
-            <p id="error" style="color: var(--miku-pink); display: none;">Access Denied!</p>
+    <div class="container" style="max-width: 400px; margin-top: 15vh;">
+        <div class="card" style="text-align: center;">
+            <h2 style="margin-bottom: 20px; color: var(--miku-teal);">ADMIN LOGIN</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button class="btn" onclick="checkLogin()" style="width: 100%; margin-top: 15px;">INITIALIZE</button>
+            <p id="error" style="color: var(--miku-pink); margin-top: 15px; display: none;">Invalid Identity</p>
         </div>
     </div>
 
@@ -20,9 +20,7 @@
         function checkLogin() {
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
-
-            // Change 'admin' and 'miku01' to whatever you want
-            if(user === "admin" && pass === "miku01") {
+            if(user === "miku" && pass === "01") { // Change these!
                 localStorage.setItem("isLoggedIn", "true");
                 window.location.href = "downloads.html";
             } else {
