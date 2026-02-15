@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WEEBOKAGE | Home</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -16,11 +19,36 @@
             <a href="login.html">Admin</a>
         </div>
     </nav>
-
+    
     <div class="container">
+        <!-- PROFILE INTRO CARD -->
+        <div class="profile-card card">
+            <img src="https://yt3.googleusercontent.com/ytc/AIdro_nbpO-5zMOWnqUGlZBoqDES-z4eWNPbSUReqgaJBsRMwnk=s160-c-k-c0x00ffffff-no-rj" alt="Weebokage" class="profile-avatar">
+            
+            <div class="profile-info">
+                <h1>Weebokage</h1>
+                <p>
+                    Digital creator, Vocaloid enthusiast, and owner of the 01-Archive. 
+                    Welcome to my personal digital space.
+                </p>
+                
+                <div class="profile-tags">
+                    <span class="tag">DEVELOPER</span>
+                    <span class="tag">VOCALOID</span>
+                    <span class="tag">ARCHIVIST</span>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <a href="https://www.youtube.com/@Weebokage/featured" target="_blank" class="btn" style="background: #FF0000; color: white;">
+                        <i class="fab fa-youtube"></i> YouTube
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <div class="hero">
-            <h1>DIGITAL ARCHIVE 01</h1>
-            <p>Welcome to the official portal of Weebokage.</p>
+            <h2 style="color: var(--miku-teal); letter-spacing: 2px;">LATEST UPDATES</h2>
+            <div style="width: 50px; height: 3px; background: var(--miku-teal); margin: 10px auto;"></div>
         </div>
 
         <!-- This is where the Firebase posts will show up -->
@@ -45,10 +73,10 @@
         // Fetch posts in real-time
         db.collection("posts").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
             const feed = document.getElementById('blog-feed');
-            feed.innerHTML = ""; // Clear the loading message
+            feed.innerHTML = ""; 
 
             if (snapshot.empty) {
-                feed.innerHTML = '<div class="card"><p>No posts found. Log in to create one!</p></div>';
+                feed.innerHTML = '<div class="card"><p style="text-align:center;">No posts found. Log in to create one!</p></div>';
                 return;
             }
 
@@ -56,7 +84,6 @@
                 const post = doc.data();
                 const date = post.timestamp ? new Date(post.timestamp.seconds * 1000).toLocaleDateString() : "Just now";
                 
-                // Create the Miku-themed post card
                 feed.innerHTML += `
                     <div class="card">
                         <span style="color: var(--miku-pink); font-size: 0.8rem; font-weight:bold;">${date}</span>
