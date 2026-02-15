@@ -2,31 +2,87 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Access Terminal | Weebokage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Access | WEEBOKAGE</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Specific styling for the login box to make it look like a floating terminal */
+        .login-box {
+            max-width: 400px;
+            margin: 15vh auto;
+            text-align: center;
+            border-top: 4px solid var(--miku-teal);
+        }
+        .status-light {
+            width: 10px;
+            height: 10px;
+            background: var(--miku-pink);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            box-shadow: 0 0 10px var(--miku-pink);
+        }
+    </style>
 </head>
 <body>
-    <div class="container" style="max-width: 400px; margin-top: 15vh;">
-        <div class="card" style="text-align: center;">
-            <h2 style="margin-bottom: 20px; color: var(--miku-teal);">ADMIN LOGIN</h2>
-            <input type="text" id="username" placeholder="Username">
+
+    <div class="container">
+        <div class="card login-box">
+            <div style="margin-bottom: 20px;">
+                <span class="status-light" id="status-indicator"></span>
+                <span style="letter-spacing: 3px; font-size: 0.8rem; color: var(--miku-teal);">SYSTEM AUTHENTICATION</span>
+            </div>
+            
+            <h2 style="margin-bottom: 30px; font-weight: 300;">Vocaloid ID <span style="color:var(--miku-teal)">01</span></h2>
+            
+            <input type="text" id="username" placeholder="Username" autocomplete="off">
             <input type="password" id="password" placeholder="Password">
-            <button class="btn" onclick="checkLogin()" style="width: 100%; margin-top: 15px;">INITIALIZE</button>
-            <p id="error" style="color: var(--miku-pink); margin-top: 15px; display: none;">Invalid Identity</p>
+            
+            <button class="btn" onclick="checkLogin()" style="width: 100%; margin-top: 20px;">ACCESS ARCHIVE</button>
+            
+            <p id="error" style="color: var(--miku-pink); margin-top: 20px; display: none; font-size: 0.9rem; font-weight: bold;">
+                [!] ACCESS DENIED: INVALID CREDENTIALS
+            </p>
         </div>
     </div>
 
     <script>
+        // This function checks your specific credentials
         function checkLogin() {
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
-            if(user === "miku" && pass === "01") { // Change these!
+            const errorMsg = document.getElementById('error');
+            const statusLight = document.getElementById('status-indicator');
+
+            // YOUR REQUESTED CREDENTIALS
+            if(user === "weebokage" && pass === "Nanek250103!") {
+                
+                // Change status light to teal (success)
+                statusLight.style.background = "var(--miku-teal)";
+                statusLight.style.boxShadow = "0 0 10px var(--miku-teal)";
+                
+                // Save login state so the downloads page lets you in
                 localStorage.setItem("isLoggedIn", "true");
-                window.location.href = "downloads.html";
+                
+                // Small delay for "cool" effect before redirecting
+                setTimeout(() => {
+                    window.location.href = "downloads.html";
+                }, 800);
+
             } else {
-                document.getElementById('error').style.display = "block";
+                // Show error and shake the status light
+                errorMsg.style.display = "block";
+                statusLight.style.background = "#ff0000";
+                statusLight.style.boxShadow = "0 0 10px #ff0000";
             }
         }
+
+        // Allow pressing "Enter" to login
+        document.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkLogin();
+            }
+        });
     </script>
 </body>
 </html>
