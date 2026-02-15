@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terminal Access | WEEBOKAGE</title>
     <link rel="stylesheet" href="style.css">
     <!-- Firebase SDKs -->
@@ -9,21 +10,39 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 </head>
 <body>
-    <div class="container" style="max-width: 400px; margin-top: 100px;">
-        <div class="card" style="text-align: center;">
-            <h2 style="margin-bottom: 20px; color: var(--miku-teal);">SYSTEM AUTH</h2>
-            <!-- Note: You must enter the FULL email you created in Firebase -->
-            <input type="text" id="email" placeholder="Vocaloid ID (Email)">
+    <nav>
+        <div class="links">
+            <a href="index.html">Home</a>
+            <a href="credits.html">Credits</a>
+            <a href="login.html">Admin</a>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width: 500px; margin-top: 10vh;">
+        <!-- LOGIN CARD -->
+        <div class="card" style="border-top: 5px solid var(--miku-teal); padding: 50px; text-align: center;">
+            <div style="margin-bottom: 30px;">
+                <h1 style="color: var(--miku-teal); font-size: 2rem; letter-spacing: 4px; text-transform: uppercase;">System Auth</h1>
+                <div style="width: 40px; height: 2px; background: var(--miku-pink); margin: 10px auto; box-shadow: 0 0 10px var(--miku-pink);"></div>
+            </div>
+            
+            <p style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 25px; letter-spacing: 1px;">INITIALIZE SECURE CONNECTION</p>
+
+            <input type="text" id="email" placeholder="Vocaloid ID (Email)" style="margin-bottom: 15px;">
             <input type="password" id="pass" placeholder="Password">
             
-            <button onclick="login()" id="loginBtn" class="btn" style="width: 100%; margin-top: 20px;">INITIALIZE</button>
+            <button onclick="login()" id="loginBtn" class="btn" style="width: 100%; margin-top: 30px; letter-spacing: 2px; text-shadow: 0 0 5px rgba(0,0,0,0.5);">
+                INITIALIZE
+            </button>
             
-            <p id="err" style="color: var(--miku-pink); display: none; margin-top: 15px; font-size: 0.8rem; border: 1px solid var(--miku-pink); padding: 10px;"></p>
+            <p id="err" style="color: var(--miku-pink); display: none; margin-top: 20px; font-size: 0.8rem; border: 1px solid var(--miku-pink); padding: 10px; background: rgba(255,102,153,0.1); border-radius: 5px;"></p>
         </div>
+
+        <p style="text-align: center; opacity: 0.3; font-size: 0.7rem; margin-top: 20px; letter-spacing: 2px;">WEEBOKAGE SECURE TERMINAL v2.0</p>
     </div>
 
     <script>
-        // Config fixed (removed the extra }; that was breaking it)
+        // CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo",
             authDomain: "weebokage-296c0.firebaseapp.com",
@@ -33,7 +52,6 @@
             appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
 
         function login() {
@@ -43,6 +61,7 @@
             const btn = document.getElementById('loginBtn');
 
             btn.innerText = "AUTHENTICATING...";
+            errBox.style.display = "none";
 
             firebase.auth().signInWithEmailAndPassword(email, pass)
                 .then(() => {
@@ -53,16 +72,20 @@
                     btn.innerText = "INITIALIZE";
                     errBox.style.display = "block";
                     
-                    // Specific error messages to help you debug
-                    if (error.code === "auth/operation-not-allowed") {
-                        errBox.innerText = "ERROR: You need to enable Email/Password in Firebase Authentication > Sign-in Method!";
-                    } else if (error.code === "auth/invalid-credential") {
-                        errBox.innerText = "ERROR: Wrong email or password.";
+                    if (error.code === "auth/invalid-credential") {
+                        errBox.innerText = "ACCESS DENIED: WRONG CREDENTIALS";
                     } else {
                         errBox.innerText = "ERROR: " + error.message;
                     }
                 });
         }
+
+        // Allow pressing Enter to login
+        document.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
     </script>
 </body>
 </html>
