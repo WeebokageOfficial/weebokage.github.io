@@ -13,17 +13,18 @@
 </head>
 <body>
     <nav>
-    <div class="links">
-        <a href="index.html">Home</a>
-        <a href="credits.html">Credits</a>
-        <a href="login.html">Admin</a>
-    </div>
-</nav>
+        <div class="links">
+            <a href="index.html">Home</a>
+            <a href="credits.html">Credits</a>
+            <a href="login.html">Admin</a>
+        </div>
+    </nav>
     
     <div class="container">
         <!-- PROFILE INTRO CARD -->
-        <div class="profile-card card">
-           <img src="assets/mikukage.png" alt="Weebokage" class="profile-avatar">
+        <div class="profile-card">
+            <!-- Added width and height attributes as a safety backup -->
+            <img src="assets/mikukage.png" alt="Weebokage" class="profile-avatar" width="150" height="150">
             
             <div class="profile-info">
                 <h1>Weebokage</h1>
@@ -39,16 +40,16 @@
                 </div>
 
                 <div style="margin-top: 20px;">
-                    <a href="https://www.youtube.com/@Weebokage/featured" target="_blank" class="btn" style="background: #FF0000; color: white;">
+                    <a href="https://www.youtube.com/@Weebokage/featured" target="_blank" class="btn" style="background: #FF0000; color: white; border: none;">
                         <i class="fab fa-youtube"></i> YouTube
                     </a>
                 </div>
             </div>
         </div>
 
-        <div class="hero">
-            <h2 style="color: var(--miku-teal); letter-spacing: 2px;">LATEST UPDATES</h2>
-            <div style="width: 50px; height: 3px; background: var(--miku-teal); margin: 10px auto;"></div>
+        <div class="hero" style="text-align: center; margin-top: 40px; margin-bottom: 20px;">
+            <h2 style="color: var(--miku-teal); letter-spacing: 2px; text-transform: uppercase;">Latest Updates</h2>
+            <div style="width: 60px; height: 4px; background: var(--miku-teal); margin: 10px auto; border-radius: 2px;"></div>
         </div>
 
         <!-- This is where the Firebase posts will show up -->
@@ -70,13 +71,12 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Fetch posts in real-time
         db.collection("posts").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
             const feed = document.getElementById('blog-feed');
             feed.innerHTML = ""; 
 
             if (snapshot.empty) {
-                feed.innerHTML = '<div class="card"><p style="text-align:center;">No posts found. Log in to create one!</p></div>';
+                feed.innerHTML = '<div class="card"><p style="text-align:center;">No entries found in the archive.</p></div>';
                 return;
             }
 
@@ -86,10 +86,10 @@
                 
                 feed.innerHTML += `
                     <div class="card">
-                        <span style="color: var(--miku-pink); font-size: 0.8rem; font-weight:bold;">${date}</span>
-                        <h2 style="margin-top: 5px;">${post.title}</h2>
+                        <span style="color: var(--miku-pink); font-size: 0.8rem; font-weight:bold; letter-spacing: 1px;">${date}</span>
+                        <h2 style="margin-top: 5px; color: var(--miku-teal);">${post.title}</h2>
                         ${post.image ? `<img src="${post.image}" class="miku-img" onerror="this.style.display='none'">` : ''}
-                        <p style="white-space: pre-wrap;">${post.content}</p>
+                        <p style="white-space: pre-wrap; margin-top: 10px; line-height: 1.6;">${post.content}</p>
                     </div>
                 `;
             });
