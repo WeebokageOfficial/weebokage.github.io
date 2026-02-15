@@ -87,3 +87,83 @@ input {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* Profile Card Specifics */
+.profile-card {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    background: rgba(57, 197, 187, 0.05); /* Very light Miku teal */
+    border: 1px solid var(--miku-teal);
+    padding: 40px;
+    border-radius: 30px;
+    margin-bottom: 50px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* The big "01" behind the profile */
+.profile-card::after {
+    content: "01";
+    position: absolute;
+    right: -10px;
+    bottom: -30px;
+    font-size: 12rem;
+    font-weight: 900;
+    color: rgba(57, 197, 187, 0.05);
+    z-index: 0;
+}
+
+.profile-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid var(--miku-teal);
+    box-shadow: 0 0 20px var(--miku-teal-glow);
+    object-fit: cover;
+    z-index: 1;
+}
+
+.profile-info {
+    z-index: 1;
+}
+
+.profile-info h1 {
+    font-size: 2.5rem;
+    margin: 0;
+    background: linear-gradient(to right, var(--miku-teal), var(--miku-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.profile-info p {
+    font-size: 1.1rem;
+    color: #ccc;
+    margin-top: 10px;
+    max-width: 500px;
+}
+
+.profile-tags {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.tag {
+    background: rgba(255, 102, 153, 0.2); /* Miku pink transparent */
+    color: var(--miku-pink);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border: 1px solid var(--miku-pink);
+}
+
+/* Mobile responsive for the profile */
+@media (max-width: 600px) {
+    .profile-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px 20px;
+    }
+}
