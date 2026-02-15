@@ -2,16 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Archive | WEEBOKAGE</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <style>
+        /* Admin Editor Styles */
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--miku-teal);
+            opacity: 0.6;
+        }
+
+        .admin-input {
+            width: 100%;
+            padding: 15px 15px 15px 45px !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(57, 197, 187, 0.3) !important;
+            border-radius: 12px !important;
+            color: white !important;
+            outline: none !important;
+            transition: 0.3s;
+        }
+
+        .admin-input:focus {
+            border-color: var(--miku-teal) !important;
+            box-shadow: 0 0 15px rgba(57, 197, 187, 0.3);
+            background: rgba(57, 197, 187, 0.05) !important;
+        }
+
+        .admin-textarea {
+            width: 100%;
+            padding: 15px !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(57, 197, 187, 0.3) !important;
+            border-radius: 12px !important;
+            color: white !important;
+            min-height: 150px;
+            resize: vertical;
+            outline: none !important;
+            font-family: inherit;
+        }
+
+        .admin-textarea:focus {
+            border-color: var(--miku-pink) !important;
+            box-shadow: 0 0 15px rgba(255, 102, 153, 0.2);
+        }
+    </style>
 </head>
 <body>
     <nav>
-        <div class="logo">PRIVATE ARCHIVE</div>
         <div class="links">
             <a href="index.html">View Site</a>
             <a href="#" onclick="logout()" style="color: var(--miku-pink);">Logout</a>
@@ -19,32 +72,38 @@
     </nav>
 
     <div class="container">
-        <!-- SECTION 1: BLOG POSTER -->
-        <div class="card" style="border-top: 4px solid var(--miku-pink);">
-            <h2 style="color: var(--miku-pink);">NEW BLOG POST</h2>
-            <input type="text" id="postTitle" placeholder="Post Title">
-            <input type="text" id="postImage" placeholder="Image URL (Direct link from Imgur/Discord/GitHub)">
-            <textarea id="postContent" placeholder="Write your update here..." style="width:100%; height:120px; background:rgba(0,0,0,0.5); border:1px solid var(--miku-teal); color:white; border-radius:10px; padding:10px; margin:10px 0; font-family:inherit; resize: vertical;"></textarea>
-            <button onclick="uploadPost()" id="postBtn" class="btn" style="width: 100%;">DEPLOY TO BLOG</button>
+        <!-- THE NEW PRETTY BLOG EDITOR -->
+        <div class="card" style="border-top: 5px solid var(--miku-pink); padding: 40px;">
+            <h2 style="color: var(--miku-pink); margin-bottom: 25px; letter-spacing: 2px;">
+                <i class="fas fa-pen-nib"></i> NEW BLOG POST
+            </h2>
+            
+            <div class="input-group">
+                <input type="text" id="postTitle" class="admin-input" placeholder="Post Title">
+                <i class="fas fa-heading"></i>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="postImage" class="admin-input" placeholder="Image URL (Direct link)">
+                <i class="fas fa-image"></i>
+            </div>
+
+            <textarea id="postContent" class="admin-textarea" placeholder="Write your update here..."></textarea>
+            
+            <button onclick="uploadPost()" id="postBtn" class="btn" style="width: 100%; margin-top: 25px; height: 55px; font-size: 1.1rem;">
+                DEPLOY TO BLOG
+            </button>
         </div>
 
-        <!-- SECTION 2: DRIVE LINKS -->
-        <h2 style="margin-top: 50px;">Secure Drive Links</h2>
-        <div class="card">
+        <h2 style="margin-top: 50px; color: var(--miku-teal);">Secure Archive</h2>
+        <div class="card" style="border-left: 5px solid var(--miku-teal);">
             <h3>Google Drive Project A</h3>
-            <p>Full folder access to my programs and images.</p>
+            <p>Access my programs and images.</p>
             <a href="https://drive.google.com/drive/folders/1DM1uYFQu6jhLyNKlWEmmQVpzET3VNj_m?hl=de" target="_blank" class="btn">OPEN DRIVE</a>
-        </div>
-
-        <div class="card">
-            <h3>Miku Background Pack</h3>
-            <p>Collection of 4k wallpapers.</p>
-            <a href="https://drive.google.com/drive/folders/1wrv-rG3Hw4bj0_9AmRyX8LO699XXHoLC?usp=sharing" target="_blank" class="btn">DOWNLOAD</a>
         </div>
     </div>
 
     <script>
-        // 1. Initialize Firebase FIRST
         const firebaseConfig = {
             apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo",
             authDomain: "weebokage-296c0.firebaseapp.com",
@@ -57,24 +116,19 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // 2. Security Check: If not logged in, redirect to login
         firebase.auth().onAuthStateChanged((user) => {
             if (!user) { window.location.href = "login.html"; }
         });
 
-        // 3. Blog Upload Function
         function uploadPost() {
             const title = document.getElementById('postTitle').value;
             const image = document.getElementById('postImage').value;
             const content = document.getElementById('postContent').value;
             const btn = document.getElementById('postBtn');
 
-            if(!title || !content) {
-                alert("Please fill in the Title and Content!");
-                return;
-            }
+            if(!title || !content) return alert("Fill in the title and content!");
 
-            btn.innerText = "UPLOADING TO DATABASE...";
+            btn.innerText = "DEPLOYING...";
             btn.disabled = true;
 
             db.collection("posts").add({
@@ -84,18 +138,11 @@
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             })
             .then(() => {
-                alert("Success! Post is now live on the homepage.");
-                // Clear the fields
-                document.getElementById('postTitle').value = "";
-                document.getElementById('postImage').value = "";
-                document.getElementById('postContent').value = "";
-                btn.innerText = "DEPLOY TO BLOG";
-                btn.disabled = false;
+                alert("Archive Updated!");
+                window.location.reload();
             })
             .catch((error) => {
-                console.error("Error adding document: ", error);
                 alert("Error: " + error.message);
-                btn.innerText = "DEPLOY TO BLOG";
                 btn.disabled = false;
             });
         }
@@ -103,73 +150,6 @@
         function logout() {
             firebase.auth().signOut().then(() => { window.location.href = "index.html"; });
         }
-    <script>
-    // 1. Initialize Firebase
-    const firebaseConfig = {
-        apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo",
-        authDomain: "weebokage-296c0.firebaseapp.com",
-        projectId: "weebokage-296c0",
-        storageBucket: "weebokage-296c0.firebasestorage.app",
-        messagingSenderId: "192569800499",
-        appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046"
-    };
-    
-    // Check if Firebase is already initialized to prevent errors
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    
-    const db = firebase.firestore();
-
-    // 2. Security Check
-    firebase.auth().onAuthStateChanged((user) => {
-        if (!user) { 
-            console.log("No user detected, redirecting...");
-            window.location.href = "login.html"; 
-        } else {
-            console.log("Logged in as:", user.email);
-        }
-    });
-
-    // 3. The Posting Function
-    function uploadPost() {
-        const title = document.getElementById('postTitle').value;
-        const image = document.getElementById('postImage').value;
-        const content = document.getElementById('postContent').value;
-        const btn = document.getElementById('postBtn');
-
-        if(!title || !content) {
-            alert("Title and Content are missing!");
-            return;
-        }
-
-        btn.innerText = "ATTEMPTING UPLOAD...";
-        btn.disabled = true;
-
-        // Try to send to Firebase
-        db.collection("posts").add({
-            title: title,
-            image: image,
-            content: content,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        })
-        .then((docRef) => {
-            console.log("Document written with ID: ", docRef.id);
-            alert("SUCCESS! Post ID: " + docRef.id);
-            window.location.reload();
-        })
-        .catch((error) => {
-            // THIS WILL ALERT YOU IF IT FAILS
-            console.error("Error details:", error);
-            alert("FAILED TO POST! \nReason: " + error.message);
-            btn.innerText = "DEPLOY TO BLOG";
-            btn.disabled = false;
-        });
-    }
-
-    function logout() {
-        firebase.auth().signOut().then(() => { window.location.href = "index.html"; });
-    }
-</script>
+    </script>
 </body>
 </html>
