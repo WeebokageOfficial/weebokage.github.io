@@ -178,3 +178,13 @@ input {
         padding: 30px 20px;
     }
 }
+    .card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.card ul li {
+    margin: 10px 0;
+    padding-left: 20px;
+    border-left: 2px solid var(--miku-teal);
+}
