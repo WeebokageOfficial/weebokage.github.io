@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WEEBOKAGE | Home</title>
-    <link rel="stylesheet" href="style.css?v=1.2">
+    <!-- Cache-Buster v1.4 -->
+    <link rel="stylesheet" href="style.css?v=1.4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'miku';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
 </head>
 <body>
 
@@ -48,9 +55,18 @@
 
         <!-- BLOG SECTION -->
         <h2 style="color: var(--primary); margin-bottom: 25px; letter-spacing: 2px;">LATEST UPDATES</h2>
-        <div id="blog-feed">
-            <!-- Posts load here -->
+        <div id="blog-feed"></div>
+
+        <!-- GUESTBOOK SECTION -->
+        <h2 style="color: var(--primary); margin-top: 60px; margin-bottom: 25px; letter-spacing: 2px;">DIGITAL GUESTBOOK</h2>
+        <div class="card" style="border-top: 4px solid var(--primary);">
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="guestName" placeholder="Your Name" style="flex: 1; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--primary); border-radius: 8px; color: white;">
+                <button onclick="postComment()" id="commentBtn" class="btn" style="padding: 0 20px;">POST</button>
+            </div>
+            <textarea id="guestMsg" placeholder="Leave a message..." style="width: 100%; height: 80px; background: rgba(0,0,0,0.3); border: 1px solid var(--primary); border-radius: 8px; color: white; padding: 12px; font-family: inherit; resize: none;"></textarea>
         </div>
+        <div id="comments-feed"></div>
     </div>
 
     <script>
@@ -60,11 +76,11 @@
         function setTheme(t) {
             document.documentElement.setAttribute('data-theme', t);
             localStorage.setItem('theme', t);
-            toggle.checked = (t === 'teto');
+            if(toggle) toggle.checked = (t === 'teto');
         }
         setTheme(localStorage.getItem('theme') || 'miku');
 
-        // FIREBASE LOGIC
+        // FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo",
             authDomain: "weebokage-296c0.firebaseapp.com",
@@ -76,19 +92,34 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        // LOAD BLOG POSTS
         db.collection("posts").orderBy("timestamp", "desc").onSnapshot((snaps) => {
             const feed = document.getElementById('blog-feed');
             feed.innerHTML = "";
             snaps.forEach((doc) => {
                 const p = doc.data();
                 const d = p.timestamp ? new Date(p.timestamp.seconds * 1000).toLocaleDateString() : "Just now";
-                feed.innerHTML += `
-                    <div class="card">
-                        <span style="color:var(--accent); font-size:0.8rem; font-weight:bold;">${d}</span>
-                        <h2 style="margin-top:5px;">${p.title}</h2>
-                        ${p.image ? `<img src="${p.image}" class="miku-img">` : ''}
-                        <p style="white-space:pre-wrap; margin-top:10px;">${p.content}</p>
-                    </div>`;
+                feed.innerHTML += `<div class="card"><span style="color:var(--accent); font-size:0.8rem; font-weight:bold;">${d}</span><h2>${p.title}</h2>${p.image ? `<img src="${p.image}" class="miku-img">` : ''}<p style="white-space:pre-wrap; margin-top:10px;">${p.content}</p></div>`;
+            });
+        });
+
+        // GUESTBOOK: POST COMMENT
+        function postComment() {
+            const name = document.getElementById('guestName').value;
+            const msg = document.getElementById('guestMsg').value;
+            if(!name || !msg) return alert("Please fill in both fields!");
+            db.collection("comments").add({ name: name, msg: msg, timestamp: firebase.firestore.FieldValue.serverTimestamp() })
+            .then(() => { document.getElementById('guestName').value = ""; document.getElementById('guestMsg').value = ""; });
+        }
+
+        // GUESTBOOK: LOAD COMMENTS
+        db.collection("comments").orderBy("timestamp", "desc").onSnapshot((snaps) => {
+            const feed = document.getElementById('comments-feed');
+            feed.innerHTML = "";
+            snaps.forEach((doc) => {
+                const c = doc.data();
+                const d = c.timestamp ? new Date(c.timestamp.seconds * 1000).toLocaleDateString() : "Just now";
+                feed.innerHTML += `<div class="card" style="padding: 20px; border-left: 3px solid var(--primary);"><div style="display:flex; justify-content:space-between;"><strong style="color:var(--primary);">${c.name}</strong><small style="opacity:0.5;">${d}</small></div><p style="margin-top:10px; font-size:0.9rem;">${c.msg}</p></div>`;
             });
         });
     </script>
