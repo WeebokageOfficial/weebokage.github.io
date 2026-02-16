@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Games | WEEBOKAGE</title>
-    <!-- Cache-Buster v3.1 -->
-    <link rel="stylesheet" href="style.css?v=3.1">
+    <!-- Cache-Buster v3.2 -->
+    <link rel="stylesheet" href="style.css?v=3.2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Load Ruffle Flash Emulator -->
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
     <script>
         (function() {
@@ -18,38 +17,21 @@
     <style>
         .game-container {
             width: 100%;
-            aspect-ratio: 4 / 3;
+            max-width: 800px;
+            aspect-ratio: 16 / 9;
             background: #000;
             border: 2px solid var(--primary);
             box-shadow: 0 0 20px var(--primary-glow);
             border-radius: 15px;
             overflow: hidden;
-            display: none; /* Hidden until a game is picked */
-            margin-top: 30px;
+            display: none;
+            margin: 30px auto;
         }
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        .game-card {
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .game-card:hover {
-            transform: scale(1.05);
-        }
-        .game-card i {
-            font-size: 3rem;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-        #ruffle-player {
-            width: 100%;
-            height: 100%;
-        }
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
+        .game-card { text-align: center; cursor: pointer; transition: 0.3s; }
+        .game-card:hover { transform: scale(1.05); border-color: var(--primary); }
+        .game-card i { font-size: 3rem; color: var(--primary); margin-bottom: 10px; }
+        #ruffle-player { width: 100%; height: 100%; }
     </style>
 </head>
 <body>
@@ -79,35 +61,32 @@
             <p style="opacity: 0.7;">Select a module to initialize</p>
         </div>
 
-        <!-- GAME SELECTION GRID -->
         <div class="game-grid" id="selection-area">
-            <!-- Mario Combat -->
+            <!-- Mario Combat Button -->
             <div class="card game-card" onclick="loadGame('assets/mario_combat.swf')">
                 <i class="fas fa-gamepad"></i>
                 <h3>Mario Combat</h3>
                 <p style="font-size: 0.8rem; opacity: 0.6;">Classic Flash Brawler</p>
             </div>
-
-            <!-- Placeholder for more games -->
-            <div class="card game-card" style="opacity: 0.5; cursor: not-allowed;">
-                <i class="fas fa-lock"></i>
-                <h3>Coming Soon</h3>
-                <p style="font-size: 0.8rem;">More files pending...</p>
+            
+            <!-- External Test Game (Use this to see if the player works!) -->
+            <div class="card game-card" onclick="loadGame('https://archive.org/download/mario_combat/mario_combat.swf')">
+                <i class="fas fa-globe"></i>
+                <h3>Mario Combat (Mirror)</h3>
+                <p style="font-size: 0.8rem; opacity: 0.6;">Load from Archive.org</p>
             </div>
         </div>
 
-        <!-- THE PLAYER AREA -->
         <div id="player-wrapper" class="game-container">
             <div id="ruffle-player"></div>
         </div>
         
         <div style="text-align: center; margin-top: 20px;">
-            <button id="closeBtn" class="btn" style="display:none; background: var(--accent); color: white;" onclick="location.reload()">CLOSE GAME</button>
+            <button id="closeBtn" class="btn" style="display:none; background: #ff2d55; color: white;" onclick="location.reload()">CLOSE GAME</button>
         </div>
     </div>
 
     <script>
-        // --- THEME LOGIC ---
         const toggle = document.getElementById('theme-toggle');
         function themeToggle() { setTheme(toggle.checked ? 'teto' : 'miku'); }
         function setTheme(t) {
@@ -117,23 +96,20 @@
         }
         setTheme(localStorage.getItem('theme') || 'miku');
 
-        // --- GAME LOADER ENGINE ---
         function loadGame(swfPath) {
-            // Hide selection, show player
             document.getElementById('selection-area').style.display = 'none';
             document.getElementById('player-wrapper').style.display = 'block';
             document.getElementById('closeBtn').style.display = 'inline-block';
 
-            // Initialize Ruffle
             const ruffle = window.RufflePlayer.newest();
             const player = ruffle.createPlayer();
             const container = document.getElementById('ruffle-player');
             container.appendChild(player);
 
-            // Load the SWF file
             player.load({
                 url: swfPath,
-                allowScriptAccess: true,
+                backgroundColor: "#000000",
+                letterbox: "on"
             });
         }
     </script>
