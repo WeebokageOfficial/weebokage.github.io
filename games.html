@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arcade | WEEBOKAGE</title>
-    <!-- Cache-Buster v3.6 -->
-    <link rel="stylesheet" href="style.css?v=3.6">
+    <!-- Cache-Buster v3.7 -->
+    <link rel="stylesheet" href="style.css?v=3.7">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
     <script>
@@ -18,8 +18,7 @@
         .game-container {
             width: 100%;
             max-width: 900px;
-            /* Classic Flash aspect ratio */
-            aspect-ratio: 550 / 400; 
+            height: 600px; /* Fixed height to prevent black screen */
             background: #000;
             border: 2px solid var(--primary);
             box-shadow: 0 0 30px var(--primary-glow);
@@ -29,8 +28,8 @@
             margin: 30px auto;
         }
         
-        /* This forces the actual Flash element to be huge */
-        ruffle-player {
+        /* Force Ruffle to fill the box */
+        #ruffle-player, ruffle-player {
             width: 100% !important;
             height: 100% !important;
             display: block;
@@ -46,20 +45,19 @@
         .game-card { 
             text-align: center; 
             cursor: pointer; 
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            transition: 0.3s; 
             padding: 40px !important; 
         }
 
         .game-card:hover { 
-            transform: translateY(-10px); 
+            transform: translateY(-5px); 
             border-color: var(--primary); 
-            box-shadow: 0 10px 20px var(--primary-glow);
+            box-shadow: 0 0 15px var(--primary-glow);
         }
 
         .game-card i { font-size: 3.5rem; color: var(--primary); margin-bottom: 15px; }
         
         .locked { opacity: 0.5; cursor: not-allowed; border-style: dashed !important; }
-        .locked:hover { transform: none; box-shadow: none; border-color: rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
@@ -90,7 +88,7 @@
         </div>
 
         <div class="game-grid" id="menu">
-            <!-- Game 1: Mario Combat (Updated Filename) -->
+            <!-- Game 1: Mario Combat -->
             <div class="card game-card" onclick="loadGame('assets/Mario_Combat.swf')">
                 <i class="fas fa-fist-raised"></i>
                 <h3>Mario Combat</h3>
@@ -105,6 +103,7 @@
             </div>
         </div>
 
+        <!-- PLAYER WRAPPER -->
         <div id="wrapper" class="game-container">
             <div id="ruffle-player"></div>
         </div>
@@ -138,12 +137,7 @@
             player.load({
                 url: path,
                 letterbox: "on",
-                unmuteOverlay: "hidden",
-                // This helps stretch the game to the container size
                 scale: "showAll", 
-                quality: "high"
+                quality: "high",
+                allowScriptAccess: true
             });
-        }
-    </script>
-</body>
-</html>
