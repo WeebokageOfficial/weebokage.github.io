@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Islam | WEEBOKAGE</title>
-    <link rel="stylesheet" href="style.css?v=2.9">
+    <!-- Cache-Buster v3.0 -->
+    <link rel="stylesheet" href="style.css?v=3.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
@@ -26,7 +27,6 @@
     </style>
 </head>
 <body class="islam-body">
-
     <nav class="islam-nav">
         <div class="links">
             <a href="index.html">Home</a>
@@ -38,21 +38,17 @@
 
     <div class="container" style="max-width: 850px;">
         <div class="bismillah">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
-
-        <!-- AUTHENTIC HADITH SECTION -->
         <div class="card islam-card">
             <h2>
                 <span><i class="fas fa-book-open"></i> Sahih al-Bukhari</span>
                 <button class="refresh-btn" onclick="fetchHadith()"><i class="fas fa-sync"></i> RANDOMIZE</button>
             </h2>
             <div id="hadith-box">
-                <p class="arabic-text" id="h-arabic">Loading...</p>
-                <p class="english-text" id="h-english">Cleaning archives...</p>
+                <p class="arabic-text" id="h-arabic">...</p>
+                <p class="english-text" id="h-english">Connecting to archives...</p>
                 <div class="hadith-ref" id="h-ref">Reference</div>
             </div>
         </div>
-
-        <!-- PRAYER TIMES SECTION -->
         <div class="card islam-card">
             <h2><i class="fas fa-mosque"></i> Mawaqit al-Salat</h2>
             <div id="hijri-display" class="hijri-date">...</div>
@@ -63,15 +59,18 @@
     <script>
         const API_KEY = "$2y$10$bh8gWRHGMPAOaerOv4kXpOQLdNdrE1DR7lBNK9oL7OuE20QHSIM6";
 
-        // ULTRA-CLEANER: Removes messy Arabic honorifics from English text
         function cleanEnglishText(text) {
             if (!text) return "";
             return text
-                .replace(/[\u0600-\u06FF]+/g, "(ra)") // Replaces any stray Arabic letters with (ra)
-                .replace(/\(ra\)\s+\(ra\)/g, "(ra)") // Fixes double tags
-                .replace(/رضي الله عنه|رضي الله عنها|رضي الله عنهم|عليه السلام|ﷺ|صلى الله عليه وسلم/g, "(ra)")
-                .replace(/`|’|‘/g, "'")
-                .replace(/\s+/g, " ") // Fixes weird spacing
+                .replace(/[\u0600-\u06FF]+/g, "") // Remove all Arabic characters
+                .replace(/\(pbuh\)/gi, "(pbuh)")
+                .replace(/\(p\.b\.u\.h\)\.?/gi, "") // Remove redundant English abbreviations
+                .replace(/\(\(pbuh\)\)/gi, "(pbuh)")
+                .replace(/ رضى الله عنهما /g, "") // Remove specific fragments that regex missed
+                .replace(/`|’|‘/g, "'") // Fix backticks
+                .replace(/\(\s+\)/g, "") // Remove empty parentheses
+                .replace(/\s+/g, " ") // Clean double spaces
+                .replace(/\(pbuh\)\s*\(pbuh\)/gi, "(pbuh)") // Fix double pbuh tags
                 .trim();
         }
 
@@ -79,9 +78,8 @@
             const hArabic = document.getElementById('h-arabic');
             const hEnglish = document.getElementById('h-english');
             const hRef = document.getElementById('h-ref');
-
             hArabic.innerText = "...";
-            hEnglish.innerText = "Opening the Bukhari Archive...";
+            hEnglish.innerText = "Consulting the Sahih Bukhari records...";
 
             try {
                 const page = Math.floor(Math.random() * 200) + 1;
@@ -89,23 +87,19 @@
                 const json = await response.json();
                 
                 if (json.status === 200 && json.hadiths.data.length > 0) {
-                    const randomIndex = Math.floor(Math.random() * json.hadiths.data.length);
-                    const hadith = json.hadiths.data[randomIndex];
-
+                    const hadith = json.hadiths.data[Math.floor(Math.random() * json.hadiths.data.length)];
                     hArabic.innerText = hadith.hadithArabic;
-                    
-                    // Clean text twice for safety
-                    let cleaned = cleanEnglishText(hadith.hadithEnglish);
-                    hEnglish.innerText = cleaned;
+                    hEnglish.innerText = cleanEnglishText(hadith.hadithEnglish);
 
-                    // FIX FOR THE "UNDEFINED" BADGE
                     const bookName = (hadith.book && hadith.book.bookName) ? hadith.book.bookName : "Sahih Bukhari";
-                    const chapterName = (hadith.chapter && hadith.chapter.chapterEn) ? hadith.chapter.chapterEn : "General";
+                    // Fixed the undefined chapter issue
+                    const chapterName = (hadith.chapter && hadith.chapter.chapterEn && hadith.chapter.chapterEn !== "undefined") 
+                                        ? hadith.chapter.chapterEn 
+                                        : "General Archive";
                     
                     hRef.innerText = `${bookName} | ${chapterName} | No. ${hadith.hadithNumber}`;
                 }
             } catch (err) {
-                hArabic.innerText = "Connection lost.";
                 hEnglish.innerText = "Bukhari servers are busy. Please try RANDOMIZE again.";
             }
         }
@@ -118,7 +112,6 @@
                         const data = await res.json();
                         const t = data.data.timings;
                         document.getElementById('hijri-display').innerText = `${data.data.date.hijri.day} ${data.data.date.hijri.month.en} ${data.data.date.hijri.year} AH`;
-
                         const prayers = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
                         document.getElementById('prayer-list').innerHTML = prayers.map(p => 
                             `<div class="prayer-row"><strong>${p}</strong><span>${t[p]}</span></div>`
@@ -127,7 +120,6 @@
                 });
             }
         }
-
         fetchHadith();
         loadPrayers();
     </script>
