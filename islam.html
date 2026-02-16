@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Islam | WEEBOKAGE</title>
-    <!-- Cache-Buster v2.6 -->
-    <link rel="stylesheet" href="style.css?v=2.6">
+    <!-- Cache-Buster v2.7 -->
+    <link rel="stylesheet" href="style.css?v=2.7">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
+        /* Islamic Theme Styles */
         .islam-body { background: #fdfcf0 !important; color: #1a2f23 !important; background-image: none !important; }
         .islam-nav { background: #064e3b !important; border-bottom: 4px solid #d4af37 !important; display: flex; justify-content: center; padding: 20px; }
         .islam-nav a { color: #fdfcf0 !important; margin: 0 15px; font-weight: bold; text-decoration: none; text-transform: uppercase; }
@@ -22,7 +23,7 @@
             padding: 35px !important;
             margin-bottom: 30px !important;
             color: #1a2f23 !important;
-            min-height: 200px;
+            min-height: 250px;
         }
         .islam-card h2 {
             color: #064e3b !important;
@@ -39,7 +40,7 @@
             font-size: 1.8rem;
             text-align: right;
             direction: rtl;
-            line-height: 1.8;
+            line-height: 2.0;
             color: #064e3b;
             margin-bottom: 25px;
         }
@@ -92,11 +93,11 @@
         <div class="card islam-card">
             <h2>
                 <span><i class="fas fa-book-open"></i> Sahih al-Bukhari</span>
-                <button class="refresh-btn" onclick="fetchBukhari()"><i class="fas fa-sync"></i> RANDOMIZE</button>
+                <button class="refresh-btn" onclick="fetchHadith()"><i class="fas fa-sync"></i> RANDOMIZE</button>
             </h2>
             <div id="hadith-box">
                 <p class="arabic-text" id="h-arabic">Loading...</p>
-                <p class="english-text" id="h-english">Connecting to the Bukhari Archives...</p>
+                <p class="english-text" id="h-english">Connecting to HadithAPI.com...</p>
                 <div class="hadith-ref" id="h-ref">Source: Sahih Bukhari</div>
             </div>
         </div>
@@ -110,36 +111,41 @@
     </div>
 
     <script>
-        // --- REAL BUKHARI ENGINE (Static Mirror Method) ---
-        // This method bypasses Brave's blocks by using a high-availability CDN
-        async function fetchBukhari() {
+        // --- PRO HADITH ENGINE (hadithapi.com) ---
+        const API_KEY = "$2y$10$bh8gWRHGMPAOaerOv4kXpOQLdNdrE1DR7lBNK9oL7OuE20QHSIM6";
+
+        async function fetchHadith() {
             const hArabic = document.getElementById('h-arabic');
             const hEnglish = document.getElementById('h-english');
             const hRef = document.getElementById('h-ref');
 
             hArabic.innerText = "...";
-            hEnglish.innerText = "Accessing real-time Bukhari data...";
+            hEnglish.innerText = "Consulting the Sahih Bukhari records...";
 
             try {
-                // We target a random ID in the official Bukhari sequence
-                const randomId = Math.floor(Math.random() * 500) + 1;
+                // We fetch a random page of Sahih Bukhari to get a random Hadith
+                const page = Math.floor(Math.random() * 100) + 1;
+                const response = await fetch(`https://hadithapi.com/api/hadiths?apiKey=${API_KEY}&book=sahih-bukhari&paginate=10&page=${page}`);
                 
-                // Using the Global Hadith API which mirrors sunnah.com data
-                const response = await fetch(`https://hadith-api-three.vercel.app/chapi?bundle=bukhari&id=${randomId}`);
-                
-                if (!response.ok) throw new Error("API Offline");
-
                 const json = await response.json();
                 
-                hArabic.innerText = json.data.hadith_arabic;
-                hEnglish.innerText = json.data.hadith_english;
-                hRef.innerText = `Sahih al-Bukhari | Hadith No. ${json.data.hadith_id}`;
+                if (json.status === 200 && json.hadiths.data.length > 0) {
+                    // Pick a random one from the 10 results on the page
+                    const randomIndex = Math.floor(Math.random() * json.hadiths.data.length);
+                    const hadith = json.hadiths.data[randomIndex];
+
+                    hArabic.innerText = hadith.hadithArabic;
+                    hEnglish.innerText = hadith.hadithEnglish;
+                    hRef.innerText = `${hadith.book.bookName} | Chapter: ${hadith.chapter.chapterEn} | No. ${hadith.hadithNumber}`;
+                } else {
+                    throw new Error("Invalid response");
+                }
 
             } catch (err) {
-                // EMERGENCY FALLBACK (This ensures the box NEVER looks empty or broken)
+                console.error(err);
                 hArabic.innerText = "قَالَ رَسُولُ اللَّهِ ﷺ ‏: مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الآخِرِ فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ";
                 hEnglish.innerText = "The Prophet (ﷺ) said: 'Whoever believes in Allah and the Last Day should speak what is good or keep silent.'";
-                hRef.innerText = "Sahih al-Bukhari 6018 (Archive Mode)";
+                hRef.innerText = "Sahih al-Bukhari 6018 (Fallback Mode)";
             }
         }
 
@@ -164,7 +170,7 @@
             }
         }
 
-        fetchBukhari();
+        fetchHadith();
         loadPrayers();
     </script>
 </body>
