@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games | WEEBOKAGE</title>
+    <!-- Cache-Buster v3.1 -->
+    <link rel="stylesheet" href="style.css?v=3.1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Load Ruffle Flash Emulator -->
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'miku';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    <style>
+        .game-container {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            background: #000;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 20px var(--primary-glow);
+            border-radius: 15px;
+            overflow: hidden;
+            display: none; /* Hidden until a game is picked */
+            margin-top: 30px;
+        }
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .game-card {
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .game-card:hover {
+            transform: scale(1.05);
+        }
+        .game-card i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        #ruffle-player {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="theme-switch-wrapper">
+        <span style="cursor:pointer" onclick="setTheme('miku')">🩵</span>
+        <label class="switch">
+            <input type="checkbox" id="theme-toggle" onclick="themeToggle()">
+            <span class="slider"></span>
+        </label>
+        <span style="cursor:pointer" onclick="setTheme('teto')">🥖</span>
+    </div>
+
+    <nav>
+        <div class="links">
+            <a href="index.html">Home</a>
+            <a href="islam.html">Islam</a>
+            <a href="games.html">Games</a>
+            <a href="credits.html">Credits</a>
+            <a href="login.html">Admin</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero" style="text-align: center; margin-bottom: 40px;">
+            <h1 style="color: var(--primary); font-size: 3rem; letter-spacing: 3px;">ARCADE TERMINAL</h1>
+            <p style="opacity: 0.7;">Select a module to initialize</p>
+        </div>
+
+        <!-- GAME SELECTION GRID -->
+        <div class="game-grid" id="selection-area">
+            <!-- Mario Combat -->
+            <div class="card game-card" onclick="loadGame('assets/mario_combat.swf')">
+                <i class="fas fa-gamepad"></i>
+                <h3>Mario Combat</h3>
+                <p style="font-size: 0.8rem; opacity: 0.6;">Classic Flash Brawler</p>
+            </div>
+
+            <!-- Placeholder for more games -->
+            <div class="card game-card" style="opacity: 0.5; cursor: not-allowed;">
+                <i class="fas fa-lock"></i>
+                <h3>Coming Soon</h3>
+                <p style="font-size: 0.8rem;">More files pending...</p>
+            </div>
+        </div>
+
+        <!-- THE PLAYER AREA -->
+        <div id="player-wrapper" class="game-container">
+            <div id="ruffle-player"></div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <button id="closeBtn" class="btn" style="display:none; background: var(--accent); color: white;" onclick="location.reload()">CLOSE GAME</button>
+        </div>
+    </div>
+
+    <script>
+        // --- THEME LOGIC ---
+        const toggle = document.getElementById('theme-toggle');
+        function themeToggle() { setTheme(toggle.checked ? 'teto' : 'miku'); }
+        function setTheme(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            localStorage.setItem('theme', t);
+            if(toggle) toggle.checked = (t === 'teto');
+        }
+        setTheme(localStorage.getItem('theme') || 'miku');
+
+        // --- GAME LOADER ENGINE ---
+        function loadGame(swfPath) {
+            // Hide selection, show player
+            document.getElementById('selection-area').style.display = 'none';
+            document.getElementById('player-wrapper').style.display = 'block';
+            document.getElementById('closeBtn').style.display = 'inline-block';
+
+            // Initialize Ruffle
+            const ruffle = window.RufflePlayer.newest();
+            const player = ruffle.createPlayer();
+            const container = document.getElementById('ruffle-player');
+            container.appendChild(player);
+
+            // Load the SWF file
+            player.load({
+                url: swfPath,
+                allowScriptAccess: true,
+            });
+        }
+    </script>
+</body>
+</html>
