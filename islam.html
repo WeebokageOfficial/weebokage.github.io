@@ -4,109 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Islam | WEEBOKAGE</title>
-    <link rel="stylesheet" href="style.css?v=2.0">
+    <link rel="stylesheet" href="style.css?v=2.2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        .islam-body {
-            background: #fdfcf0 !important;
-            color: #1a2f23 !important;
-            background-image: none !important;
-        }
-        .islam-nav {
-            background: #064e3b !important;
-            border-bottom: 4px solid #d4af37 !important;
-            display: flex;
-            justify-content: center;
-            padding: 20px;
-        }
-        .islam-nav a { 
-            color: #fdfcf0 !important; 
-            margin: 0 15px; 
-            font-weight: bold;
-            text-decoration: none;
-            text-transform: uppercase;
-        }
+        .islam-body { background: #fdfcf0 !important; color: #1a2f23 !important; background-image: none !important; }
+        .islam-nav { background: #064e3b !important; border-bottom: 4px solid #d4af37 !important; display: flex; justify-content: center; padding: 20px; }
+        .islam-nav a { color: #fdfcf0 !important; margin: 0 15px; font-weight: bold; text-decoration: none; text-transform: uppercase; }
         .islam-nav a:hover { color: #d4af37 !important; }
-
-        .islam-card {
-            background: #ffffff !important;
-            border: 2px solid #d4af37 !important;
-            box-shadow: 0 10px 30px rgba(6, 78, 59, 0.1) !important;
-            border-radius: 15px !important;
-            padding: 30px !important;
-            margin-bottom: 30px !important;
-            color: #1a2f23 !important;
-        }
-        .islam-card h2 {
-            color: #064e3b !important;
-            border-bottom: 2px solid #d4af37;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            font-family: 'Amiri', serif;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .arabic-text {
-            font-family: 'Amiri', serif;
-            font-size: 2rem;
-            text-align: right;
-            direction: rtl;
-            line-height: 1.6;
-            color: #064e3b;
-            margin-bottom: 20px;
-        }
-        .english-text {
-            font-size: 1.05rem;
-            line-height: 1.7;
-            color: #333;
-            border-top: 1px solid #eee;
-            padding-top: 15px;
-        }
-        .hadith-ref {
-            display: inline-block;
-            margin-top: 15px;
-            background: #064e3b;
-            color: #d4af37;
-            padding: 4px 12px;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 0.8rem;
-        }
-        .prayer-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
+        .islam-card { background: #ffffff !important; border: 2px solid #d4af37 !important; box-shadow: 0 10px 30px rgba(6, 78, 59, 0.1) !important; border-radius: 15px !important; padding: 35px !important; margin-bottom: 30px !important; color: #1a2f23 !important; }
+        .islam-card h2 { color: #064e3b !important; border-bottom: 2px solid #d4af37; padding-bottom: 12px; margin-bottom: 25px; font-family: 'Amiri', serif; }
+        .arabic-text { font-family: 'Amiri', serif; font-size: 1.9rem; text-align: right; direction: rtl; line-height: 1.8; color: #064e3b; margin-bottom: 25px; }
+        .english-text { font-size: 1.1rem; line-height: 1.8; color: #333; border-top: 1px solid #eee; padding-top: 20px; font-style: italic; }
+        .hadith-ref { display: inline-block; margin-top: 20px; background: #064e3b; color: #d4af37; padding: 6px 16px; border-radius: 5px; font-weight: bold; font-size: 0.85rem; letter-spacing: 1px; }
+        .prayer-row { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #f0f0f0; font-size: 1.1rem; }
         .prayer-row strong { color: #064e3b; }
         .prayer-row span { font-weight: bold; color: #d4af37; }
-        .refresh-btn {
-            background: none;
-            border: 1px solid #d4af37;
-            color: #d4af37;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.7rem;
-            transition: 0.3s;
-        }
-        .refresh-btn:hover { background: #d4af37; color: white; }
-        .bismillah {
-            font-family: 'Amiri', serif;
-            font-size: 2.5rem;
-            color: #064e3b;
-            text-align: center;
-            margin: 30px 0;
-        }
-        .hijri-date {
-            text-align: center;
-            color: #064e3b;
-            font-weight: bold;
-            margin-bottom: 20px;
-            font-size: 1.1rem;
-        }
+        .bismillah { font-family: 'Amiri', serif; font-size: 2.8rem; color: #064e3b; text-align: center; margin: 40px 0; }
+        .hijri-date { text-align: center; color: #064e3b; font-weight: bold; margin-bottom: 25px; font-size: 1.2rem; background: rgba(212, 175, 55, 0.1); padding: 10px; border-radius: 50px; }
     </style>
 </head>
 <body class="islam-body">
@@ -120,97 +35,86 @@
         </div>
     </nav>
 
-    <div class="container" style="max-width: 800px;">
+    <div class="container" style="max-width: 850px;">
         <div class="bismillah">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
 
-        <!-- HADITH BOX -->
+        <!-- AUTHENTIC HADITH SECTION -->
         <div class="card islam-card">
-            <h2>
-                <span><i class="fas fa-quote-right"></i> Daily Hadith</span>
-                <button class="refresh-btn" onclick="loadHadith()"><i class="fas fa-sync"></i> REFRESH</button>
-            </h2>
+            <h2><i class="fas fa-book-quran"></i> Hadith of the Day</h2>
             <div id="hadith-box">
-                <p class="arabic-text" id="h-arabic">Loading Arabic...</p>
-                <p class="english-text" id="h-english">Loading Translation...</p>
-                <div class="hadith-ref" id="h-ref">Reference Loading...</div>
+                <p class="arabic-text" id="h-arabic">Loading daily transmission...</p>
+                <p class="english-text" id="h-english">Please wait while we connect to the authentic archives...</p>
+                <div class="hadith-ref" id="h-ref">Reference</div>
             </div>
         </div>
 
         <!-- PRAYER TIMES -->
         <div class="card islam-card">
-            <h2><span><i class="fas fa-clock"></i> Mawaqit al-Salat</span></h2>
-            <div id="hijri-display" class="hijri-date">Loading Hijri Date...</div>
-            <div id="prayer-list">
-                <p style="text-align: center; opacity: 0.6;">Detecting location...</p>
-            </div>
+            <h2><i class="fas fa-mosque"></i> Mawaqit al-Salat</h2>
+            <div id="hijri-display" class="hijri-date">...</div>
+            <div id="prayer-list"><p style="text-align: center; opacity: 0.6;">Waiting for location access...</p></div>
         </div>
     </div>
 
     <script>
-        // --- HADITH ENGINE ---
-        async function loadHadith() {
+        // --- AUTHENTIC HADITH ENGINE (hadith-api.com) ---
+        async function loadDailyHadith() {
             const hArabic = document.getElementById('h-arabic');
             const hEnglish = document.getElementById('h-english');
             const hRef = document.getElementById('h-ref');
-            
-            hArabic.innerText = "...";
-            hEnglish.innerText = "Connecting to Archive...";
 
             try {
-                // Using a more stable Bukhari random endpoint
-                const response = await fetch('https://random-hadith-generator.vercel.app/bukhari/');
-                const json = await response.json();
+                // We pick a random number between 1 and 200 for a consistent daily-like experience
+                // Pulling directly from Sahih Bukhari (The most authentic source)
+                const randomId = Math.floor(Math.random() * 200) + 1;
+                const response = await fetch(`https://hadith-api-three.vercel.app/chapi?bundle=bukhari&id=${randomId}`);
                 
-                if(json.data) {
-                    hArabic.innerText = json.data.hadith_arabic;
-                    hEnglish.innerText = json.data.hadith_english;
-                    hRef.innerText = json.data.header || "Sahih Bukhari";
-                }
+                if (!response.ok) throw new Error("Network issue");
+                
+                const json = await response.json();
+                const data = json.data;
+
+                hArabic.innerText = data.hadith_arabic;
+                hEnglish.innerText = data.hadith_english;
+                hRef.innerText = `Sahih al-Bukhari | Hadith No. ${data.hadith_id}`;
+
             } catch (err) {
-                hEnglish.innerText = "Connection lost. Please try the Refresh button.";
-                console.error(err);
+                console.error("API Error:", err);
+                hEnglish.innerText = "Connection to Islam archive timed out. Please refresh the page.";
+                hArabic.innerText = "تَعَذَّرَ الِاتِّصَالُ";
             }
         }
 
-        // --- PRAYER TIMES & HIJRI ENGINE ---
+        // --- PRAYER TIMES ENGINE ---
         function loadPrayers() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(async (pos) => {
-                    const lat = pos.coords.latitude;
-                    const lon = pos.coords.longitude;
-                    
                     try {
+                        const lat = pos.coords.latitude;
+                        const lon = pos.coords.longitude;
                         const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=3`);
                         const data = await res.json();
                         const t = data.data.timings;
-                        const date = data.data.date;
                         
-                        // Set Hijri Date
-                        document.getElementById('hijri-display').innerText = 
-                            `${date.hijri.day} ${date.hijri.month.en} ${date.hijri.year} AH`;
+                        // Hijri Date Update
+                        const hijri = data.data.date.hijri;
+                        document.getElementById('hijri-display').innerText = `${hijri.day} ${hijri.month.en} ${hijri.year} AH`;
 
-                        const prayers = [
-                            {label: "Fajr", time: t.Fajr},
-                            {label: "Sunrise", time: t.Sunrise},
-                            {label: "Dhuhr", time: t.Dhuhr},
-                            {label: "Asr", time: t.Asr},
-                            {label: "Maghrib", time: t.Maghrib},
-                            {label: "Isha", time: t.Isha}
-                        ];
-
-                        let html = "";
-                        prayers.forEach(p => {
-                            html += `<div class="prayer-row"><strong>${p.label}</strong><span>${p.time}</span></div>`;
-                        });
-                        document.getElementById('prayer-list').innerHTML = html;
+                        const prayers = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
+                        document.getElementById('prayer-list').innerHTML = prayers.map(p => 
+                            `<div class="prayer-row"><strong>${p}</strong><span>${t[p]}</span></div>`
+                        ).join('');
                     } catch (e) {
-                        document.getElementById('prayer-list').innerText = "API Error. Check connection.";
+                        document.getElementById('prayer-list').innerText = "Prayer API currently unavailable.";
                     }
+                }, () => {
+                    document.getElementById('prayer-list').innerText = "Please enable Location Access to see Mawaqit.";
                 });
             }
         }
 
-        loadHadith();
+        // Run engines
+        loadDailyHadith();
         loadPrayers();
     </script>
 </body>
