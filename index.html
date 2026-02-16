@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WEEBOKAGE | Home</title>
-    <!-- Cache-Buster v1.4 -->
-    <link rel="stylesheet" href="style.css?v=1.6">
+    <!-- Cache-Buster v1.7 -->
+    <link rel="stylesheet" href="style.css?v=1.7">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script>
+        // Theme Flash-Fix (Runs before page renders)
         (function() {
             const savedTheme = localStorage.getItem('theme') || 'miku';
             document.documentElement.setAttribute('data-theme', savedTheme);
@@ -18,13 +20,14 @@
 </head>
 <body>
 
+    <!-- THEME SWITCHER -->
     <div class="theme-switch-wrapper">
-        <span style="cursor:pointer" onclick="setTheme('miku')">🩵</span>
+        <span style="cursor:pointer; font-size: 1.2rem;" onclick="setTheme('miku')">🩵</span>
         <label class="switch">
             <input type="checkbox" id="theme-toggle" onclick="themeToggle()">
             <span class="slider"></span>
         </label>
-        <span style="cursor:pointer" onclick="setTheme('teto')">🥖</span>
+        <span style="cursor:pointer; font-size: 1.2rem;" onclick="setTheme('teto')">🥖</span>
     </div>
 
     <nav>
@@ -37,45 +40,56 @@
     
     <div class="container">
         <!-- PROFILE SECTION -->
-       <div class="profile-card">
-    <div class="profile-avatar"></div>
-    <div class="profile-info">
-        <h1>Weebokage</h1>
-        <p>Author, Anime/Manga Fan, Certified Gamer, Practicing Muslim. Welcome to my personal digital space.</p>
-        
-        <!-- HIER IST DIE KORREKTUR -->
-        <div class="profile-tags">
-            <span class="tag">DEVELOPER</span>
-            <span class="tag">VOCALOID</span>
-            <span class="tag">ARCHIVIST</span>
-        </div>
+        <div class="card profile-card">
+            <div class="profile-avatar"></div>
+            <div class="profile-info">
+                <h1>Weebokage</h1>
+                <p>Author, Anime/Manga Fan, Certified Gamer, Practicing Muslim. Welcome to my personal digital space.</p>
+                
+                <!-- FIXED TAGS WITH FRAMES -->
+                <div class="profile-tags">
+                    <span class="tag">DEVELOPER</span>
+                    <span class="tag">VOCALOID</span>
+                    <span class="tag">ARCHIVIST</span>
+                </div>
 
-        <div style="margin-top: 20px;">
-            <a href="https://www.youtube.com/@Weebokage/featured" target="_blank" class="btn" style="background: #FF0000; color: white; border: none;">
-                <i class="fab fa-youtube"></i> YouTube
-            </a>
+                <div style="margin-top: 20px;">
+                    <a href="https://www.youtube.com/@Weebokage/featured" target="_blank" class="btn" style="background: #FF0000; color: white; border: none;">
+                        <i class="fab fa-youtube"></i> YouTube
+                    </a>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
         <!-- BLOG SECTION -->
-        <h2 style="color: var(--primary); margin-bottom: 25px; letter-spacing: 2px;">LATEST UPDATES</h2>
-        <div id="blog-feed"></div>
+        <h2 style="color: var(--primary); margin-top: 50px; margin-bottom: 25px; letter-spacing: 2px; text-transform: uppercase; border-left: 4px solid var(--primary); padding-left: 15px;">Latest Updates</h2>
+        <div id="blog-feed">
+            <p style="text-align: center; opacity: 0.5;">Accessing Archive...</p>
+        </div>
 
         <!-- GUESTBOOK SECTION -->
-        <h2 style="color: var(--primary); margin-top: 60px; margin-bottom: 25px; letter-spacing: 2px;">DIGITAL GUESTBOOK</h2>
-        <div class="card" style="border-top: 4px solid var(--primary);">
+        <h2 style="color: var(--primary); margin-top: 60px; margin-bottom: 25px; letter-spacing: 2px; text-transform: uppercase; border-left: 4px solid var(--primary); padding-left: 15px;">Digital Guestbook</h2>
+        
+        <div class="card">
             <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                 <input type="text" id="guestName" placeholder="Your Name" style="flex: 1; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--primary); border-radius: 8px; color: white;">
-                <button onclick="postComment()" id="commentBtn" class="btn" style="padding: 0 20px;">POST</button>
+                <button onclick="postComment()" id="commentBtn" class="btn" style="padding: 0 25px;">POST</button>
             </div>
             <textarea id="guestMsg" placeholder="Leave a message..." style="width: 100%; height: 80px; background: rgba(0,0,0,0.3); border: 1px solid var(--primary); border-radius: 8px; color: white; padding: 12px; font-family: inherit; resize: none;"></textarea>
         </div>
-        <div id="comments-feed"></div>
+
+        <div id="comments-feed">
+            <!-- Comments load here -->
+        </div>
+
+        <!-- FOOTER -->
+        <div style="text-align: center; margin-top: 80px; opacity: 0.3; font-size: 0.8rem; letter-spacing: 2px;">
+            <p>&copy; 2026 WEEBOKAGE. All rights reserved.</p>
+        </div>
     </div>
 
     <script>
-        // THEME LOGIC
+        // --- THEME ENGINE ---
         const toggle = document.getElementById('theme-toggle');
         function themeToggle() { setTheme(toggle.checked ? 'teto' : 'miku'); }
         function setTheme(t) {
@@ -85,7 +99,7 @@
         }
         setTheme(localStorage.getItem('theme') || 'miku');
 
-        // FIREBASE CONFIG
+        // --- FIREBASE SETUP ---
         const firebaseConfig = {
             apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo",
             authDomain: "weebokage-296c0.firebaseapp.com",
@@ -97,34 +111,58 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // LOAD BLOG POSTS
+        // --- LOAD BLOG POSTS ---
         db.collection("posts").orderBy("timestamp", "desc").onSnapshot((snaps) => {
             const feed = document.getElementById('blog-feed');
             feed.innerHTML = "";
+            if(snaps.empty) feed.innerHTML = "<p style='text-align:center; opacity:0.5;'>No updates found.</p>";
             snaps.forEach((doc) => {
                 const p = doc.data();
                 const d = p.timestamp ? new Date(p.timestamp.seconds * 1000).toLocaleDateString() : "Just now";
-                feed.innerHTML += `<div class="card"><span style="color:var(--accent); font-size:0.8rem; font-weight:bold;">${d}</span><h2>${p.title}</h2>${p.image ? `<img src="${p.image}" class="miku-img">` : ''}<p style="white-space:pre-wrap; margin-top:10px;">${p.content}</p></div>`;
+                feed.innerHTML += `
+                    <div class="card">
+                        <span style="color:var(--accent); font-size:0.8rem; font-weight:bold;">${d}</span>
+                        <h2 style="margin-top:5px;">${p.title}</h2>
+                        ${p.image ? `<img src="${p.image}" class="miku-img">` : ''}
+                        <p style="white-space:pre-wrap; margin-top:10px; line-height:1.6;">${p.content}</p>
+                    </div>`;
             });
         });
 
-        // GUESTBOOK: POST COMMENT
+        // --- GUESTBOOK: POST ---
         function postComment() {
             const name = document.getElementById('guestName').value;
             const msg = document.getElementById('guestMsg').value;
-            if(!name || !msg) return alert("Please fill in both fields!");
-            db.collection("comments").add({ name: name, msg: msg, timestamp: firebase.firestore.FieldValue.serverTimestamp() })
-            .then(() => { document.getElementById('guestName').value = ""; document.getElementById('guestMsg').value = ""; });
+            const btn = document.getElementById('commentBtn');
+            if(!name || !msg) return alert("Please enter both Name and Message!");
+            
+            btn.disabled = true;
+            db.collection("comments").add({
+                name: name,
+                msg: msg,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                document.getElementById('guestName').value = "";
+                document.getElementById('guestMsg').value = "";
+                btn.disabled = false;
+            });
         }
 
-        // GUESTBOOK: LOAD COMMENTS
-        db.collection("comments").orderBy("timestamp", "desc").onSnapshot((snaps) => {
+        // --- GUESTBOOK: LOAD ---
+        db.collection("comments").orderBy("timestamp", "desc").limit(20).onSnapshot((snaps) => {
             const feed = document.getElementById('comments-feed');
             feed.innerHTML = "";
             snaps.forEach((doc) => {
                 const c = doc.data();
                 const d = c.timestamp ? new Date(c.timestamp.seconds * 1000).toLocaleDateString() : "Just now";
-                feed.innerHTML += `<div class="card" style="padding: 20px; border-left: 3px solid var(--primary);"><div style="display:flex; justify-content:space-between;"><strong style="color:var(--primary);">${c.name}</strong><small style="opacity:0.5;">${d}</small></div><p style="margin-top:10px; font-size:0.9rem;">${c.msg}</p></div>`;
+                feed.innerHTML += `
+                    <div class="card" style="padding: 20px; border-left: 4px solid var(--primary);">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <strong style="color:var(--primary);">${c.name}</strong>
+                            <small style="opacity:0.5;">${d}</small>
+                        </div>
+                        <p style="margin-top:10px; font-size:0.95rem; opacity:0.9;">${c.msg}</p>
+                    </div>`;
             });
         });
     </script>
