@@ -1,24 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
 
+/* --- THEME ENGINE --- */
 :root {
+    /* MIKU COLORS (Default) */
     --primary: #39C5BB;
     --primary-glow: rgba(57, 197, 187, 0.4);
     --accent: #ff6699;
     --bg-overlay: rgba(10, 11, 16, 0.85);
     --bg-image: url('assets/wallpaper.jpg');
-    --pfp-image: url('assets/mikukage.png');
+    --pfp: url('assets/mikukage.png');
 }
 
 [data-theme='teto'] {
+    /* TETO COLORS */
     --primary: #FF2D55;
     --primary-glow: rgba(255, 45, 85, 0.4);
     --accent: #4A4A4A;
     --bg-overlay: rgba(20, 5, 5, 0.95);
-    --bg-image: url('assets/wallpaper 2.png');
-    --pfp-image: url('assets/tetokage.png');
+    --bg-image: url('assets/wallpaper2.png');
+    --pfp: url('assets/tetokage.png');
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* --- GLOBAL STYLES --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
 body {
     background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), var(--bg-image);
@@ -28,19 +36,21 @@ body {
     color: white;
     font-family: 'Poppins', sans-serif;
     min-height: 100vh;
-    transition: 0.5s ease-in-out;
+    overflow-x: hidden;
+    transition: background 0.5s ease-in-out;
 }
 
+/* --- NAVIGATION --- */
 nav {
     display: flex;
     justify-content: center;
     padding: 20px;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(12px);
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(15px);
     border-bottom: 2px solid var(--primary);
     position: sticky;
     top: 0;
-    z-index: 999;
+    z-index: 1000;
 }
 
 nav a {
@@ -49,44 +59,92 @@ nav a {
     margin: 0 15px;
     font-weight: bold;
     text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    transition: 0.3s;
 }
 
-/* THEME TOGGLE SWITCH */
+nav a:hover {
+    color: var(--primary);
+    text-shadow: 0 0 10px var(--primary-glow);
+}
+
+/* --- THEME SWITCH (Top Right) --- */
 .theme-switch-wrapper {
     position: fixed;
     top: 18px;
     right: 25px;
     display: flex;
     align-items: center;
-    z-index: 1001;
+    z-index: 1100;
     gap: 10px;
 }
 
-.switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
 .switch input { opacity: 0; width: 0; height: 0; }
+
 .slider {
-    position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #222; transition: .4s; border-radius: 34px; border: 1px solid var(--primary);
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #222;
+    transition: .4s;
+    border-radius: 34px;
+    border: 1px solid var(--primary);
 }
+
 .slider:before {
-    position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 3px;
-    background-color: var(--primary); transition: .4s; border-radius: 50%;
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 3px;
+    background-color: var(--primary);
+    transition: .4s;
+    border-radius: 50%;
 }
+
 input:checked + .slider:before { transform: translateX(22px); }
 
-.container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+/* --- CARDS (System Auth / Glowing Style) --- */
+.card {
+    background: rgba(10, 11, 16, 0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--primary);
+    box-shadow: 0 0 15px var(--primary-glow);
+    padding: 30px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    width: 100%;
+    transition: all 0.3s ease-in-out;
+}
 
-/* PROFILE CARD FIX */
+.card:hover {
+    box-shadow: 0 0 25px var(--primary);
+    transform: translateY(-2px);
+}
+
+.card h2 {
+    color: var(--primary);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+}
+
+/* --- PROFILE SECTION --- */
 .profile-card {
     display: flex;
     align-items: center;
     gap: 30px;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(15px);
-    border: 1px solid var(--primary);
-    padding: 40px;
-    border-radius: 25px;
-    margin-bottom: 50px;
+    margin-top: 20px;
 }
 
 .profile-avatar {
@@ -96,72 +154,91 @@ input:checked + .slider:before { transform: translateX(22px); }
     border-radius: 50%;
     border: 3px solid var(--primary);
     box-shadow: 0 0 20px var(--primary-glow);
-    background-image: var(--pfp-image);
+    background-image: var(--pfp);
     background-size: cover;
     background-position: center;
+    transition: all 0.5s ease-in-out;
 }
 
-.profile-info h1 { font-size: 2.5rem; color: var(--primary); }
-.profile-tags { display: flex; gap: 10px; margin: 15px 0; }
+.profile-info h1 {
+    font-size: 2.8rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.profile-tags {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+}
+
 .tag {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     color: white;
-    padding: 4px 12px;
+    padding: 5px 15px;
     border-radius: 15px;
     font-size: 0.75rem;
     border: 1px solid var(--primary);
+    font-weight: bold;
 }
 
-/* BLOG CARDS */
-/* Einheitliches Karten-Design wie im Login-Terminal */
-.card {
-    background: rgba(10, 11, 16, 0.7); /* Dunklerer Hintergrund für besseren Kontrast */
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--primary); /* Der Rahmen nutzt jetzt die Theme-Farbe */
-    box-shadow: 0 0 15px var(--primary-glow); /* Sanfter Glow-Effekt */
-    padding: 30px;
-    border-radius: 20px;
-    margin-bottom: 30px;
-    transition: all 0.3s ease-in-out;
+/* --- INPUTS & BUTTONS --- */
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    color: white;
+    outline: none;
+    transition: 0.3s;
 }
 
-/* Hover-Effekt: Der Glow wird stärker, wenn man mit der Maus drüberfährt */
-.card:hover {
-    box-shadow: 0 0 25px var(--primary);
-    transform: translateY(-3px);
+input:focus, textarea:focus {
+    box-shadow: 0 0 10px var(--primary);
 }
-
-/* Titel innerhalb der Karten */
-.card h2 {
-    color: var(--primary) !important; /* Titel leuchten immer in der Theme-Farbe */
-    margin-bottom: 15px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-size: 1.3rem;
-}
-
-/* Listen-Styling für die Credits */
-.card ul {
-    list-style: none;
-}
-
-.card ul li {
-    margin: 12px 0;
-    padding-left: 15px;
-    border-left: 2px solid var(--primary); /* Kleine Akzent-Linie in Theme-Farbe */
-    font-size: 0.95rem;
-}
-
-.miku-img { width: 100%; border-radius: 15px; margin-top: 15px; border: 1px solid var(--primary-glow); }
 
 .btn {
     background: var(--primary);
     color: black;
-    padding: 10px 20px;
+    padding: 12px 25px;
     border-radius: 50px;
     text-decoration: none;
     font-weight: bold;
+    border: none;
+    cursor: pointer;
     display: inline-block;
+    transition: 0.3s;
 }
 
-@media (max-width: 700px) { .profile-card { flex-direction: column; text-align: center; } }
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px var(--primary);
+}
+
+.miku-img {
+    width: 100%;
+    border-radius: 15px;
+    margin-top: 15px;
+    border: 1px solid var(--primary-glow);
+}
+
+/* --- CONTAINER --- */
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 700px) {
+    .profile-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    .theme-switch-wrapper {
+        top: auto;
+        bottom: 20px;
+        right: 20px;
+    }
+}
