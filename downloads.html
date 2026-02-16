@@ -2,114 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Archive | WEEBOKAGE</title>
-    <link rel="stylesheet" href="style.css?v=1.2">
-    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="style.css?v=1.4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <style>
-        /* Admin Editor Styles */
-        .input-group {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .input-group i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--miku-teal);
-            opacity: 0.6;
-        }
-
-        .admin-input {
-            width: 100%;
-            padding: 15px 15px 15px 45px !important;
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(57, 197, 187, 0.3) !important;
-            border-radius: 12px !important;
-            color: white !important;
-            outline: none !important;
-            transition: 0.3s;
-        }
-
-        .admin-input:focus {
-            border-color: var(--miku-teal) !important;
-            box-shadow: 0 0 15px rgba(57, 197, 187, 0.3);
-            background: rgba(57, 197, 187, 0.05) !important;
-        }
-
-        .admin-textarea {
-            width: 100%;
-            padding: 15px !important;
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(57, 197, 187, 0.3) !important;
-            border-radius: 12px !important;
-            color: white !important;
-            min-height: 150px;
-            resize: vertical;
-            outline: none !important;
-            font-family: inherit;
-        }
-
-        .admin-textarea:focus {
-            border-color: var(--miku-pink) !important;
-            box-shadow: 0 0 15px rgba(255, 102, 153, 0.2);
-        }
-    </style>
 </head>
 <body>
     <nav>
         <div class="links">
             <a href="index.html">View Site</a>
-            <a href="#" onclick="logout()" style="color: var(--miku-pink);">Logout</a>
+            <a href="javascript:void(0)" onclick="logout()" style="color: var(--primary); font-weight: bold;">Logout</a>
         </div>
     </nav>
 
-    <div class="theme-switch-wrapper">
-    <span class="icon-label icon-miku" onclick="setTheme('miku')">🩵</span>
-    <label class="switch">
-        <input type="checkbox" id="theme-toggle" onclick="themeToggle()">
-        <span class="slider"></span>
-    </label>
-    <span class="icon-label icon-teto" onclick="setTheme('teto')">🥖</span>
-</div>
-    
     <div class="container">
-        <!-- THE NEW PRETTY BLOG EDITOR -->
-        <div class="card" style="border-top: 5px solid var(--miku-pink); padding: 40px;">
-            <h2 style="color: var(--miku-pink); margin-bottom: 25px; letter-spacing: 2px;">
-                <i class="fas fa-pen-nib"></i> NEW BLOG POST
-            </h2>
-            
-            <div class="input-group">
-                <input type="text" id="postTitle" class="admin-input" placeholder="Post Title">
-                <i class="fas fa-heading"></i>
-            </div>
-
-            <div class="input-group">
-                <input type="text" id="postImage" class="admin-input" placeholder="Image URL (Direct link)">
-                <i class="fas fa-image"></i>
-            </div>
-
-            <textarea id="postContent" class="admin-textarea" placeholder="Write your update here..."></textarea>
-            
-            <button onclick="uploadPost()" id="postBtn" class="btn" style="width: 100%; margin-top: 25px; height: 55px; font-size: 1.1rem;">
-                DEPLOY TO BLOG
-            </button>
+        <!-- POST EDITOR -->
+        <div class="card" style="border-top: 5px solid var(--primary);">
+            <h2 style="color: var(--primary);">NEW BLOG POST</h2>
+            <input type="text" id="postTitle" placeholder="Title" style="width:100%; padding:10px; margin-bottom:10px; background:rgba(0,0,0,0.3); border:1px solid var(--primary); color:white; border-radius:5px;">
+            <input type="text" id="postImage" placeholder="Image URL" style="width:100%; padding:10px; margin-bottom:10px; background:rgba(0,0,0,0.3); border:1px solid var(--primary); color:white; border-radius:5px;">
+            <textarea id="postContent" placeholder="Content" style="width:100%; height:100px; padding:10px; background:rgba(0,0,0,0.3); border:1px solid var(--primary); color:white; border-radius:5px; resize:none;"></textarea>
+            <button onclick="uploadPost()" class="btn" style="width:100%; margin-top:10px;">DEPLOY TO BLOG</button>
         </div>
 
-        <h2 style="margin-top: 50px; color: var(--miku-teal);">Secure Archive</h2>
-        <div class="card" style="border-left: 5px solid var(--miku-teal);">
-            <h3>Google Drive Project A</h3>
-            <p>Access my programs and images.</p>
-            <a href="https://drive.google.com/drive/folders/1DM1uYFQu6jhLyNKlWEmmQVpzET3VNj_m?hl=de" target="_blank" class="btn">OPEN DRIVE</a>
-        </div>
+        <!-- COMMENT MANAGEMENT -->
+        <h2 style="color: var(--primary); margin-top: 50px;">COMMENT MODERATION</h2>
+        <div id="admin-comments"></div>
     </div>
 
     <script>
@@ -121,62 +41,31 @@
             messagingSenderId: "192569800499",
             appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046"
         };
-        
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        firebase.auth().onAuthStateChanged((user) => {
-            if (!user) { window.location.href = "login.html"; }
-        });
+        firebase.auth().onAuthStateChanged((user) => { if (!user) window.location.replace("login.html"); });
+
+        function logout() { firebase.auth().signOut().then(() => window.location.replace("index.html")); }
 
         function uploadPost() {
             const title = document.getElementById('postTitle').value;
-            const image = document.getElementById('postImage').value;
             const content = document.getElementById('postContent').value;
-            const btn = document.getElementById('postBtn');
+            const img = document.getElementById('postImage').value;
+            db.collection("posts").add({ title, content, image: img, timestamp: firebase.firestore.FieldValue.serverTimestamp() })
+            .then(() => alert("Post Published!"));
+        }
 
-            if(!title || !content) return alert("Fill in the title and content!");
-
-            btn.innerText = "DEPLOYING...";
-            btn.disabled = true;
-
-            db.collection("posts").add({
-                title: title,
-                image: image,
-                content: content,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .then(() => {
-                alert("Archive Updated!");
-                window.location.reload();
-            })
-            .catch((error) => {
-                alert("Error: " + error.message);
-                btn.disabled = false;
+        db.collection("comments").orderBy("timestamp", "desc").onSnapshot((snaps) => {
+            const div = document.getElementById('admin-comments');
+            div.innerHTML = "";
+            snaps.forEach((doc) => {
+                const c = doc.data();
+                div.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px;"><div><strong>${c.name}:</strong> ${c.msg}</div><button onclick="deleteComment('${doc.id}')" style="background:#ff2d55; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">DEL</button></div>`;
             });
-        }
+        });
 
-        function logout() {
-            firebase.auth().signOut().then(() => { window.location.href = "index.html"; });
-        }
+        function deleteComment(id) { if(confirm("Delete?")) db.collection("comments").doc(id).delete(); }
     </script>
-    <script>
-    const toggle = document.getElementById('theme-toggle');
-    
-    function themeToggle() {
-        const newTheme = toggle.checked ? 'teto' : 'miku';
-        setTheme(newTheme);
-    }
-
-    function setTheme(themeName) {
-        document.documentElement.setAttribute('data-theme', themeName);
-        localStorage.setItem('theme', themeName);
-        toggle.checked = (themeName === 'teto');
-    }
-
-    // Initial Load
-    const savedTheme = localStorage.getItem('theme') || 'miku';
-    setTheme(savedTheme);
-</script>
 </body>
 </html>
