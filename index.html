@@ -2,139 +2,67 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WEEBOKAGE | Home</title>
-    <!-- Cache-Buster v5.2 -->
-    <link rel="stylesheet" href="style.css?v=5.2">
+    <link rel="stylesheet" href="style.css?v=7.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script>
-        (function() {
-            const savedTheme = localStorage.getItem('theme') || 'miku';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        })();
-    </script>
 </head>
 <body>
-
     <div class="theme-switch-wrapper">
-        <span onclick="setTheme('miku')" style="cursor:pointer; font-size: 1.2rem;">🩵</span>
-        <label class="switch">
-            <input type="checkbox" id="theme-toggle" onclick="themeToggle()">
-            <span class="slider"></span>
-        </label>
-        <span onclick="setTheme('teto')" style="cursor:pointer; font-size: 1.2rem;">🥖</span>
+        <span onclick="setTheme('miku')" style="cursor:pointer">🩵</span>
+        <label class="switch"><input type="checkbox" id="theme-toggle" onclick="themeToggle()"><span class="slider"></span></label>
+        <span onclick="setTheme('teto')" style="cursor:pointer">🥖</span>
     </div>
 
     <nav>
-    <div class="links">
-        <a href="index.html">Home</a>
-        <!-- This link is now hidden and has a specific ID -->
-        <a href="islam.html" class="admin-hide" id="nav-islam">Islam</a> 
-        <a href="games.html">Games</a>
-        <a href="credits.html">Credits</a>
-        <a href="login.html">Admin</a>
-    </div>
-</nav>
+        <div class="links">
+            <a href="index.html">Home</a>
+            <a href="islam.html" class="admin-hide" id="nav-islam">Islam</a>
+            <a href="games.html">Games</a>
+            <a href="credits.html">Credits</a>
+            <a href="login.html">Admin</a>
+        </div>
+    </nav>
     
     <div class="container">
-        <!-- PROFILE SECTION -->
         <div class="card profile-card">
             <div class="profile-avatar"></div>
             <div class="profile-info">
                 <h1>Weebokage</h1>
-                <p>Author, Anime/Manga Fan, Certified Gamer, Practicing Muslim. Welcome to my personal digital space.</p>
-                <div class="profile-tags" style="margin-top:15px;">
-                    <span class="tag">DEVELOPER</span>
-                    <span class="tag">VOCALOID</span>
-                    <span class="tag">ARCHIVIST</span>
-                </div>
-                <a href="https://www.youtube.com/@Weebokage/featured" target="_blank" class="btn" style="background:#FF0000; color:white; margin-top:15px;">
-                    <i class="fab fa-youtube"></i> YouTube
-                </a>
+                <p>Digital space of Weebokage. Approved entries only.</p>
+                <div class="profile-tags"><span class="tag">DEVELOPER</span><span class="tag">VOCALOID</span><span class="tag">ARCHIVIST</span></div>
             </div>
         </div>
-
-        <h2 style="color:var(--primary); margin: 50px 0 25px 0; border-left: 4px solid var(--primary); padding-left: 15px; letter-spacing: 2px;">LATEST UPDATES</h2>
+        <h2 style="color:var(--primary); margin:30px 0;">LATEST UPDATES</h2>
         <div id="blog-feed"></div>
-
-        <!-- GUESTBOOK SECTION (PRETTY VERSION) -->
-        <h2 style="color:var(--primary); margin: 60px 0 25px 0; border-left: 4px solid var(--primary); padding-left: 15px; letter-spacing: 2px;">DIGITAL GUESTBOOK</h2>
-        <div class="card">
-            <div class="input-group">
-                <input type="text" id="guestName" placeholder="Your Name / Alias">
-                <i class="fas fa-user-tag"></i>
-            </div>
-            <div class="input-group">
-                <textarea id="guestMsg" placeholder="Leave a transmission..." style="height: 100px; padding-top: 15px !important;"></textarea>
-                <i class="fas fa-comment-dots textarea-icon"></i>
-            </div>
-            <button onclick="postComment()" id="commentBtn" class="btn" style="width: 100%; height: 50px; letter-spacing: 2px;">
-                <i class="fas fa-paper-plane"></i> DEPLOY MESSAGE
-            </button>
-        </div>
-
-        <div id="comments-feed"></div>
     </div>
 
     <script>
-        // --- FIREBASE ---
         const firebaseConfig = { apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo", authDomain: "weebokage-296c0.firebaseapp.com", projectId: "weebokage-296c0", storageBucket: "weebokage-296c0.firebasestorage.app", messagingSenderId: "192569800499", appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // --- THEME ---
+        // PERSISTENCE: Only show Islam link if logged in
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('nav-islam').style.setProperty('display', 'inline-block', 'important');
+            }
+        });
+
         const toggle = document.getElementById('theme-toggle');
         function themeToggle() { setTheme(toggle.checked ? 'teto' : 'miku'); }
-        function setTheme(t) {
-            document.documentElement.setAttribute('data-theme', t);
-            localStorage.setItem('theme', t);
-            if(toggle) toggle.checked = (t === 'teto');
-        }
+        function setTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); if(toggle) toggle.checked = (t==='teto'); }
         setTheme(localStorage.getItem('theme') || 'miku');
 
-        // --- BLOG ---
         db.collection("posts").orderBy("timestamp", "desc").onSnapshot(snaps => {
             const feed = document.getElementById('blog-feed'); feed.innerHTML = "";
             snaps.forEach(doc => {
                 const p = doc.data(); const d = p.timestamp ? new Date(p.timestamp.seconds * 1000).toLocaleDateString() : "Just now";
-                feed.innerHTML += `<div class="card"><span style="color:var(--accent); font-size:0.8rem; font-weight:bold;">${d}</span><h2 style="margin-top:5px;">${p.title}</h2>${p.image ? `<img src="${p.image}" class="miku-img">` : ''}<p style="margin-top:10px; white-space:pre-wrap;">${p.content}</p></div>`;
+                feed.innerHTML += `<div class="card"><h2>${p.title}</h2><p>${p.content}</p></div>`;
             });
         });
-
-        // --- GUESTBOOK ---
-        function postComment() {
-            const name = document.getElementById('guestName').value; const msg = document.getElementById('guestMsg').value;
-            if(!name || !msg) return alert("All fields required.");
-            db.collection("comments").add({ name, msg, timestamp: firebase.firestore.FieldValue.serverTimestamp() })
-            .then(() => { document.getElementById('guestName').value = ""; document.getElementById('guestMsg').value = ""; });
-        }
-        db.collection("comments").orderBy("timestamp", "desc").limit(15).onSnapshot(snaps => {
-            const feed = document.getElementById('comments-feed'); feed.innerHTML = "";
-            snaps.forEach(doc => {
-                const c = doc.data();
-                feed.innerHTML += `<div class="card" style="padding:20px; border-left:4px solid var(--primary);"><strong style="color:var(--primary);">${c.name}</strong><p style="margin-top:10px; opacity:0.9;">${c.msg}</p></div>`;
-            });
-        });
-        // --- ADMIN PERSISTENCE SCRIPT ---
-firebase.auth().onAuthStateChanged((user) => {
-    const islamTab = document.getElementById('nav-islam');
-    if (user) {
-        // If you are logged in, show the Islam tab
-        if(islamTab) {
-            islamTab.style.setProperty('display', 'inline-block', 'important');
-        }
-        console.log("Admin session active.");
-    } else {
-        // If not logged in, ensure it stays hidden
-        if(islamTab) {
-            islamTab.style.setProperty('display', 'none', 'important');
-        }
-    }
-});
     </script>
 </body>
 </html>
