@@ -67,15 +67,14 @@
     </style>
 </head>
 <body>
-    <nav>
-    <div class="links">
-        <a href="index.html">Home</a>
-        <a href="islam.html">Islam</a>
-        <a href="games.html">Games</a> <!-- Add this -->
-        <a href="credits.html">Credits</a>
-        <a href="login.html">Admin</a>
-    </div>
-</nav>
+    <div class="links" id="nav-links">
+    <a href="home.html">Home</a>
+    <!-- This link is invisible to guests -->
+    <a href="islam.html" class="admin-only" id="islam-nav">Islam</a> 
+    <a href="games.html">Games</a>
+    <a href="credits.html">Credits</a>
+    <a href="login.html">Admin</a>
+</div>
 
     <div class="theme-switch-wrapper">
     <span class="icon-label icon-miku" onclick="setTheme('miku')">🩵</span>
