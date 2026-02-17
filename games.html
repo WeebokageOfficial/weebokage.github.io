@@ -3,100 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arcade | WEEBOKAGE</title>
-    <!-- Cache-Buster v3.8 -->
-    <link rel="stylesheet" href="style.css?v=3.8">
+    <title>Arcade Terminal | WEEBOKAGE</title>
+    <!-- Updated Cache-Buster to v5.1 -->
+    <link rel="stylesheet" href="style.css?v=5.1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Load Ruffle Emulator -->
+    
+    <!-- Load Ruffle Emulator Script -->
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+    
     <script>
+        // Smooth Theme Flash-Fix
         (function() {
             const savedTheme = localStorage.getItem('theme') || 'miku';
             document.documentElement.setAttribute('data-theme', savedTheme);
         })();
     </script>
+
     <style>
+        /* Specific Overrides for Games Page */
         .game-container {
             width: 100%;
             max-width: 900px;
-            height: 600px; 
+            height: 600px; /* Fixed height to prevent black screen issues */
             background: #000;
             border: 2px solid var(--primary);
             box-shadow: 0 0 30px var(--primary-glow);
-            border-radius: 15px;
+            border-radius: 20px;
             overflow: hidden;
-            display: none; 
+            display: none; /* Hidden until game starts */
             margin: 30px auto;
+            position: relative;
         }
-        
+
+        /* Ensure Ruffle fills the container perfectly */
         ruffle-player {
             width: 100% !important;
             height: 100% !important;
+            display: block;
         }
 
-        .game-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-            gap: 25px; 
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
             margin-top: 20px;
         }
 
-        .game-card { 
-            text-align: center; 
-            cursor: pointer; 
-            transition: 0.3s ease; 
-            padding: 40px !important; 
+        .game-card {
+            text-align: center;
+            cursor: pointer;
+            padding: 50px !important;
+            border-style: solid;
         }
 
-        .game-card:hover { 
-            transform: translateY(-5px); 
-            border-color: var(--primary); 
-            box-shadow: 0 0 15px var(--primary-glow);
+        /* Hover lift effect matching the blog posts */
+        .game-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 15px 35px var(--primary-glow);
         }
 
-        .game-card i { font-size: 3.5rem; color: var(--primary); margin-bottom: 15px; }
-        
-        .locked { opacity: 0.5; cursor: not-allowed; border-style: dashed !important; }
+        .game-card i {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            transition: 0.3s ease;
+        }
+
+        .game-card:hover i {
+            transform: scale(1.1);
+            text-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .locked-card {
+            opacity: 0.4;
+            cursor: not-allowed;
+            border-style: dashed !important;
+        }
+
+        .locked-card:hover {
+            transform: none;
+            box-shadow: none;
+        }
     </style>
 </head>
 <body>
 
+    <!-- THEME TOGGLE -->
     <div class="theme-switch-wrapper">
-        <span style="cursor:pointer" onclick="setTheme('miku')">🩵</span>
+        <span onclick="setTheme('miku')" style="cursor:pointer; font-size: 1.2rem;">🩵</span>
         <label class="switch">
             <input type="checkbox" id="theme-toggle" onclick="themeToggle()">
             <span class="slider"></span>
         </label>
-        <span style="cursor:pointer" onclick="setTheme('teto')">🥖</span>
+        <span onclick="setTheme('teto')" style="cursor:pointer; font-size: 1.2rem;">🥖</span>
     </div>
 
-   <div class="links" id="nav-links">
-    <a href="home.html">Home</a>
-    <!-- This link is invisible to guests -->
-    <a href="islam.html" class="admin-only" id="islam-nav">Islam</a> 
-    <a href="games.html">Games</a>
-    <a href="credits.html">Credits</a>
-    <a href="login.html">Admin</a>
-</div>
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="links">
+            <a href="index.html">Home</a>
+            <a href="islam.html">Islam</a>
+            <a href="games.html">Games</a>
+            <a href="credits.html">Credits</a>
+            <a href="login.html">Admin</a>
+        </div>
+    </nav>
 
     <div class="container">
-        <div class="hero" id="game-header" style="text-align: center; margin-bottom: 40px;">
-            <h1 style="color: var(--primary); font-size: 3rem; letter-spacing: 4px; text-transform: uppercase;">Arcade Terminal</h1>
-            <p style="opacity: 0.6;">Select a data module to initialize</p>
+        <!-- HEADER -->
+        <div class="hero" id="arcade-header" style="text-align: center; margin-bottom: 50px;">
+            <h1 style="color: var(--primary); font-size: 3.5rem; letter-spacing: 5px; text-transform: uppercase; font-weight: 700;">Arcade Terminal</h1>
+            <p style="opacity: 0.6; letter-spacing: 2px;">Select a simulation module to initialize</p>
+            <div style="width: 100px; height: 4px; background: var(--primary); margin: 20px auto; border-radius: 2px;"></div>
         </div>
 
         <!-- SELECTION MENU -->
         <div class="game-grid" id="selection-area">
+            <!-- Mario Combat -->
             <div class="card game-card" onclick="loadGame('assets/Mario_Combat.swf')">
                 <i class="fas fa-fist-raised"></i>
                 <h3>Mario Combat</h3>
-                <p style="font-size: 0.8rem; opacity: 0.5; margin-top: 10px;">Simulation Alpha</p>
+                <p style="font-size: 0.85rem; opacity: 0.5; margin-top: 10px;">Simulation: Alpha-01</p>
             </div>
 
-            <div class="card game-card locked">
+            <!-- Coming Soon Placeholder -->
+            <div class="card game-card locked-card">
                 <i class="fas fa-lock"></i>
                 <h3>Coming Soon</h3>
-                <p style="font-size: 0.8rem; opacity: 0.5; margin-top: 10px;">Pending update...</p>
+                <p style="font-size: 0.85rem; opacity: 0.5; margin-top: 10px;">Pending decryption...</p>
             </div>
         </div>
 
@@ -106,12 +141,14 @@
         </div>
         
         <div style="text-align: center;">
-            <button id="closeBtn" class="btn" style="display:none; margin-top: 20px; background: #ff2d55; color: white;" onclick="location.reload()">TERMINATE SESSION</button>
+            <button id="closeBtn" class="btn" style="display:none; margin-top: 30px; background: #ff2d55; color: white;" onclick="location.reload()">
+                <i class="fas fa-times-circle"></i> TERMINATE SESSION
+            </button>
         </div>
     </div>
 
     <script>
-        // --- THEME LOGIC ---
+        // --- THEME ENGINE ---
         const toggle = document.getElementById('theme-toggle');
         function themeToggle() { setTheme(toggle.checked ? 'teto' : 'miku'); }
         function setTheme(t) {
@@ -121,50 +158,45 @@
         }
         setTheme(localStorage.getItem('theme') || 'miku');
 
-        // --- FIXED GAME LOADER ---
-        function loadGame(swfPath) {
-            console.log("Attempting to load: " + swfPath);
+        // --- BRAVE-FRIENDLY GAME LOADER ---
+        async function loadGame(swfPath) {
+            console.log("Loading module: " + swfPath);
 
-            // 1. Swap UI
+            // 1. Check for Brave/Shields
+            if (!window.RufflePlayer) {
+                alert("ACCESS DENIED: Emulator script blocked. If using Brave, turn Shields OFF for this site.");
+                return;
+            }
+
+            // 2. UI Swap
             document.getElementById('selection-area').style.display = 'none';
-            document.getElementById('game-header').style.display = 'none';
+            document.getElementById('arcade-header').style.display = 'none';
             document.getElementById('player-wrapper').style.display = 'block';
             document.getElementById('closeBtn').style.display = 'inline-block';
 
-            // 2. Initialize Ruffle
-            const ruffle = window.RufflePlayer.newest();
-            const player = ruffle.createPlayer();
-            const container = document.getElementById('ruffle-canvas');
-            
-            // Clear container first to prevent double-loading
-            container.innerHTML = "";
-            container.appendChild(player);
+            // 3. Initialize Ruffle
+            try {
+                const ruffle = window.RufflePlayer.newest();
+                const player = ruffle.createPlayer();
+                const container = document.getElementById('ruffle-canvas');
+                
+                container.innerHTML = ""; // Clear loader
+                container.appendChild(player);
 
-            // 3. Load File
-            player.load({
-                url: swfPath,
-                scale: "showAll",
-                quality: "high",
-                letterbox: "on",
-                allowScriptAccess: true
-            }).then(() => {
-                console.log("Game loaded successfully!");
-            }).catch((err) => {
-                console.error("Ruffle failed to load SWF:", err);
-                alert("Session Failed: " + swfPath + " could not be initialized.");
-            });
-        }
-    </script>
-    <script>
-    // This checks if YOU are logged in and shows the secret menu tab
-    firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-            const islamLink = document.getElementById('islam-nav');
-            if (islamLink) {
-                islamLink.style.setProperty('display', 'inline-block', 'important');
+                await player.load({
+                    url: swfPath,
+                    scale: "showAll",
+                    allowScriptAccess: true,
+                    quality: "high",
+                    letterbox: "on"
+                });
+                console.log("Simulation started successfully.");
+            } catch (err) {
+                console.error("Ruffle Error:", err);
+                alert("Critical Error: Module " + swfPath + " failed to load.");
+                location.reload();
             }
         }
-    });
-</script>
+    </script>
 </body>
 </html>
