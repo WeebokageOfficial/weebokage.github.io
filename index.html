@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>WEEBOKAGE | Home</title>
-    <link rel="stylesheet" href="style.css?v=4.5">
+    <link rel="stylesheet" href="style.css?v=5.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -14,40 +15,37 @@
         <label class="switch"><input type="checkbox" id="theme-toggle" onclick="themeToggle()"><span class="slider"></span></label>
         <span onclick="setTheme('teto')" style="cursor:pointer">🥖</span>
     </div>
-
-    <nav>
-        <div class="links">
-            <a href="index.html">Home</a>
-            <a href="islam.html" class="admin-only" id="islam-link">Islam</a>
-            <a href="games.html">Games</a>
-            <a href="credits.html">Credits</a>
-            <a href="login.html">Admin</a>
-        </div>
-    </nav>
-
+    <nav><div class="links">
+        <a href="index.html">Home</a>
+        <a href="islam.html">Islam</a>
+        <a href="games.html">Games</a>
+        <a href="credits.html">Credits</a>
+        <a href="login.html">Admin</a>
+    </div></nav>
     <div class="container">
-        <div class="card" style="display:flex; align-items:center; gap:30px;">
+        <div class="card profile-card">
             <div class="profile-avatar"></div>
             <div>
-                <h1 style="color:var(--primary)">Weebokage</h1>
+                <h1 style="color:var(--primary); font-size: 2.5rem;">Weebokage</h1>
                 <p>Welcome to my personal digital space.</p>
-                <div style="margin-top:10px;"><span class="tag">DEVELOPER</span><span class="tag">VOCALOID</span></div>
+                <div style="margin-top:15px;"><span class="tag">DEVELOPER</span><span class="tag">VOCALOID</span></div>
+                <a href="https://www.youtube.com/@Weebokage/featured" target="_blank" class="btn" style="background:#FF0000; color:white; margin-top:15px;"><i class="fab fa-youtube"></i> YouTube</a>
             </div>
         </div>
-        <h2 style="color:var(--primary); margin: 30px 0 20px 0;">LATEST UPDATES</h2>
+        <h2 style="color:var(--primary); margin: 40px 0 20px 0; border-left: 4px solid var(--primary); padding-left: 15px;">LATEST UPDATES</h2>
         <div id="blog-feed"></div>
+        <h2 style="color:var(--primary); margin: 40px 0 20px 0; border-left: 4px solid var(--primary); padding-left: 15px;">GUESTBOOK</h2>
+        <div class="card">
+            <input type="text" id="guestName" placeholder="Your Name">
+            <textarea id="guestMsg" placeholder="Leave a message..." style="height: 80px;"></textarea>
+            <button onclick="postComment()" id="commentBtn" class="btn">POST</button>
+        </div>
+        <div id="comments-feed"></div>
     </div>
-
     <script>
         const firebaseConfig = { apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo", authDomain: "weebokage-296c0.firebaseapp.com", projectId: "weebokage-296c0", storageBucket: "weebokage-296c0.firebasestorage.app", messagingSenderId: "192569800499", appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-
-        // THEME & LOGIN CHECK
-        firebase.auth().onAuthStateChanged(user => {
-            if(user) document.getElementById('islam-link').classList.remove('admin-only');
-        });
-
         const toggle = document.getElementById('theme-toggle');
         function themeToggle() { setTheme(toggle.checked ? 'teto' : 'miku'); }
         function setTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); toggle.checked = (t==='teto'); }
@@ -56,9 +54,18 @@
         db.collection("posts").orderBy("timestamp", "desc").onSnapshot(snaps => {
             const feed = document.getElementById('blog-feed'); feed.innerHTML = "";
             snaps.forEach(doc => {
-                const p = doc.data();
-                feed.innerHTML += `<div class="card"><h2>${p.title}</h2>${p.image ? `<img src="${p.image}" class="miku-img">` : ''}<p style="margin-top:10px;">${p.content}</p></div>`;
+                const p = doc.data(); const d = p.timestamp ? new Date(p.timestamp.seconds * 1000).toLocaleDateString() : "";
+                feed.innerHTML += `<div class="card"><span style="color:var(--accent); font-size:0.8rem; font-weight:bold;">${d}</span><h2>${p.title}</h2>${p.image ? `<img src="${p.image}" class="miku-img">` : ''}<p style="margin-top:10px;">${p.content}</p></div>`;
             });
+        });
+        function postComment() {
+            const name = document.getElementById('guestName').value; const msg = document.getElementById('guestMsg').value;
+            if(!name || !msg) return alert("Fill fields!");
+            db.collection("comments").add({ name, msg, timestamp: firebase.firestore.FieldValue.serverTimestamp() }).then(() => { location.reload(); });
+        }
+        db.collection("comments").orderBy("timestamp", "desc").onSnapshot(snaps => {
+            const feed = document.getElementById('comments-feed'); feed.innerHTML = "";
+            snaps.forEach(doc => { const c = doc.data(); feed.innerHTML += `<div class="card" style="padding:20px; border-left:3px solid var(--primary);"><strong>${c.name}</strong><p>${c.msg}</p></div>`; });
         });
     </script>
 </body>
