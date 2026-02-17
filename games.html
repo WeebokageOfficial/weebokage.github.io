@@ -70,15 +70,14 @@
         <span style="cursor:pointer" onclick="setTheme('teto')">🥖</span>
     </div>
 
-    <nav>
-        <div class="links">
-            <a href="index.html">Home</a>
-            <a href="islam.html">Islam</a>
-            <a href="games.html">Games</a>
-            <a href="credits.html">Credits</a>
-            <a href="login.html">Admin</a>
-        </div>
-    </nav>
+   <div class="links" id="nav-links">
+    <a href="home.html">Home</a>
+    <!-- This link is invisible to guests -->
+    <a href="islam.html" class="admin-only" id="islam-nav">Islam</a> 
+    <a href="games.html">Games</a>
+    <a href="credits.html">Credits</a>
+    <a href="login.html">Admin</a>
+</div>
 
     <div class="container">
         <div class="hero" id="game-header" style="text-align: center; margin-bottom: 40px;">
