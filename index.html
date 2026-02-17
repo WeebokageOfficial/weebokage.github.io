@@ -119,6 +119,22 @@
                 feed.innerHTML += `<div class="card" style="padding:20px; border-left:4px solid var(--primary);"><strong style="color:var(--primary);">${c.name}</strong><p style="margin-top:10px; opacity:0.9;">${c.msg}</p></div>`;
             });
         });
+        // --- ADMIN PERSISTENCE SCRIPT ---
+firebase.auth().onAuthStateChanged((user) => {
+    const islamTab = document.getElementById('nav-islam');
+    if (user) {
+        // If you are logged in, show the Islam tab
+        if(islamTab) {
+            islamTab.style.setProperty('display', 'inline-block', 'important');
+        }
+        console.log("Admin session active.");
+    } else {
+        // If not logged in, ensure it stays hidden
+        if(islamTab) {
+            islamTab.style.setProperty('display', 'none', 'important');
+        }
+    }
+});
     </script>
 </body>
 </html>
