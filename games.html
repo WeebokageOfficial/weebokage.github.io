@@ -198,6 +198,22 @@
                 location.reload();
             }
         }
+        // --- ADMIN PERSISTENCE SCRIPT ---
+firebase.auth().onAuthStateChanged((user) => {
+    const islamTab = document.getElementById('nav-islam');
+    if (user) {
+        // If you are logged in, show the Islam tab
+        if(islamTab) {
+            islamTab.style.setProperty('display', 'inline-block', 'important');
+        }
+        console.log("Admin session active.");
+    } else {
+        // If not logged in, ensure it stays hidden
+        if(islamTab) {
+            islamTab.style.setProperty('display', 'none', 'important');
+        }
+    }
+});
     </script>
 </body>
 </html>
