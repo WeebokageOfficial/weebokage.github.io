@@ -254,3 +254,7 @@ input:focus, textarea:focus {
         right: 20px;
     }
 }
+/* Hidden by default, shown via JavaScript when logged in */
+.admin-only {
+    display: none !important;
+}
