@@ -2,143 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Archive | WEEBOKAGE</title>
-    <!-- Cache-Buster v1.5 -->
-    <link rel="stylesheet" href="style.css?v=1.6">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Firebase SDKs -->
+    <title>Admin | WEEBOKAGE</title>
+    <link rel="stylesheet" href="style.css?v=5.0">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script>
-        // Theme Flash-Fix
-        (function() {
-            const savedTheme = localStorage.getItem('theme') || 'miku';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        })();
-    </script>
 </head>
 <body>
-
-    <!-- THEME SWITCHER -->
-    <div class="theme-switch-wrapper">
-        <span style="cursor:pointer" onclick="setTheme('miku')">🩵</span>
-        <label class="switch">
-            <input type="checkbox" id="theme-toggle" onclick="themeToggle()">
-            <span class="slider"></span>
-        </label>
-        <span style="cursor:pointer" onclick="setTheme('teto')">🥖</span>
-    </div>
-
-    <nav>
-        <div class="links">
-            <a href="index.html">View Site</a>
-            <a href="javascript:void(0)" onclick="logout()" style="color: var(--primary); font-weight: bold;">LOGOUT</a>
-        </div>
-    </nav>
-
+    <nav><div class="links">
+        <a href="index.html">View Site</a>
+        <a href="javascript:void(0)" onclick="logout()">LOGOUT</a>
+    </div></nav>
     <div class="container">
-        <!-- 1. BLOG POST EDITOR -->
         <div class="card">
-            <h2>NEW BLOG POST</h2>
-            <input type="text" id="postTitle" placeholder="Title" style="margin-bottom:10px;">
-            <input type="text" id="postImage" placeholder="Image URL (Optional)" style="margin-bottom:10px;">
-            <textarea id="postContent" placeholder="Content..." style="height:100px; margin-bottom:10px;"></textarea>
-            <button onclick="uploadPost()" id="postBtn" class="btn" style="width:100%;">DEPLOY TO BLOG</button>
+            <h2>New Blog Post</h2>
+            <input type="text" id="postTitle" placeholder="Title">
+            <input type="text" id="postImage" placeholder="Image URL">
+            <textarea id="postContent" placeholder="Content..." style="height:100px;"></textarea>
+            <button onclick="uploadPost()" class="btn">DEPLOY</button>
         </div>
-
-        <!-- 2. THE RESTORED GOOGLE DRIVE SECTION -->
-        <h2 style="color: var(--primary); margin-top: 50px; margin-bottom: 25px; letter-spacing: 2px;">SECURE ARCHIVE</h2>
-        
-        <div class="card">
-            <h3>Google Drive Project A</h3>
-            <p style="margin-bottom:15px; opacity:0.8;">Access my programs and images archive.</p>
-            <a href="https://drive.google.com/drive/folders/1DM1uYFQu6jhLyNKlWEmmQVpzET3VNj_m?hl=de" target="_blank" class="btn">OPEN DRIVE</a>
-        </div>
-
-        <div class="card">
-            <h3>Miku Background Pack</h3>
-            <p style="margin-bottom:15px; opacity:0.8;">Full collection of 4K wallpapers.</p>
-            <a href="https://drive.google.com/drive/folders/1wrv-rG3Hw4bj0_9AmRyX8LO699XXHoLC?usp=sharing" target="_blank" class="btn">DOWNLOAD</a>
-        </div>
-
-        <!-- 3. COMMENT MODERATION -->
-        <h2 style="color: var(--primary); margin-top: 50px; margin-bottom: 25px; letter-spacing: 2px;">COMMENT MODERATION</h2>
-        <div id="admin-comments">
-            <p style="text-align:center; opacity:0.5;">Scanning for transmissions...</p>
-        </div>
+        <h2 style="color:var(--primary); margin:30px 0;">Comment Moderation</h2>
+        <div id="admin-comments"></div>
     </div>
-
     <script>
-        // THEME LOGIC
-        const toggle = document.getElementById('theme-toggle');
-        function themeToggle() { setTheme(toggle.checked ? 'teto' : 'miku'); }
-        function setTheme(t) {
-            document.documentElement.setAttribute('data-theme', t);
-            localStorage.setItem('theme', t);
-            if(toggle) toggle.checked = (t === 'teto');
-        }
-        setTheme(localStorage.getItem('theme') || 'miku');
-
-        // FIREBASE CONFIG
-        const firebaseConfig = {
-            apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo",
-            authDomain: "weebokage-296c0.firebaseapp.com",
-            projectId: "weebokage-296c0",
-            storageBucket: "weebokage-296c0.firebasestorage.app",
-            messagingSenderId: "192569800499",
-            appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046"
-        };
+        const firebaseConfig = { apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo", authDomain: "weebokage-296c0.firebaseapp.com", projectId: "weebokage-296c0", storageBucket: "weebokage-296c0.firebasestorage.app", messagingSenderId: "192569800499", appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-
-        // Security: Boot if not logged in
-        firebase.auth().onAuthStateChanged((user) => { 
-            if (!user) window.location.replace("login.html"); 
-        });
-
-        function logout() { 
-            firebase.auth().signOut().then(() => {
-                localStorage.removeItem('miku_auth');
-                window.location.replace("index.html");
-            });
-        }
-
-        // Upload Blog
+        firebase.auth().onAuthStateChanged(user => { if(!user) window.location.replace("login.html"); });
+        function logout() { firebase.auth().signOut().then(() => window.location.replace("index.html")); }
         function uploadPost() {
-            const title = document.getElementById('postTitle').value;
-            const content = document.getElementById('postContent').value;
-            const img = document.getElementById('postImage').value;
-            const btn = document.getElementById('postBtn');
-
-            if(!title || !content) return alert("Fill required fields!");
-            btn.innerText = "UPLOADING...";
-
-            db.collection("posts").add({ 
-                title, content, image: img, timestamp: firebase.firestore.FieldValue.serverTimestamp() 
-            }).then(() => {
-                alert("Post Published!");
-                window.location.reload();
-            });
+            const title = document.getElementById('postTitle').value; const content = document.getElementById('postContent').value; const image = document.getElementById('postImage').value;
+            db.collection("posts").add({ title, content, image, timestamp: firebase.firestore.FieldValue.serverTimestamp() }).then(() => alert("Posted!"));
         }
-
-        // Admin Comments
-        db.collection("comments").orderBy("timestamp", "desc").onSnapshot((snaps) => {
-            const div = document.getElementById('admin-comments');
-            div.innerHTML = "";
-            if (snaps.empty) div.innerHTML = "<p style='text-align:center; opacity:0.5;'>No comments found.</p>";
-            snaps.forEach((doc) => {
-                const c = doc.data();
-                div.innerHTML += `
-                    <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px; margin-bottom:10px;">
-                        <div><strong>${c.name}:</strong> ${c.msg}</div>
-                        <button onclick="deleteComment('${doc.id}')" style="background:var(--primary); color:black; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; font-weight:bold;">DELETE</button>
-                    </div>`;
-            });
+        db.collection("comments").orderBy("timestamp", "desc").onSnapshot(snaps => {
+            const div = document.getElementById('admin-comments'); div.innerHTML = "";
+            snaps.forEach(doc => { const c = doc.data(); div.innerHTML += `<div class="card" style="display:flex; justify-content:space-between;"><div><strong>${c.name}:</strong> ${c.msg}</div><button onclick="db.collection('comments').doc('${doc.id}').delete()" style="color:red">DEL</button></div>`; });
         });
-
-        function deleteComment(id) { if(confirm("Permanently delete?")) db.collection("comments").doc(id).delete(); }
     </script>
 </body>
 </html>
