@@ -2,67 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Archive | WEEBOKAGE</title>
-    <link rel="stylesheet" href="style.css?v=6.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <title>Admin | WEEBOKAGE</title>
+    <link rel="stylesheet" href="style.css?v=7.0">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script>
-        (function() {
-            const savedTheme = localStorage.getItem('theme') || 'miku';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        })();
-    </script>
 </head>
 <body>
-
-    <div class="theme-switch-wrapper">
-        <span onclick="setTheme('miku')" style="cursor:pointer">🩵</span>
-        <label class="switch"><input type="checkbox" id="theme-toggle" onclick="themeToggle()"><span class="slider"></span></label>
-        <span onclick="setTheme('teto')" style="cursor:pointer">🥖</span>
-    </div>
-
-   <nav>
-    <div class="links">
-        <a href="index.html">Home</a>
-        <!-- This link is now hidden and has a specific ID -->
-        <a href="islam.html" class="admin-hide" id="nav-islam">Islam</a> 
-        <a href="games.html">Games</a>
-        <a href="credits.html">Credits</a>
-        <a href="login.html">Admin</a>
-    </div>
-</nav>
+    <nav><div class="links">
+        <a href="index.html">View Site</a>
+        <a href="islam.html">Islam</a>
+        <a href="javascript:void(0)" onclick="logout()" style="color:var(--primary)">LOGOUT</a>
+    </div></nav>
 
     <div class="container">
-        <!-- 1. BLOG POSTER -->
         <div class="card" style="border-top: 5px solid var(--primary);">
-            <h2 style="color: var(--primary);">NEW BLOG ENTRY</h2>
-            <input type="text" id="postTitle" placeholder="Post Title">
-            <input type="text" id="postImage" placeholder="Image URL (Optional)">
-            <textarea id="postContent" placeholder="Enter content..." style="height: 120px;"></textarea>
-            <button onclick="uploadPost()" id="postBtn" class="btn" style="width: 100%; margin-top: 10px;">DEPLOY TO BLOG</button>
-        </div>
-
-        <!-- 2. SECURE DRIVE LINKS (RESTORED) -->
-        <h2 style="color: var(--primary); margin: 40px 0 20px 0; border-left: 4px solid var(--primary); padding-left: 15px;">SECURE ARCHIVE</h2>
-        
-        <div class="card">
+            <h2 style="color: var(--primary);">SECURE ARCHIVE</h2>
             <h3>Google Drive Project A</h3>
-            <p style="opacity: 0.7; margin-bottom: 15px;">Main archive for programs and images.</p>
-            <a href="https://drive.google.com/drive/folders/1DM1uYFQu6jhLyNKlWEmmQVpzET3VNj_m?hl=de" target="_blank" class="btn">OPEN FOLDER</a>
+            <a href="https://drive.google.com/drive/folders/1DM1uYFQu6jhLyNKlWEmmQVpzET3VNj_m?hl=de" target="_blank" class="btn">OPEN DRIVE</a>
+            <h3 style="margin-top:20px;">Miku Background Pack</h3>
+            <a href="https://drive.google.com/drive/folders/1wrv-rG3Hw4bj0_9AmRyX8LO699XXHoLC?usp=sharing" target="_blank" class="btn">DOWNLOAD</a>
         </div>
-
         <div class="card">
-            <h3>Miku Background Pack</h3>
-            <p style="opacity: 0.7; margin-bottom: 15px;">Full collection of 4K High-Res wallpapers.</p>
-            <a href="https://drive.google.com/drive/folders/1wrv-rG3Hw4bj0_9AmRyX8LO699XXHoLC?usp=sharing" target="_blank" class="btn">DOWNLOAD PACK</a>
+            <h2>NEW POST</h2>
+            <input type="text" id="pTitle" placeholder="Title">
+            <textarea id="pContent" placeholder="Content..."></textarea>
+            <button onclick="uploadPost()" class="btn">DEPLOY</button>
         </div>
-
-        <!-- 3. COMMENT MODERATION -->
-        <h2 style="color: var(--primary); margin: 40px 0 20px 0; border-left: 4px solid var(--primary); padding-left: 15px;">MODERATION</h2>
-        <div id="admin-comments"></div>
     </div>
 
     <script>
@@ -70,43 +36,23 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // PERSISTENCE CHECK: Only redirect if definitely not logged in
+        // SESSION FIX: Wait for Auth state
         firebase.auth().onAuthStateChanged(user => {
-            if (!user) window.location.replace("login.html");
+            if (!user) {
+                window.location.replace("login.html");
+            }
         });
 
         function logout() {
-            firebase.auth().signOut().then(() => {
-                localStorage.removeItem('miku_auth');
-                window.location.replace("index.html");
-            });
+            firebase.auth().signOut().then(() => window.location.replace("index.html"));
         }
 
         function uploadPost() {
-            const title = document.getElementById('postTitle').value;
-            const content = document.getElementById('postContent').value;
-            const image = document.getElementById('postImage').value;
-            if(!title || !content) return alert("Fields missing!");
-            db.collection("posts").add({ title, content, image, timestamp: firebase.firestore.FieldValue.serverTimestamp() })
-            .then(() => { alert("Post Deployed!"); location.reload(); });
+            const title = document.getElementById('pTitle').value;
+            const content = document.getElementById('pContent').value;
+            db.collection("posts").add({ title, content, timestamp: firebase.firestore.FieldValue.serverTimestamp() })
+            .then(() => alert("Post Published!"));
         }
-
-        db.collection("comments").orderBy("timestamp", "desc").onSnapshot(snaps => {
-            const div = document.getElementById('admin-comments'); div.innerHTML = "";
-            snaps.forEach(doc => {
-                const c = doc.data();
-                div.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px; margin-bottom:10px;">
-                    <div><strong>${c.name}:</strong> ${c.msg}</div>
-                    <button onclick="db.collection('comments').doc('${doc.id}').delete()" class="btn" style="background:#ff2d55; color:white; padding:5px 15px;">DEL</button>
-                </div>`;
-            });
-        });
-
-        // Theme
-        const toggle = document.getElementById('theme-toggle');
-        function themeToggle() { setTheme(toggle.checked ? 'teto' : 'miku'); }
-        function setTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); toggle.checked = (t==='teto'); }
-        setTheme(localStorage.getItem('theme') || 'miku');
     </script>
 </body>
 </html>
