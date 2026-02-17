@@ -2,7 +2,6 @@
 
 /* --- THEME ENGINE --- */
 :root {
-    /* MIKU THEME (Default) */
     --primary: #39C5BB;
     --primary-glow: rgba(57, 197, 187, 0.5);
     --accent: #ff6699;
@@ -12,22 +11,20 @@
 }
 
 [data-theme='teto'] {
-    /* TETO THEME */
     --primary: #FF2D55;
     --primary-glow: rgba(255, 45, 85, 0.5);
     --accent: #4A4A4A;
     --bg-overlay: rgba(20, 5, 5, 0.85);
-    --bg-image: url('assets/wallpaper2.png');
+    --bg-image: url('assets/wallpaper 2.png');
     --pfp: url('assets/tetokage.png');
 }
 
-/* --- GLOBAL RESET --- */
+/* --- GLOBAL RESET & TRANSITIONS --- */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    /* This makes every single color change on the site smooth */
-    transition: background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease, color 0.3s ease;
+    transition: background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease, transform 0.3s ease;
 }
 
 body {
@@ -40,8 +37,6 @@ body {
     font-family: 'Poppins', sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
-    /* Smooth transition for the background overlay */
-    transition: background-image 0.5s ease-in-out;
 }
 
 /* --- NAVIGATION --- */
@@ -64,7 +59,6 @@ nav a {
     font-weight: bold;
     text-transform: uppercase;
     font-size: 0.9rem;
-    letter-spacing: 1px;
 }
 
 nav a:hover {
@@ -72,7 +66,7 @@ nav a:hover {
     text-shadow: 0 0 10px var(--primary-glow);
 }
 
-/* --- THEME SWITCHER --- */
+/* --- THEME SWITCHER (Top Right) --- */
 .theme-switch-wrapper {
     position: fixed;
     top: 18px;
@@ -95,7 +89,7 @@ nav a:hover {
 }
 input:checked + .slider:before { transform: translateX(22px); }
 
-/* --- CARDS & HOVER EFFECTS --- */
+/* --- CARDS & HOVER LIFT --- */
 .card {
     background: rgba(10, 11, 16, 0.7);
     backdrop-filter: blur(20px);
@@ -105,15 +99,11 @@ input:checked + .slider:before { transform: translateX(22px); }
     border-radius: 20px;
     margin-bottom: 30px;
     width: 100%;
-    /* The transition for the hover effect */
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease !important;
 }
 
-/* THE HOVER EFFECT YOU WANTED */
 .card:hover {
     transform: translateY(-8px);
     box-shadow: 0 10px 30px var(--primary-glow);
-    border-color: var(--primary);
 }
 
 .card h2 {
@@ -131,13 +121,11 @@ input:checked + .slider:before { transform: translateX(22px); }
     border-radius: 50%; border: 3px solid var(--primary);
     box-shadow: 0 0 20px var(--primary-glow);
     background-image: var(--pfp);
-    background-size: cover; background-position: center;
-    /* Smooth transition for the avatar swap */
-    transition: background-image 0.5s ease-in-out, border-color 0.5s ease;
+    background-size: cover;
+    background-position: center;
 }
 
-/* --- TAGS (The Little Boxes) --- */
-.profile-tags { display: flex; gap: 12px; margin: 15px 0; flex-wrap: wrap; }
+.profile-info h1 { font-size: 2.8rem; color: var(--primary); }
 
 .tag {
     background: rgba(255, 255, 255, 0.05);
@@ -148,37 +136,69 @@ input:checked + .slider:before { transform: translateX(22px); }
     font-weight: bold;
     border: 1px solid var(--primary);
     box-shadow: 0 0 10px var(--primary-glow);
-    letter-spacing: 1px;
-    /* Smooth transition for the tag hover */
-    transition: all 0.3s ease !important;
-    cursor: default;
+    margin-right: 10px;
 }
 
-/* HOVER EFFECT FOR TAGS */
 .tag:hover {
     background: var(--primary);
     color: black;
-    transform: scale(1.1);
-    box-shadow: 0 0 20px var(--primary);
 }
 
-/* --- BUTTONS --- */
+/* --- HIGH-QUALITY INPUTS --- */
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.input-group i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.input-group i.textarea-icon { top: 25px; }
+
+input, textarea {
+    width: 100%;
+    padding: 15px 15px 15px 45px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    color: white !important;
+    font-family: inherit;
+    outline: none !important;
+}
+
+input:focus, textarea:focus {
+    border-color: var(--primary) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 0 15px var(--primary-glow) !important;
+}
+
+input:focus + i, textarea:focus + i {
+    color: var(--accent);
+    opacity: 1;
+}
+
 .btn {
     background: var(--primary);
     color: black;
     padding: 12px 25px;
     border-radius: 50px;
-    text-decoration: none;
     font-weight: bold;
     border: none;
     cursor: pointer;
     display: inline-block;
-    transition: all 0.3s ease;
 }
 
 .btn:hover {
-    transform: scale(1.05);
     box-shadow: 0 0 20px var(--primary);
+    transform: scale(1.02);
 }
 
 .miku-img { width: 100%; border-radius: 15px; margin-top: 15px; border: 1px solid var(--primary-glow); }
