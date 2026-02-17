@@ -24,13 +24,16 @@
         <span onclick="setTheme('teto')" style="cursor:pointer">🥖</span>
     </div>
 
-    <nav>
-        <div class="links">
-            <a href="index.html">Home</a>
-            <a href="islam.html">Islam</a>
-            <a href="javascript:void(0)" onclick="logout()" style="color:var(--primary)">LOGOUT</a>
-        </div>
-    </nav>
+   <nav>
+    <div class="links">
+        <a href="index.html">Home</a>
+        <!-- This link is now hidden and has a specific ID -->
+        <a href="islam.html" class="admin-hide" id="nav-islam">Islam</a> 
+        <a href="games.html">Games</a>
+        <a href="credits.html">Credits</a>
+        <a href="login.html">Admin</a>
+    </div>
+</nav>
 
     <div class="container">
         <!-- 1. BLOG POSTER -->
