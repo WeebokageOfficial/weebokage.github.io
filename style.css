@@ -1,42 +1,105 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
 
 :root {
-    --primary: #39C5BB; --primary-glow: rgba(57, 197, 187, 0.5); --accent: #ff6699;
-    --bg-overlay: rgba(10, 11, 16, 0.8); --bg-image: url('assets/wallpaper.jpg'); --pfp: url('assets/mikukage.png');
+    --primary: #39C5BB;
+    --primary-glow: rgba(57, 197, 187, 0.5);
+    --accent: #ff6699;
+    --bg-overlay: rgba(10, 11, 16, 0.8);
+    --bg-image: url('assets/wallpaper.jpg');
+    --pfp: url('assets/mikukage.png');
 }
+
 [data-theme='teto'] {
-    --primary: #FF2D55; --primary-glow: rgba(255, 45, 85, 0.5); --accent: #4A4A4A;
-    --bg-overlay: rgba(20, 5, 5, 0.85); --bg-image: url('assets/wallpaper2.png'); --pfp: url('assets/tetokage.png');
+    --primary: #FF2D55;
+    --primary-glow: rgba(255, 45, 85, 0.5);
+    --accent: #707070;
+    --bg-overlay: rgba(20, 5, 5, 0.85);
+    --bg-image: url('assets/wallpaper 2.png');
+    --pfp: url('assets/tetokage.png');
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
     background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), var(--bg-image);
-    background-size: cover; background-position: center; background-attachment: fixed;
-    color: white; font-family: 'Poppins', sans-serif; min-height: 100vh; transition: 0.5s;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: #000;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    transition: background-image 0.5s ease-in-out;
 }
 
 nav {
-    display: flex; justify-content: center; padding: 20px;
-    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px);
-    border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 1000;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(15px);
+    border-bottom: 2px solid var(--primary);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
-nav a { color: white; text-decoration: none; margin: 0 15px; font-weight: bold; text-transform: uppercase; font-size: 0.9rem; transition: 0.3s; }
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
 nav a:hover { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
 
-/* SECRET TAB LOGIC */
-.admin-only { display: none !important; }
+.theme-switch-wrapper {
+    position: fixed;
+    top: 18px;
+    right: 25px;
+    display: flex;
+    align-items: center;
+    z-index: 1100;
+    gap: 10px;
+}
 
-.theme-switch-wrapper { position: fixed; top: 18px; right: 25px; display: flex; align-items: center; z-index: 1100; gap: 10px; }
 .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
 .switch input { opacity: 0; width: 0; height: 0; }
-.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #222; transition: .4s; border-radius: 34px; border: 1px solid var(--primary); }
-.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 3px; background-color: var(--primary); transition: .4s; border-radius: 50%; }
+.slider {
+    position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #222; transition: .4s; border-radius: 34px; border: 1px solid var(--primary);
+}
+.slider:before {
+    position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 3px;
+    background-color: var(--primary); transition: .4s; border-radius: 50%;
+}
 input:checked + .slider:before { transform: translateX(22px); }
 
-.card { background: rgba(10, 11, 16, 0.7); backdrop-filter: blur(20px); border: 1px solid var(--primary); box-shadow: 0 0 15px var(--primary-glow); padding: 30px; border-radius: 20px; margin-bottom: 30px; width: 100%; }
 .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
-.btn { background: var(--primary); color: black; padding: 12px 25px; border-radius: 50px; font-weight: bold; border: none; cursor: pointer; display: inline-block; }
-.profile-avatar { width: 150px; height: 150px; border-radius: 50%; border: 3px solid var(--primary); background-image: var(--pfp); background-size: cover; }
+
+.card {
+    background: rgba(10, 11, 16, 0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--primary);
+    box-shadow: 0 0 15px var(--primary-glow);
+    padding: 30px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+}
+
+.profile-card { display: flex; align-items: center; gap: 35px; }
+.profile-avatar {
+    width: 150px; height: 150px; min-width: 150px;
+    border-radius: 50%; border: 3px solid var(--primary);
+    box-shadow: 0 0 20px var(--primary-glow);
+    background-image: var(--pfp);
+    background-size: cover; background-position: center;
+}
+
 .tag { border: 1px solid var(--primary); padding: 5px 15px; border-radius: 8px; font-size: 0.75rem; margin-right: 5px; }
+.btn { background: var(--primary); color: #000; padding: 12px 25px; border-radius: 50px; font-weight: bold; text-decoration: none; cursor: pointer; display: inline-block; border: none; }
 .miku-img { width: 100%; border-radius: 15px; margin-top: 15px; border: 1px solid var(--primary-glow); }
+input, textarea { width: 100%; padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid var(--primary); border-radius: 8px; color: white; margin-bottom: 10px; }
