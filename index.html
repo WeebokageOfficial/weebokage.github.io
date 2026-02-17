@@ -167,5 +167,16 @@
             });
         });
     </script>
+    <script>
+    // This checks if YOU are logged in and shows the secret menu tab
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            const islamLink = document.getElementById('islam-nav');
+            if (islamLink) {
+                islamLink.style.setProperty('display', 'inline-block', 'important');
+            }
+        }
+    });
+</script>
 </body>
 </html>
