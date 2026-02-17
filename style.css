@@ -208,3 +208,7 @@ input:focus + i, textarea:focus + i {
     .profile-card { flex-direction: column; text-align: center; }
     .theme-switch-wrapper { top: auto; bottom: 20px; right: 20px; }
 }
+/* Hidden by default for guests */
+.admin-hide {
+    display: none !important;
+}
