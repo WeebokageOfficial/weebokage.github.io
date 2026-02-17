@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Credits | WEEBOKAGE</title>
-    <!-- Cache-Buster v1.3 für sofortige Aktualisierung -->
-    <link rel="stylesheet" href="style.css?v=1.6">
+    <!-- Cache-Buster v5.0 -->
+    <link rel="stylesheet" href="style.css?v=5.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script>
-        // Flash-Fix für Theme-Memory
+        // Theme Flash-Fix (Ensures correct colors load immediately)
         (function() {
             const savedTheme = localStorage.getItem('theme') || 'miku';
             document.documentElement.setAttribute('data-theme', savedTheme);
@@ -17,66 +17,79 @@
 </head>
 <body>
 
+    <!-- THEME SWITCHER -->
     <div class="theme-switch-wrapper">
-        <span style="cursor:pointer" onclick="setTheme('miku')">🩵</span>
+        <span onclick="setTheme('miku')" style="cursor:pointer">🩵</span>
         <label class="switch">
             <input type="checkbox" id="theme-toggle" onclick="themeToggle()">
             <span class="slider"></span>
         </label>
-        <span style="cursor:pointer" onclick="setTheme('teto')">🥖</span>
+        <span onclick="setTheme('teto')" style="cursor:pointer">🥖</span>
     </div>
 
-<div class="links" id="nav-links">
-    <a href="home.html">Home</a>
-    <!-- This link is invisible to guests -->
-    <a href="islam.html" class="admin-only" id="islam-nav">Islam</a> 
-    <a href="games.html">Games</a>
-    <a href="credits.html">Credits</a>
-    <a href="login.html">Admin</a>
-</div>
+    <nav>
+        <div class="links">
+            <a href="index.html">Home</a>
+            <a href="islam.html">Islam</a>
+            <a href="games.html">Games</a>
+            <a href="credits.html">Credits</a>
+            <a href="login.html">Admin</a>
+        </div>
+    </nav>
+
     <div class="container">
-        <div class="hero" style="text-align: center; margin-bottom: 40px;">
-            <h1 style="color: var(--primary); font-size: 3rem; letter-spacing: 2px;">ARCHIVE SOURCES</h1>
-            <p style="opacity: 0.8;">Ownership, Assets, and Art Credits</p>
+        <div style="text-align: center; margin-bottom: 50px;">
+            <h1 style="color: var(--primary); font-size: 3rem; letter-spacing: 4px; text-transform: uppercase;">Archive Sources</h1>
+            <p style="opacity: 0.6;">Ownership, Assets, and Art Credits</p>
         </div>
 
         <!-- Section 1: Ownership -->
         <div class="card">
-            <h2><i class="fas fa-user-shield"></i> Site Ownership</h2>
-            <p>This website (weebokage.com) is owned and operated by <strong>Weebokage</strong>. All original content, site structure, and curated archives are managed under this identity.</p>
+            <h2 style="margin-bottom: 15px;"><i class="fas fa-user-shield"></i> Site Ownership</h2>
+            <p>This website (<strong>weebokage.com</strong>) is owned and operated by <strong>Weebokage</strong>. All original content, site structure, and curated archives are managed under this identity.</p>
         </div>
 
-        <!-- Section 2: Art & Backgrounds -->
+        <!-- Section 2: Visual Credits -->
         <div class="card">
-            <h2><i class="fas fa-image"></i> Visual Credits</h2>
-            <p><strong>Background Wallpaper:</strong> Found via AlphaCoders. If you are the artist, please contact me for specific tagging!</p>
-            <p style="margin-top: 10px;"><strong>Profile Image:</strong> Assets provided by Weebokage / YouTube profile.</p>
-            <p style="margin-top: 10px;"><strong>Characters:</strong> Hatsune Miku & Kasane Teto are properties of their respective creators. This site is a non-commercial fan project.</p>
+            <h2 style="margin-bottom: 15px;"><i class="fas fa-image"></i> Visual Credits</h2>
+            <p><strong>Background Wallpapers:</strong> Mirrored via AlphaCoders and official Vocaloid media. All art belongs to their respective illustrators.</p>
+            <p style="margin-top: 10px;"><strong>Profile Imagery:</strong> Custom assets provided by Weebokage / YouTube profile archives.</p>
+            <p style="margin-top: 10px;"><strong>Vocaloids:</strong> Hatsune Miku is a property of <strong>Crypton Future Media</strong>. Kasane Teto is a property of <strong>Oyamano Mayo / TWINDRILL</strong>. This is a non-commercial fan project.</p>
         </div>
 
         <!-- Section 3: Technical Credits -->
         <div class="card">
-            <h2><i class="fas fa-code"></i> Technology Stack</h2>
-            <ul>
-                <li><strong>Hosting:</strong> GitHub Pages</li>
-                <li><strong>Database & Auth:</strong> Google Firebase</li>
-                <li><strong>Theme:</strong> Hybrid Miku/Teto Terminal</li>
-                <li><strong>Icons:</strong> Font Awesome</li>
+            <h2 style="margin-bottom: 15px;"><i class="fas fa-code"></i> Technology Stack</h2>
+            <ul style="list-style: none;">
+                <li style="margin: 10px 0; padding-left: 15px; border-left: 3px solid var(--primary);">
+                    <strong>Hosting:</strong> GitHub Pages
+                </li>
+                <li style="margin: 10px 0; padding-left: 15px; border-left: 3px solid var(--primary);">
+                    <strong>Database:</strong> Google Firebase (Firestore)
+                </li>
+                <li style="margin: 10px 0; padding-left: 15px; border-left: 3px solid var(--primary);">
+                    <strong>Emulator:</strong> Ruffle (Flash Player)
+                </li>
+                <li style="margin: 10px 0; padding-left: 15px; border-left: 3px solid var(--primary);">
+                    <strong>Icons:</strong> Font Awesome 6.0
+                </li>
             </ul>
         </div>
 
-        <div style="text-align: center; margin-top: 60px; opacity: 0.5; font-size: 0.8rem;">
+        <!-- Footer -->
+        <div style="text-align: center; margin-top: 60px; opacity: 0.4; font-size: 0.8rem; letter-spacing: 2px;">
             <p>&copy; 2026 WEEBOKAGE. All rights reserved.</p>
         </div>
     </div>
 
     <script>
+        // THEME ENGINE (Matches index.html)
         const toggle = document.getElementById('theme-toggle');
         function themeToggle() { setTheme(toggle.checked ? 'teto' : 'miku'); }
         function setTheme(t) {
             document.documentElement.setAttribute('data-theme', t);
             localStorage.setItem('theme', t);
-            toggle.checked = (t === 'teto');
+            if(toggle) toggle.checked = (t === 'teto');
         }
         setTheme(localStorage.getItem('theme') || 'miku');
     </script>
