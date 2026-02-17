@@ -4,14 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terminal Access | WEEBOKAGE</title>
-    <link rel="stylesheet" href="style.css?v=1.6">
-    <!-- Font Awesome for Icons -->
+    <!-- Cache-Buster v5.1 -->
+    <link rel="stylesheet" href="style.css?v=5.1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script>
+        // Smooth Theme Flash-Fix
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'miku';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
     <style>
-        /* Specific styling for the pretty inputs */
+        /* Specific Styles for the Login Terminal */
+        .login-card {
+            max-width: 450px;
+            margin: 10vh auto;
+            text-align: center;
+            padding: 50px !important;
+            border-top: 5px solid var(--primary);
+        }
+
         .input-group {
             position: relative;
             margin-bottom: 20px;
@@ -23,109 +38,123 @@
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--miku-teal);
+            color: var(--primary);
             opacity: 0.6;
             transition: 0.3s;
         }
 
-        /* The glassmorphic input */
         .pretty-input {
             width: 100%;
-            padding: 15px 15px 15px 45px !important; /* Space for the icon */
+            padding: 15px 15px 15px 45px !important;
             background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(57, 197, 187, 0.3) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
             border-radius: 12px !important;
             color: white !important;
             font-family: 'Poppins', sans-serif;
-            font-size: 0.9rem;
-            transition: all 0.3s ease-in-out !important;
             outline: none !important;
+            transition: all 0.3s ease;
         }
 
-        /* Glow effect when clicking the box */
         .pretty-input:focus {
-            background: rgba(57, 197, 187, 0.1) !important;
-            border-color: var(--miku-teal) !important;
-            box-shadow: 0 0 20px rgba(57, 197, 187, 0.4) !important;
-            transform: translateY(-2px);
+            border-color: var(--primary) !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 0 15px var(--primary-glow) !important;
         }
 
-        /* Make icon glow when input is focused */
         .pretty-input:focus + i {
-            color: var(--miku-pink);
+            color: var(--accent);
             opacity: 1;
-            text-shadow: 0 0 10px var(--miku-pink);
+            text-shadow: 0 0 10px var(--accent);
         }
 
-        .login-card {
-            border-top: 5px solid var(--miku-teal);
-            padding: 50px;
-            text-align: center;
-            backdrop-filter: blur(20px);
-            background: rgba(10, 11, 16, 0.7);
+        #err {
+            color: var(--primary);
+            display: none;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--primary);
         }
     </style>
 </head>
 <body>
-    <div class="links" id="nav-links">
-    <a href="home.html">Home</a>
-    <!-- This link is invisible to guests -->
-    <a href="islam.html" class="admin-only" id="islam-nav">Islam</a> 
-    <a href="games.html">Games</a>
-    <a href="credits.html">Credits</a>
-    <a href="login.html">Admin</a>
-</div>
 
+    <!-- THEME TOGGLE -->
     <div class="theme-switch-wrapper">
-    <span class="icon-label icon-miku" onclick="setTheme('miku')">🩵</span>
-    <label class="switch">
-        <input type="checkbox" id="theme-toggle" onclick="themeToggle()">
-        <span class="slider"></span>
-    </label>
-    <span class="icon-label icon-teto" onclick="setTheme('teto')">🥖</span>
-</div>
+        <span onclick="setTheme('miku')" style="cursor:pointer; font-size: 1.2rem;">🩵</span>
+        <label class="switch">
+            <input type="checkbox" id="theme-toggle" onclick="themeToggle()">
+            <span class="slider"></span>
+        </label>
+        <span onclick="setTheme('teto')" style="cursor:pointer; font-size: 1.2rem;">🥖</span>
+    </div>
 
-    <div class="container" style="max-width: 450px; margin-top: 10vh;">
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="links">
+            <a href="index.html">Home</a>
+            <a href="islam.html">Islam</a>
+            <a href="games.html">Games</a>
+            <a href="credits.html">Credits</a>
+            <a href="login.html">Admin</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- LOGIN TERMINAL -->
         <div class="card login-card">
-            <div style="margin-bottom: 30px;">
-                <h1 style="color: var(--miku-teal); font-size: 1.8rem; letter-spacing: 4px; text-transform: uppercase;">System Auth</h1>
-                <div style="width: 50px; height: 2px; background: var(--miku-pink); margin: 10px auto; box-shadow: 0 0 10px var(--miku-pink);"></div>
+            <div style="margin-bottom: 35px;">
+                <h1 style="color: var(--primary); font-size: 1.8rem; letter-spacing: 5px; text-transform: uppercase;">System Auth</h1>
+                <div style="width: 50px; height: 3px; background: var(--accent); margin: 10px auto; border-radius: 2px; box-shadow: 0 0 10px var(--accent);"></div>
             </div>
 
-            <!-- USERNAME/EMAIL FIELD -->
+            <p style="font-size: 0.75rem; opacity: 0.5; margin-bottom: 25px; letter-spacing: 2px;">IDENTIFY TO DECRYPT ARCHIVE</p>
+
             <div class="input-group">
-                <input type="text" id="email" class="pretty-input" placeholder="Vocaloid ID (Email)">
-                <i class="fas fa-user"></i>
+                <input type="text" id="email" class="pretty-input" placeholder="Vocaloid ID (Email)" autocomplete="off">
+                <i class="fas fa-user-circle"></i>
             </div>
 
-            <!-- PASSWORD FIELD -->
             <div class="input-group">
                 <input type="password" id="pass" class="pretty-input" placeholder="Access Key">
-                <i class="fas fa-lock"></i>
+                <i class="fas fa-fingerprint"></i>
             </div>
-            
-            <button onclick="login()" id="loginBtn" class="btn" style="width: 100%; margin-top: 20px; letter-spacing: 2px;">
+
+            <button onclick="login()" id="loginBtn" class="btn" style="width: 100%; margin-top: 20px; height: 50px; letter-spacing: 2px;">
                 INITIALIZE
             </button>
-            
-            <p id="err" style="color: var(--miku-pink); display: none; margin-top: 20px; font-size: 0.8rem; border: 1px solid var(--miku-pink); padding: 10px; background: rgba(255,102,153,0.1); border-radius: 8px;"></p>
+
+            <p id="err"></p>
         </div>
 
-        <p style="text-align: center; opacity: 0.3; font-size: 0.6rem; margin-top: 30px; letter-spacing: 3px; color: white;">01_ENCRYPT_SYSTEM_ACTIVE</p>
+        <p style="text-align: center; opacity: 0.3; font-size: 0.6rem; letter-spacing: 3px;">01_ENCRYPT_PROTOCOL_ACTIVE</p>
     </div>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo",
-            authDomain: "weebokage-296c0.firebaseapp.com",
-            projectId: "weebokage-296c0",
-            storageBucket: "weebokage-296c0.firebasestorage.app",
-            messagingSenderId: "192569800499",
-            appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046"
+        // --- FIREBASE CONFIG ---
+        const firebaseConfig = { 
+            apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo", 
+            authDomain: "weebokage-296c0.firebaseapp.com", 
+            projectId: "weebokage-296c0", 
+            storageBucket: "weebokage-296c0.firebasestorage.app", 
+            messagingSenderId: "192569800499", 
+            appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046" 
         };
-
         firebase.initializeApp(firebaseConfig);
 
+        // --- THEME ENGINE ---
+        const toggle = document.getElementById('theme-toggle');
+        function themeToggle() { setTheme(toggle.checked ? 'teto' : 'miku'); }
+        function setTheme(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            localStorage.setItem('theme', t);
+            if(toggle) toggle.checked = (t === 'teto');
+        }
+        setTheme(localStorage.getItem('theme') || 'miku');
+
+        // --- LOGIN LOGIC ---
         function login() {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('pass').value;
@@ -144,39 +173,14 @@
                     btn.innerText = "INITIALIZE";
                     errBox.style.display = "block";
                     errBox.innerText = "ACCESS DENIED: UNKNOWN IDENTITY";
+                    console.error(error.message);
                 });
         }
 
-        document.addEventListener('keypress', (e) => { if (e.key === 'Enter') login(); });
+        // Press Enter to login
+        document.addEventListener('keypress', (e) => { 
+            if (e.key === 'Enter') login(); 
+        });
     </script>
-    <script>
-    const toggle = document.getElementById('theme-toggle');
-    
-    function themeToggle() {
-        const newTheme = toggle.checked ? 'teto' : 'miku';
-        setTheme(newTheme);
-    }
-
-    function setTheme(themeName) {
-        document.documentElement.setAttribute('data-theme', themeName);
-        localStorage.setItem('theme', themeName);
-        toggle.checked = (themeName === 'teto');
-    }
-
-    // Initial Load
-    const savedTheme = localStorage.getItem('theme') || 'miku';
-    setTheme(savedTheme);
-</script>
-    <script>
-    // This checks if YOU are logged in and shows the secret menu tab
-    firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-            const islamLink = document.getElementById('islam-nav');
-            if (islamLink) {
-                islamLink.style.setProperty('display', 'inline-block', 'important');
-            }
-        }
-    });
-</script>
 </body>
 </html>
