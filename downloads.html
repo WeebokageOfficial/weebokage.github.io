@@ -2,42 +2,108 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin | WEEBOKAGE</title>
-    <link rel="stylesheet" href="style.css?v=5.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Archive | WEEBOKAGE</title>
+    <link rel="stylesheet" href="style.css?v=6.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'miku';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
 </head>
 <body>
-    <nav><div class="links">
-        <a href="index.html">View Site</a>
-        <a href="javascript:void(0)" onclick="logout()">LOGOUT</a>
-    </div></nav>
-    <div class="container">
-        <div class="card">
-            <h2>New Blog Post</h2>
-            <input type="text" id="postTitle" placeholder="Title">
-            <input type="text" id="postImage" placeholder="Image URL">
-            <textarea id="postContent" placeholder="Content..." style="height:100px;"></textarea>
-            <button onclick="uploadPost()" class="btn">DEPLOY</button>
+
+    <div class="theme-switch-wrapper">
+        <span onclick="setTheme('miku')" style="cursor:pointer">🩵</span>
+        <label class="switch"><input type="checkbox" id="theme-toggle" onclick="themeToggle()"><span class="slider"></span></label>
+        <span onclick="setTheme('teto')" style="cursor:pointer">🥖</span>
+    </div>
+
+    <nav>
+        <div class="links">
+            <a href="index.html">Home</a>
+            <a href="islam.html">Islam</a>
+            <a href="javascript:void(0)" onclick="logout()" style="color:var(--primary)">LOGOUT</a>
         </div>
-        <h2 style="color:var(--primary); margin:30px 0;">Comment Moderation</h2>
+    </nav>
+
+    <div class="container">
+        <!-- 1. BLOG POSTER -->
+        <div class="card" style="border-top: 5px solid var(--primary);">
+            <h2 style="color: var(--primary);">NEW BLOG ENTRY</h2>
+            <input type="text" id="postTitle" placeholder="Post Title">
+            <input type="text" id="postImage" placeholder="Image URL (Optional)">
+            <textarea id="postContent" placeholder="Enter content..." style="height: 120px;"></textarea>
+            <button onclick="uploadPost()" id="postBtn" class="btn" style="width: 100%; margin-top: 10px;">DEPLOY TO BLOG</button>
+        </div>
+
+        <!-- 2. SECURE DRIVE LINKS (RESTORED) -->
+        <h2 style="color: var(--primary); margin: 40px 0 20px 0; border-left: 4px solid var(--primary); padding-left: 15px;">SECURE ARCHIVE</h2>
+        
+        <div class="card">
+            <h3>Google Drive Project A</h3>
+            <p style="opacity: 0.7; margin-bottom: 15px;">Main archive for programs and images.</p>
+            <a href="https://drive.google.com/drive/folders/1DM1uYFQu6jhLyNKlWEmmQVpzET3VNj_m?hl=de" target="_blank" class="btn">OPEN FOLDER</a>
+        </div>
+
+        <div class="card">
+            <h3>Miku Background Pack</h3>
+            <p style="opacity: 0.7; margin-bottom: 15px;">Full collection of 4K High-Res wallpapers.</p>
+            <a href="https://drive.google.com/drive/folders/1wrv-rG3Hw4bj0_9AmRyX8LO699XXHoLC?usp=sharing" target="_blank" class="btn">DOWNLOAD PACK</a>
+        </div>
+
+        <!-- 3. COMMENT MODERATION -->
+        <h2 style="color: var(--primary); margin: 40px 0 20px 0; border-left: 4px solid var(--primary); padding-left: 15px;">MODERATION</h2>
         <div id="admin-comments"></div>
     </div>
+
     <script>
         const firebaseConfig = { apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo", authDomain: "weebokage-296c0.firebaseapp.com", projectId: "weebokage-296c0", storageBucket: "weebokage-296c0.firebasestorage.app", messagingSenderId: "192569800499", appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        firebase.auth().onAuthStateChanged(user => { if(!user) window.location.replace("login.html"); });
-        function logout() { firebase.auth().signOut().then(() => window.location.replace("index.html")); }
-        function uploadPost() {
-            const title = document.getElementById('postTitle').value; const content = document.getElementById('postContent').value; const image = document.getElementById('postImage').value;
-            db.collection("posts").add({ title, content, image, timestamp: firebase.firestore.FieldValue.serverTimestamp() }).then(() => alert("Posted!"));
+
+        // PERSISTENCE CHECK: Only redirect if definitely not logged in
+        firebase.auth().onAuthStateChanged(user => {
+            if (!user) window.location.replace("login.html");
+        });
+
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                localStorage.removeItem('miku_auth');
+                window.location.replace("index.html");
+            });
         }
+
+        function uploadPost() {
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+            const image = document.getElementById('postImage').value;
+            if(!title || !content) return alert("Fields missing!");
+            db.collection("posts").add({ title, content, image, timestamp: firebase.firestore.FieldValue.serverTimestamp() })
+            .then(() => { alert("Post Deployed!"); location.reload(); });
+        }
+
         db.collection("comments").orderBy("timestamp", "desc").onSnapshot(snaps => {
             const div = document.getElementById('admin-comments'); div.innerHTML = "";
-            snaps.forEach(doc => { const c = doc.data(); div.innerHTML += `<div class="card" style="display:flex; justify-content:space-between;"><div><strong>${c.name}:</strong> ${c.msg}</div><button onclick="db.collection('comments').doc('${doc.id}').delete()" style="color:red">DEL</button></div>`; });
+            snaps.forEach(doc => {
+                const c = doc.data();
+                div.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:15px; margin-bottom:10px;">
+                    <div><strong>${c.name}:</strong> ${c.msg}</div>
+                    <button onclick="db.collection('comments').doc('${doc.id}').delete()" class="btn" style="background:#ff2d55; color:white; padding:5px 15px;">DEL</button>
+                </div>`;
+            });
         });
+
+        // Theme
+        const toggle = document.getElementById('theme-toggle');
+        function themeToggle() { setTheme(toggle.checked ? 'teto' : 'miku'); }
+        function setTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); toggle.checked = (t==='teto'); }
+        setTheme(localStorage.getItem('theme') || 'miku');
     </script>
 </body>
 </html>
