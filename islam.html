@@ -43,6 +43,13 @@
     </div>
 
     <script>
+        // --- PAGE PROTECTION ---
+firebase.auth().onAuthStateChanged((user) => {
+    if (!user) {
+        // If a stranger tries to access this page, send them home
+        window.location.replace("index.html");
+    }
+});
         const API_KEY = "$2y$10$bh8gWRHGMPAOaerOv4kXpOQLdNdrE1DR7lBNK9oL7OuE20QHSIM6";
         
         async function fetchHadith() {
