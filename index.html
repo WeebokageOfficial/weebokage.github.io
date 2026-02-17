@@ -2,70 +2,155 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WEEBOKAGE | Home</title>
-    <link rel="stylesheet" href="style.css?v=5.0">
+    <!-- Updated Cache-Buster to v5.1 -->
+    <link rel="stylesheet" href="style.css?v=5.1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script>
+        // Smooth Theme Flash-Fix
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'miku';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
 </head>
 <body>
+
+    <!-- THEME TOGGLE -->
     <div class="theme-switch-wrapper">
-        <span onclick="setTheme('miku')" style="cursor:pointer">🩵</span>
-        <label class="switch"><input type="checkbox" id="theme-toggle" onclick="themeToggle()"><span class="slider"></span></label>
-        <span onclick="setTheme('teto')" style="cursor:pointer">🥖</span>
+        <span onclick="setTheme('miku')" style="cursor:pointer; font-size: 1.2rem;">🩵</span>
+        <label class="switch">
+            <input type="checkbox" id="theme-toggle" onclick="themeToggle()">
+            <span class="slider"></span>
+        </label>
+        <span onclick="setTheme('teto')" style="cursor:pointer; font-size: 1.2rem;">🥖</span>
     </div>
-    <nav><div class="links">
-        <a href="index.html">Home</a>
-        <a href="islam.html">Islam</a>
-        <a href="games.html">Games</a>
-        <a href="credits.html">Credits</a>
-        <a href="login.html">Admin</a>
-    </div></nav>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="links">
+            <a href="index.html">Home</a>
+            <a href="islam.html">Islam</a>
+            <a href="games.html">Games</a>
+            <a href="credits.html">Credits</a>
+            <a href="login.html">Admin</a>
+        </div>
+    </nav>
+    
     <div class="container">
+        <!-- PROFILE CARD -->
         <div class="card profile-card">
             <div class="profile-avatar"></div>
-            <div>
-                <h1 style="color:var(--primary); font-size: 2.5rem;">Weebokage</h1>
-                <p>Welcome to my personal digital space.</p>
-                <div style="margin-top:15px;"><span class="tag">DEVELOPER</span><span class="tag">VOCALOID</span></div>
-                <a href="https://www.youtube.com/@Weebokage/featured" target="_blank" class="btn" style="background:#FF0000; color:white; margin-top:15px;"><i class="fab fa-youtube"></i> YouTube</a>
+            <div class="profile-info">
+                <h1>Weebokage</h1>
+                <p>Author, Anime/Manga Fan, Certified Gamer, Practicing Muslim. Welcome to my personal digital space.</p>
+                
+                <div class="profile-tags">
+                    <span class="tag">DEVELOPER</span>
+                    <span class="tag">VOCALOID</span>
+                    <span class="tag">ARCHIVIST</span>
+                </div>
+
+                <a href="https://www.youtube.com/@Weebokage/featured" target="_blank" class="btn" style="background:#FF0000; color:white; margin-top:15px; border:none;">
+                    <i class="fab fa-youtube"></i> YouTube
+                </a>
             </div>
         </div>
-        <h2 style="color:var(--primary); margin: 40px 0 20px 0; border-left: 4px solid var(--primary); padding-left: 15px;">LATEST UPDATES</h2>
-        <div id="blog-feed"></div>
-        <h2 style="color:var(--primary); margin: 40px 0 20px 0; border-left: 4px solid var(--primary); padding-left: 15px;">GUESTBOOK</h2>
-        <div class="card">
-            <input type="text" id="guestName" placeholder="Your Name">
-            <textarea id="guestMsg" placeholder="Leave a message..." style="height: 80px;"></textarea>
-            <button onclick="postComment()" id="commentBtn" class="btn">POST</button>
+
+        <!-- BLOG SECTION -->
+        <h2 style="color:var(--primary); margin: 40px 0 20px 0; border-left: 4px solid var(--primary); padding-left: 15px; letter-spacing: 2px;">LATEST UPDATES</h2>
+        <div id="blog-feed">
+            <p style="text-align: center; opacity: 0.5;">Accessing Archive...</p>
         </div>
+
+        <!-- GUESTBOOK SECTION -->
+        <h2 style="color:var(--primary); margin: 50px 0 20px 0; border-left: 4px solid var(--primary); padding-left: 15px; letter-spacing: 2px;">DIGITAL GUESTBOOK</h2>
+        <div class="card">
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="guestName" placeholder="Your Name" style="flex: 1;">
+                <button onclick="postComment()" id="commentBtn" class="btn" style="padding: 0 25px;">POST</button>
+            </div>
+            <textarea id="guestMsg" placeholder="Leave a message..." style="height: 80px;"></textarea>
+        </div>
+
         <div id="comments-feed"></div>
+        
+        <!-- FOOTER -->
+        <div style="text-align: center; margin-top: 80px; opacity: 0.3; font-size: 0.8rem; letter-spacing: 2px; padding-bottom: 40px;">
+            <p>&copy; 2026 WEEBOKAGE. All rights reserved.</p>
+        </div>
     </div>
+
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo", authDomain: "weebokage-296c0.firebaseapp.com", projectId: "weebokage-296c0", storageBucket: "weebokage-296c0.firebasestorage.app", messagingSenderId: "192569800499", appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046" };
+        // --- FIREBASE CONFIG ---
+        const firebaseConfig = { 
+            apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo", 
+            authDomain: "weebokage-296c0.firebaseapp.com", 
+            projectId: "weebokage-296c0", 
+            storageBucket: "weebokage-296c0.firebasestorage.app", 
+            messagingSenderId: "192569800499", 
+            appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046" 
+        };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+
+        // --- THEME ENGINE ---
         const toggle = document.getElementById('theme-toggle');
         function themeToggle() { setTheme(toggle.checked ? 'teto' : 'miku'); }
-        function setTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); toggle.checked = (t==='teto'); }
+        function setTheme(t) { 
+            document.documentElement.setAttribute('data-theme', t); 
+            localStorage.setItem('theme', t); 
+            if(toggle) toggle.checked = (t === 'teto'); 
+        }
         setTheme(localStorage.getItem('theme') || 'miku');
 
+        // --- BLOG LOADER ---
         db.collection("posts").orderBy("timestamp", "desc").onSnapshot(snaps => {
-            const feed = document.getElementById('blog-feed'); feed.innerHTML = "";
+            const feed = document.getElementById('blog-feed'); 
+            feed.innerHTML = "";
             snaps.forEach(doc => {
-                const p = doc.data(); const d = p.timestamp ? new Date(p.timestamp.seconds * 1000).toLocaleDateString() : "";
-                feed.innerHTML += `<div class="card"><span style="color:var(--accent); font-size:0.8rem; font-weight:bold;">${d}</span><h2>${p.title}</h2>${p.image ? `<img src="${p.image}" class="miku-img">` : ''}<p style="margin-top:10px;">${p.content}</p></div>`;
+                const p = doc.data(); 
+                const d = p.timestamp ? new Date(p.timestamp.seconds * 1000).toLocaleDateString() : "Just now";
+                feed.innerHTML += `
+                    <div class="card">
+                        <span style="color:var(--accent); font-size:0.8rem; font-weight:bold;">${d}</span>
+                        <h2 style="margin-top:5px; color:var(--primary);">${p.title}</h2>
+                        ${p.image ? `<img src="${p.image}" class="miku-img">` : ''}
+                        <p style="margin-top:10px; white-space:pre-wrap; line-height:1.6;">${p.content}</p>
+                    </div>`;
             });
         });
+
+        // --- GUESTBOOK ENGINE ---
         function postComment() {
-            const name = document.getElementById('guestName').value; const msg = document.getElementById('guestMsg').value;
-            if(!name || !msg) return alert("Fill fields!");
-            db.collection("comments").add({ name, msg, timestamp: firebase.firestore.FieldValue.serverTimestamp() }).then(() => { location.reload(); });
+            const name = document.getElementById('guestName').value; 
+            const msg = document.getElementById('guestMsg').value;
+            if(!name || !msg) return alert("Please identify yourself and leave a message!");
+            db.collection("comments").add({ 
+                name: name, 
+                msg: msg, 
+                timestamp: firebase.firestore.FieldValue.serverTimestamp() 
+            }).then(() => {
+                document.getElementById('guestName').value = "";
+                document.getElementById('guestMsg').value = "";
+            });
         }
-        db.collection("comments").orderBy("timestamp", "desc").onSnapshot(snaps => {
-            const feed = document.getElementById('comments-feed'); feed.innerHTML = "";
-            snaps.forEach(doc => { const c = doc.data(); feed.innerHTML += `<div class="card" style="padding:20px; border-left:3px solid var(--primary);"><strong>${c.name}</strong><p>${c.msg}</p></div>`; });
+
+        db.collection("comments").orderBy("timestamp", "desc").limit(15).onSnapshot(snaps => {
+            const feed = document.getElementById('comments-feed'); 
+            feed.innerHTML = "";
+            snaps.forEach(doc => { 
+                const c = doc.data(); 
+                feed.innerHTML += `
+                    <div class="card" style="padding:20px; border-left:4px solid var(--primary);">
+                        <strong style="color:var(--primary);">${c.name}</strong>
+                        <p style="margin-top:5px; opacity:0.9;">${c.msg}</p>
+                    </div>`; 
+            });
         });
     </script>
 </body>
