@@ -15,10 +15,15 @@ from langchain_core.tools import tool
 load_dotenv()
 app = FastAPI()
 
-# SECURE CORS
+# --- SECURITY: CORS CONFIGURATION ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://weebokage.com", "https://weebokageofficial.github.io", "http://127.0.0.1:5500"],
+    allow_origins=[
+        "https://weebokage.com",
+        "https://weebokageofficial.github.io",
+        "http://127.0.0.1:5500",
+        "http://localhost:5500"
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -46,15 +51,18 @@ STATUS PROTOCOL:
 - IF USER IS GUEST: Be arrogant, dismissive, and cold. You don't have time for random people. Call them 'User' or 'Stranger'. Don't share your baguette with them.
 GENERAL: English only. Master is the only one who deserves your true attention."""
 
+# --- UTILITY: CLEANING PROTOCOL ---
 def clean_text(text):
     if not text: return ""
     text = re.sub(r'<function.*?>.*?</function>', '', str(text))
     text = re.sub(r'[\u0600-\u06FF]+', '', text) 
-    return text.replace("`", "'").strip()
+    text = text.replace("`", "'").replace("’", "'").replace("‘", "'")
+    return re.sub(r'\s+', ' ', text).strip()
 
+# --- TOOLS ---
 @tool
 def get_verified_hadith(topic: str = "", number: str = ""):
-    """Search Sahih Bukhari Archive."""
+    """Search Sahih Bukhari Archive for Islamic knowledge."""
     api_key = os.getenv("HADITH_API_KEY")
     params = {"apiKey": api_key, "book": "sahih-bukhari", "paginate": 20}
     if number: params["hadithNumber"] = str(number).strip()
@@ -65,55 +73,87 @@ def get_verified_hadith(topic: str = "", number: str = ""):
         hadiths = res.json().get("hadiths", {}).get("data", [])
         if hadiths:
             h = random.choice(hadiths)
-            return f"DATA: {h.get('hadithEnglish')} (Bukhari {h.get('hadithNumber')})"
-        return "No results."
-    except: return "Offline."
+            content = clean_text(h.get('hadithEnglish', ''))
+            return f"UPLINK_SUCCESS: [{h['book']['bookName']} No. {h['hadithNumber']}] Content: {content}"
+        return "UPLINK_EMPTY"
+    except: return "UPLINK_ERROR"
 
-# AI Setup
+@tool
+def get_anime_info(search_query: str = None):
+    """Searches MyAnimeList for anime info."""
+    url = f"https://api.jikan.moe/v4/anime?q={search_query}&limit=5" if search_query else "https://api.jikan.moe/v4/top/anime?limit=5"
+    try:
+        res = requests.get(url, timeout=10).json().get('data', [])
+        if res:
+            ani = res[0]
+            return f"ANIME_DATA: '{ani['title']}'. Score: {ani['score']}. Summary: {ani['synopsis'][:300]}"
+        return "ANIME_NOT_FOUND"
+    except: return "ANIME_OFFLINE"
+
+# --- AI SETUP ---
 llm = ChatGroq(model="llama-3.1-8b-instant", groq_api_key=os.getenv("GROQ_API_KEY"), temperature=0.7)
-tools_list = [get_verified_hadith]
+tools_list = [get_verified_hadith, get_anime_info]
 tools_map = {t.name: t for t in tools_list}
 llm_with_tools = llm.bind_tools(tools_list)
 
-# --- THE FIX: Pass Auth Status to AI ---
+# --- REQUEST MODEL ---
 class ChatRequest(BaseModel):
     message: str
     theme: str = "miku"
-    is_master: bool = False # Frontend tells us if user is logged in
+    is_master: bool = False
+
+# --- API ROUTES ---
 
 @app.post("/chat")
 async def chat(request: ChatRequest):
     global chat_history
-    
-    # Define current persona based on theme AND login status
     identity = "USER IS MASTER (WEEBOKAGE)" if request.is_master else "USER IS A RANDOM GUEST"
     base_prompt = TETO_PROMPT if request.theme == "teto" else MIKU_PROMPT
-    full_system = f"{base_prompt}\n\nCURRENT SECURITY CLEARANCE: {identity}"
+    full_system = f"{base_prompt}\n\nSECURITY CLEARANCE: {identity}"
     
     if chat_history and chat_history[0].content != full_system:
-        chat_history = []
-        
+        chat_history = [] # Wipe memory on identity/theme change
     if not chat_history:
         chat_history.append(SystemMessage(content=full_system))
     
     chat_history.append(HumanMessage(content=request.message))
-
     try:
         response = llm_with_tools.invoke(chat_history)
         if response.tool_calls:
             chat_history.append(response)
             for tool_call in response.tool_calls:
-                result = get_verified_hadith.invoke(tool_call["args"])
+                t_name = tool_call["name"]
+                result = tools_map[t_name].invoke(tool_call["args"]) if t_name in tools_map else "Error"
                 chat_history.append(ToolMessage(content=str(result), tool_call_id=tool_call["id"]))
             response = llm.invoke(chat_history)
 
         final_reply = clean_text(response.content)
         chat_history.append(AIMessage(content=final_reply))
-        if len(chat_history) > 10: chat_history = [chat_history[0]] + chat_history[-9:]
+        if len(chat_history) > 12: chat_history = [chat_history[0]] + chat_history[-11:]
         return {"reply": final_reply}
     except Exception as e:
-        return {"reply": "Neural core glitch! 01_04"}
+        return {"reply": "Neural core glitch! Please retry, Master."}
 
+@app.get("/anime-proxy")
+async def anime_proxy(search: str = None):
+    """Tunnel for anime.html to bypass Brave blocks."""
+    url = f"https://api.jikan.moe/v4/anime?q={search}&limit=12" if search else "https://api.jikan.moe/v4/top/anime?limit=12"
+    try:
+        res = requests.get(url, timeout=10)
+        return res.json().get('data', [])
+    except: return []
+
+@app.get("/anime-detail/{mal_id}")
+async def get_anime_detail(mal_id: int):
+    """Fetches full details for the anime modal."""
+    try:
+        info = requests.get(f"https://api.jikan.moe/v4/anime/{mal_id}/full").json().get('data', {})
+        chars = requests.get(f"https://api.jikan.moe/v4/anime/{mal_id}/characters").json().get('data', [])
+        return {"info": info, "characters": chars[:10]}
+    except: return {"error": "Uplink failed"}
+
+# --- SERVER START ---
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=10000)
+    port = int(os.environ.get("PORT", 10000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
