@@ -120,6 +120,41 @@
             box.scrollTop = box.scrollHeight;
         }
         document.getElementById('miku-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') askMiku(); });
+         // --- WEATHER LOGIC ---
+        const weatherIcons = {
+            0: "fa-sun", 1: "fa-cloud-sun", 2: "fa-cloud-sun", 3: "fa-cloud",
+            45: "fa-smog", 48: "fa-smog", 51: "fa-cloud-rain", 61: "fa-cloud-showers-heavy",
+            71: "fa-snowflake", 80: "fa-cloud-showers-water", 95: "fa-bolt"
+        };
+
+        async function fetchWeather(lat, lon, elementId) {
+            try {
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+                const data = await res.json();
+                const current = data.current_weather;
+                const card = document.getElementById(elementId);
+                
+                card.querySelector('.weather-temp').innerText = `${Math.round(current.temperature)}°C`;
+                card.querySelector('.weather-desc').innerText = `Wind: ${current.windspeed} km/h`;
+                
+                // Set Icon
+                const iconClass = weatherIcons[current.weathercode] || "fa-cloud";
+                card.querySelector('i').className = `fas ${iconClass} weather-icon`;
+            } catch (e) { console.error("Weather Uplink Failed"); }
+        }
+
+        function updateWeather() {
+            fetchWeather(51.08, 7.11, 'weather-burscheid');
+            fetchWeather(50.93, 6.95, 'weather-koeln');
+        }
+
+        // Theme logic
+        function setTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); }
+        setTheme(localStorage.getItem('theme') || 'miku');
+        function themeToggle() { setTheme(document.getElementById('theme-toggle').checked ? 'teto' : 'miku'); location.reload(); }
+
+        updateWeather();
+        setInterval(updateWeather, 600000); // Refresh every 10 mins
     </script>
 </body>
 </html>
