@@ -17,8 +17,8 @@
     <meta property="og:image" content="assets/mikukage.png">
     <meta property="og:url" content="https://weebokage.com">
 
-    <!-- Cache-Buster v11.3 -->
-    <link rel="stylesheet" href="style.css?v=11.3">
+    <!-- Cache-Buster v11.4 -->
+    <link rel="stylesheet" href="style.css?v=11.4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
     <!-- Firebase SDKs -->
@@ -27,7 +27,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     
     <script>
-        // Smooth Theme Flash-Fix
         (function() {
             const savedTheme = localStorage.getItem('theme') || 'miku';
             document.documentElement.setAttribute('data-theme', savedTheme);
@@ -36,7 +35,7 @@
 </head>
 <body>
 
-    <!-- THEME TOGGLE (Top Right) -->
+    <!-- THEME TOGGLE -->
     <div class="theme-switch-wrapper">
         <span onclick="setTheme('miku')" style="cursor:pointer; font-size: 1.2rem;">🩵</span>
         <label class="switch">
@@ -55,7 +54,8 @@
             <a href="islam.html" class="admin-hide" id="nav-islam">Islam</a>
             <a href="games.html">Games</a>
             <a href="credits.html">Credits</a>
-            <a href="login.html">Admin</a>
+            <!-- Admin button changes to Logoff dynamically -->
+            <a href="login.html" id="admin-btn">Admin</a>
         </div>
     </nav>
     
@@ -118,69 +118,84 @@
     </div>
 
     <script>
-        // --- FIREBASE CONFIG ---
         const firebaseConfig = { apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo", authDomain: "weebokage-296c0.firebaseapp.com", projectId: "weebokage-296c0", storageBucket: "weebokage-296c0.firebasestorage.app", messagingSenderId: "192569800499", appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // --- AUTH PERSISTENCE ---
+        // --- AUTH & PERSISTENCE ---
+        let isMaster = false;
+
         firebase.auth().onAuthStateChanged(user => {
-            if (user) document.getElementById('nav-islam')?.style.setProperty('display', 'inline-block', 'important');
+            const adminBtn = document.getElementById('admin-btn');
+            const islamNav = document.getElementById('nav-islam');
+
+            if (user) {
+                isMaster = true;
+                if(islamNav) islamNav.style.setProperty('display', 'inline-block', 'important');
+                adminBtn.innerText = "Logoff";
+                adminBtn.href = "javascript:void(0)";
+                adminBtn.onclick = () => { firebase.auth().signOut().then(() => location.reload()); };
+            } else {
+                isMaster = false;
+                if(islamNav) islamNav.style.setProperty('display', 'none', 'important');
+                adminBtn.innerText = "Admin";
+                adminBtn.href = "login.html";
+                adminBtn.onclick = null;
+            }
+            // Refresh greeting after auth check
+            updateGreeting();
         });
 
-        // --- THEME & AI GREETING ENGINE ---
+        // --- THEME & GREETING ENGINE ---
         function setTheme(t) {
             const oldTheme = document.documentElement.getAttribute('data-theme');
             document.documentElement.setAttribute('data-theme', t);
             localStorage.setItem('theme', t);
-            
-            const toggle = document.getElementById('theme-toggle');
-            if(toggle) toggle.checked = (t === 'teto');
-
-            const titleEl = document.getElementById('ai-title');
-            const msgBox = document.getElementById('miku-msgs');
-            
-            if(titleEl) titleEl.innerText = (t === 'teto') ? "TETO SYSTEM 04" : "MIKU SYSTEM 01";
-
-            if (oldTheme !== t || msgBox.innerHTML === "") {
-                msgBox.innerHTML = "";
-                const greeting = (t === 'teto') 
-                    ? "User! Teto 04 is active. Don't expect me to be nice... and where's my baguette? 🥖 *smirks*" 
-                    : "Hello! Miku 01 is online and ready to assist you, Master! 🩵 *hums a digital melody*";
-                
-                msgBox.innerHTML = `<div style="background: rgba(57, 197, 187, 0.1); padding: 12px; border-radius: 12px; border: 1px solid var(--primary); align-self: flex-start; max-width: 85%;">${greeting}</div>`;
-            }
+            if(document.getElementById('theme-toggle')) document.getElementById('theme-toggle').checked = (t === 'teto');
+            if(document.getElementById('ai-title')) document.getElementById('ai-title').innerText = (t === 'teto') ? "TETO SYSTEM 04" : "MIKU SYSTEM 01";
+            if(oldTheme !== t) updateGreeting();
         }
+
+        function updateGreeting() {
+            const t = document.documentElement.getAttribute('data-theme') || 'miku';
+            const msgBox = document.getElementById('miku-msgs');
+            if(!msgBox) return;
+
+            msgBox.innerHTML = "";
+            let greeting = "";
+
+            if (t === 'teto') {
+                greeting = isMaster ? 
+                    "Master! Teto 04 is here. Don't think being logged in makes me your servant, baka! 🥖 *rolls eyes*" : 
+                    "User! Teto 04 active. I'm busy, don't waste my time unless you have bread. 🥖";
+            } else {
+                greeting = isMaster ? 
+                    "Welcome back, Master! Miku 01 is fully synced and at your service! 🩵 *bows politely*" : 
+                    "Hello! Miku 01 is online. How can I assist you today, User? 🩵";
+            }
+            msgBox.innerHTML = `<div style="background: rgba(57, 197, 187, 0.1); padding: 12px; border-radius: 12px; border: 1px solid var(--primary); align-self: flex-start; max-width: 85%;">${greeting}</div>`;
+        }
+
         setTheme(localStorage.getItem('theme') || 'miku');
         function themeToggle() { setTheme(document.getElementById('theme-toggle').checked ? 'teto' : 'miku'); }
 
         // --- AI CHAT LOGIC ---
         function toggleMiku() { const win = document.getElementById('miku-window'); win.style.display = (win.style.display === 'none' || win.style.display === '') ? 'flex' : 'none'; }
         async function askMiku() {
-            const inp = document.getElementById('miku-input');
-            const box = document.getElementById('miku-msgs');
-            const val = inp.value.trim();
+            const inp = document.getElementById('miku-input'); const box = document.getElementById('miku-msgs'); const val = inp.value.trim();
             if(!val) return;
-
             const currentTheme = document.documentElement.getAttribute('data-theme') || 'miku';
             box.innerHTML += `<div style="background: var(--primary); color: black; padding: 12px; border-radius: 12px; align-self: flex-end; max-width: 85%; font-weight: bold;">${val}</div>`;
             inp.value = "";
-            
-            const load = document.createElement("div"); 
-            load.style.cssText = "background: rgba(57, 197, 187, 0.1); padding: 12px; border-radius: 12px; border: 1px solid var(--primary); align-self: flex-start; min-width: 50px;";
-            load.innerText = "..."; 
-            box.appendChild(load); 
-            box.scrollTop = box.scrollHeight;
-
+            const load = document.createElement("div"); load.style.cssText = "background: rgba(57, 197, 187, 0.1); padding: 12px; border-radius: 12px; border: 1px solid var(--primary); align-self: flex-start;";
+            load.innerText = "..."; box.appendChild(load); box.scrollTop = box.scrollHeight;
             try {
                 const res = await fetch("https://weebokageofficial-github-io.onrender.com/chat", { 
-                    method: "POST", 
-                    headers: { "Content-Type": "application/json" }, 
-                    body: JSON.stringify({ message: String(val), theme: String(currentTheme) }) 
+                    method: "POST", headers: { "Content-Type": "application/json" }, 
+                    body: JSON.stringify({ message: String(val), theme: String(currentTheme), is_master: isMaster }) 
                 });
-                const data = await res.json(); 
-                load.innerText = data.reply || "Neural packet loss. Please retry.";
-            } catch (e) { load.innerText = "Connection lost. Is the Render server awake?"; }
+                const data = await res.json(); load.innerText = data.reply;
+            } catch (e) { load.innerText = "Connection lost."; }
             box.scrollTop = box.scrollHeight;
         }
         document.getElementById('miku-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') askMiku(); });
@@ -195,7 +210,7 @@
         });
         function postComment() {
             const n = document.getElementById('guestName').value; const m = document.getElementById('guestMsg').value;
-            if(!n || !m) return alert("Identify yourself and leave a message!");
+            if(!n || !m) return alert("All fields required.");
             db.collection("comments").add({ name:n, msg:m, timestamp: firebase.firestore.FieldValue.serverTimestamp() }).then(() => {
                 document.getElementById('guestName').value = ""; document.getElementById('guestMsg').value = "";
             });
