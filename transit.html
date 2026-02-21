@@ -1,13 +1,18 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transit | WEEBOKAGE</title>
-    <link rel="stylesheet" href="style.css?v=9.5">
+    <title>Transit Terminal | WEEBOKAGE</title>
+    <!-- Cache-Buster v11.7 -->
+    <link rel="stylesheet" href="style.css?v=11.7">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <script>
         (function() {
             const savedTheme = localStorage.getItem('theme') || 'miku';
@@ -15,60 +20,58 @@
         })();
     </script>
     <style>
+        .weather-banner { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
+        .weather-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid var(--primary); border-radius: 20px; padding: 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 0 20px var(--primary-glow); animation: weatherFloat 4s ease-in-out infinite; }
+        .weather-temp { font-size: 2rem; font-weight: 700; }
+        .weather-icon { font-size: 2.5rem; color: var(--primary); }
+        @keyframes weatherFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
         .transit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; margin-top: 20px; }
-        .vrs-widget { width: 100%; height: 550px; border: none; background: #fff; border-radius: 0 0 15px 15px; filter: invert(0.9) hue-rotate(180deg) brightness(1.1); }
+        .vrs-widget { width: 100%; height: 500px; border: none; background: #fff; border-radius: 0 0 15px 15px; filter: invert(0.9) hue-rotate(180deg) brightness(1.1); }
         .stop-card { padding: 0 !important; overflow: hidden; border-top: 5px solid var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
         .stop-header { padding: 15px; background: rgba(0,0,0,0.5); display: flex; align-items: center; gap: 10px; }
         .stop-header h3 { margin: 0; color: var(--primary); font-size: 1.1rem; }
+        @media (max-width: 600px) { .weather-banner { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
+    <!-- THEME TOGGLE -->
     <div class="theme-switch-wrapper">
         <span onclick="setTheme('miku')" style="cursor:pointer; font-size: 1.2rem;">🩵</span>
-        <label class="switch"><input type="checkbox" id="theme-toggle" onclick="themeToggle()"><span class="slider"></span></label>
+        <label class="switch">
+            <input type="checkbox" id="theme-toggle" onclick="themeToggle()">
+            <span class="slider"></span>
+        </label>
         <span onclick="setTheme('teto')" style="cursor:pointer; font-size: 1.2rem;">🥖</span>
     </div>
 
+    <!-- NAVIGATION -->
     <nav>
         <div class="links">
             <a href="index.html">Home</a>
             <a href="transit.html">Transit</a>
             <a href="anime.html">Anime</a>
-            <!-- Der versteckte Admin-Link -->
             <a href="islam.html" class="admin-hide" id="nav-islam">Islam</a>
             <a href="games.html">Games</a>
             <a href="credits.html">Credits</a>
-            <a href="login.html">Admin</a>
+            <a href="login.html" id="admin-btn">Admin</a>
         </div>
     </nav>
 
     <div class="container" style="max-width: 1100px;">
-        <div style="text-align: center; margin-bottom: 40px;">
-            <h1 style="color: var(--primary); font-size: 3rem; letter-spacing: 3px; text-transform: uppercase;">Transit Terminal</h1>
-            <p style="opacity: 0.6;">Uplinked to Official VRS Monitors</p>
-        </div>
-
-         <!-- WEATHER BANNER -->
+        <!-- WEATHER BANNER -->
         <div class="weather-banner">
             <div class="weather-card" id="weather-burscheid">
-                <div class="weather-info">
-                    <h4>Burscheid Sector</h4>
-                    <div class="weather-temp">--°C</div>
-                    <div class="weather-desc" style="font-size: 0.7rem; opacity: 0.6;">Synchronizing...</div>
-                </div>
+                <div class="weather-info"><h4>Burscheid Sector</h4><div class="weather-temp">--°C</div><div class="weather-desc" style="font-size: 0.7rem; opacity: 0.6;">Syncing...</div></div>
                 <i class="fas fa-cloud-sun weather-icon"></i>
             </div>
             <div class="weather-card" id="weather-koeln" style="animation-delay: 1s;">
-                <div class="weather-info">
-                    <h4>Köln Sector</h4>
-                    <div class="weather-temp">--°C</div>
-                    <div class="weather-desc" style="font-size: 0.7rem; opacity: 0.6;">Synchronizing...</div>
-                </div>
+                <div class="weather-info"><h4>Köln Sector</h4><div class="weather-temp">--°C</div><div class="weather-desc" style="font-size: 0.7rem; opacity: 0.6;">Syncing...</div></div>
                 <i class="fas fa-cloud-sun weather-icon"></i>
             </div>
         </div>
-        
+
+        <!-- TRANSIT GRID -->
         <div class="transit-grid">
             <div class="card stop-card"><div class="stop-header"><i class="fas fa-bus"></i> <h3>Nagelsbaum</h3></div><iframe class="vrs-widget" src="https://www.vrs.de/am/s/2d5200b1b0ceef2ffb16af3170bf8aec"></iframe></div>
             <div class="card stop-card"><div class="stop-header"><i class="fas fa-train"></i> <h3>Opladen</h3></div><iframe class="vrs-widget" src="https://www.vrs.de/am/s/bed61f99abba10de1c4d0e43c96b6236"></iframe></div>
@@ -82,7 +85,7 @@
         <div id="miku-window" style="display: none; width: 350px; height: 500px; background: rgba(10,11,16,0.95); backdrop-filter: blur(20px); border: 2px solid var(--primary); border-radius: 20px; flex-direction: column; overflow: hidden; box-shadow: 0 0 30px var(--primary-glow); margin-bottom: 15px;">
             <div style="background: var(--primary); color: black; padding: 12px; font-weight: bold; display: flex; justify-content: space-between;"><span id="ai-title">MIKU SYSTEM 01</span><span onclick="toggleMiku()" style="cursor: pointer;">&times;</span></div>
             <div id="miku-msgs" style="flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; font-size: 0.9rem;"></div>
-            <div style="padding: 15px; display: flex; gap: 10px; border-top: 1px solid rgba(255,255,255,0.1);"><input type="text" id="miku-input" placeholder="Frage Miku..." style="margin:0; border-radius: 12px;"><button onclick="askMiku()" class="btn" style="width: 50px; height: 50px; border-radius: 50%; padding: 0;"><i class="fas fa-paper-plane"></i></button></div>
+            <div style="padding: 15px; display: flex; gap: 10px; border-top: 1px solid rgba(255,255,255,0.1);"><input type="text" id="miku-input" placeholder="Ask Miku/Teto..." style="margin:0; border-radius: 12px;"><button onclick="askMiku()" class="btn" style="width: 50px; height: 50px; border-radius: 50%; padding: 0;"><i class="fas fa-paper-plane"></i></button></div>
         </div>
         <div id="miku-btn" onclick="toggleMiku()" style="width: 70px; height: 70px; border-radius: 50%; background-image: var(--pfp); background-size: cover; border: 3px solid var(--primary); cursor: pointer; box-shadow: 0 0 20px var(--primary-glow);"></div>
     </div>
@@ -90,21 +93,65 @@
     <script>
         const firebaseConfig = { apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo", authDomain: "weebokage-296c0.firebaseapp.com", projectId: "weebokage-296c0", storageBucket: "weebokage-296c0.firebasestorage.app", messagingSenderId: "192569800499", appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046" };
         firebase.initializeApp(firebaseConfig);
-        firebase.auth().onAuthStateChanged(user => { if (user) document.getElementById('nav-islam').style.setProperty('display', 'inline-block', 'important'); });
 
+        let isMaster = false;
+        firebase.auth().onAuthStateChanged(user => {
+            const adminBtn = document.getElementById('admin-btn');
+            const islamNav = document.getElementById('nav-islam');
+            if (user) {
+                isMaster = true;
+                if(islamNav) islamNav.style.setProperty('display', 'inline-block', 'important');
+                adminBtn.innerText = "Logoff";
+                adminBtn.href = "javascript:void(0)";
+                adminBtn.onclick = () => { firebase.auth().signOut().then(() => location.reload()); };
+            } else {
+                isMaster = false;
+                if(islamNav) islamNav.style.setProperty('display', 'none', 'important');
+                adminBtn.innerText = "Admin";
+                adminBtn.href = "login.html";
+                adminBtn.onclick = null;
+            }
+            updateGreeting();
+        });
+
+        // --- THEME ENGINE ---
         function setTheme(t) {
             const oldTheme = document.documentElement.getAttribute('data-theme');
-            document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); document.getElementById('theme-toggle').checked = (t === 'teto');
-            document.getElementById('ai-title').innerText = (t === 'teto') ? "TETO SYSTEM 04" : "MIKU SYSTEM 01";
-            if(oldTheme !== t || document.getElementById('miku-msgs').innerHTML === "") {
-                const box = document.getElementById('miku-msgs');
-                const greeting = (t === 'teto') ? "Master! Teto 04 is here. 🥖" : "Master! Miku 01 is here to help! 🩵";
-                box.innerHTML = `<div style="background: rgba(57, 197, 187, 0.1); padding: 12px; border-radius: 12px; border: 1px solid var(--primary); align-self: flex-start; max-width: 85%;">${greeting}</div>`;
-            }
+            document.documentElement.setAttribute('data-theme', t);
+            localStorage.setItem('theme', t);
+            
+            const toggle = document.getElementById('theme-toggle');
+            if(toggle) toggle.checked = (t === 'teto');
+
+            if(document.getElementById('ai-title')) document.getElementById('ai-title').innerText = (t === 'teto') ? "TETO SYSTEM 04" : "MIKU SYSTEM 01";
+            if(oldTheme !== t) updateGreeting();
+        }
+
+        function updateGreeting() {
+            const t = localStorage.getItem('theme') || 'miku';
+            const msgBox = document.getElementById('miku-msgs');
+            if(!msgBox) return;
+            msgBox.innerHTML = "";
+            let g = t === 'teto' ? (isMaster ? "Master! Teto 04 active. 🥖" : "User! Teto 04 active. 🥖") : (isMaster ? "Welcome back, Master! Miku 01 at your service! 🩵" : "Hello! Miku 01 is online, User! 🩵");
+            msgBox.innerHTML = `<div style="background: rgba(57, 197, 187, 0.1); padding: 12px; border-radius: 12px; border: 1px solid var(--primary); align-self: flex-start; max-width: 85%;">${g}</div>`;
         }
         setTheme(localStorage.getItem('theme') || 'miku');
         function themeToggle() { setTheme(document.getElementById('theme-toggle').checked ? 'teto' : 'miku'); }
 
+        // --- WEATHER ---
+        async function fetchWeather(lat, lon, id) {
+            try {
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+                const data = await res.json();
+                const card = document.getElementById(id);
+                card.querySelector('.weather-temp').innerText = `${Math.round(data.current_weather.temperature)}°C`;
+                card.querySelector('.weather-desc').innerText = `Wind: ${data.current_weather.windspeed} km/h`;
+            } catch (e) { console.error("Weather error"); }
+        }
+        function updateAllWeather() { fetchWeather(51.08, 7.11, 'weather-burscheid'); fetchWeather(50.93, 6.95, 'weather-koeln'); }
+        updateAllWeather(); setInterval(updateAllWeather, 600000);
+
+        // --- AI CHAT ---
         function toggleMiku() { const win = document.getElementById('miku-window'); win.style.display = (win.style.display === 'none' || win.style.display === '') ? 'flex' : 'none'; }
         async function askMiku() {
             const inp = document.getElementById('miku-input'); const box = document.getElementById('miku-msgs'); const val = inp.value.trim();
@@ -114,47 +161,12 @@
             const load = document.createElement("div"); load.style.cssText = "background: rgba(57, 197, 187, 0.1); padding: 12px; border-radius: 12px; border: 1px solid var(--primary); align-self: flex-start;";
             load.innerText = "..."; box.appendChild(load); box.scrollTop = box.scrollHeight;
             try {
-                const res = await fetch("https://weebokageofficial-github-io.onrender.com/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: val, theme: localStorage.getItem('theme') || 'miku' }) });
+                const res = await fetch("https://weebokageofficial-github-io.onrender.com/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: String(val), theme: localStorage.getItem('theme') || 'miku', is_master: isMaster }) });
                 const data = await res.json(); load.innerText = data.reply;
             } catch (e) { load.innerText = "Connection lost."; }
             box.scrollTop = box.scrollHeight;
         }
         document.getElementById('miku-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') askMiku(); });
-         // --- WEATHER LOGIC ---
-        const weatherIcons = {
-            0: "fa-sun", 1: "fa-cloud-sun", 2: "fa-cloud-sun", 3: "fa-cloud",
-            45: "fa-smog", 48: "fa-smog", 51: "fa-cloud-rain", 61: "fa-cloud-showers-heavy",
-            71: "fa-snowflake", 80: "fa-cloud-showers-water", 95: "fa-bolt"
-        };
-
-        async function fetchWeather(lat, lon, elementId) {
-            try {
-                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-                const data = await res.json();
-                const current = data.current_weather;
-                const card = document.getElementById(elementId);
-                
-                card.querySelector('.weather-temp').innerText = `${Math.round(current.temperature)}°C`;
-                card.querySelector('.weather-desc').innerText = `Wind: ${current.windspeed} km/h`;
-                
-                // Set Icon
-                const iconClass = weatherIcons[current.weathercode] || "fa-cloud";
-                card.querySelector('i').className = `fas ${iconClass} weather-icon`;
-            } catch (e) { console.error("Weather Uplink Failed"); }
-        }
-
-        function updateWeather() {
-            fetchWeather(51.08, 7.11, 'weather-burscheid');
-            fetchWeather(50.93, 6.95, 'weather-koeln');
-        }
-
-        // Theme logic
-        function setTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); }
-        setTheme(localStorage.getItem('theme') || 'miku');
-        function themeToggle() { setTheme(document.getElementById('theme-toggle').checked ? 'teto' : 'miku'); location.reload(); }
-
-        updateWeather();
-        setInterval(updateWeather, 600000); // Refresh every 10 mins
     </script>
 </body>
 </html>
