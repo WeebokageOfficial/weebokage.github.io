@@ -4,15 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arcade Terminal | WEEBOKAGE</title>
-    <!-- Updated Cache-Buster to v5.1 -->
-    <link rel="stylesheet" href="style.css?v=5.1">
+    <!-- Cache-Buster v12.0 -->
+    <link rel="stylesheet" href="style.css?v=12.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
-    <!-- Load Ruffle Emulator Script -->
+    <!-- ENGINE 1: Ruffle (Flash) -->
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
     
+    <!-- ENGINE 2: JS-DOS (Classic PC Games) -->
+    <script src="https://js-dos.com/v7/build/js-dos.js"></script>
+    <link href="https://js-dos.com/v7/build/js-dos.css" rel="stylesheet">
+
     <script>
-        // Smooth Theme Flash-Fix
         (function() {
             const savedTheme = localStorage.getItem('theme') || 'miku';
             document.documentElement.setAttribute('data-theme', savedTheme);
@@ -20,202 +23,124 @@
     </script>
 
     <style>
-        /* Specific Overrides for Games Page */
         .game-container {
-            width: 100%;
-            max-width: 900px;
-            height: 600px; /* Fixed height to prevent black screen issues */
-            background: #000;
-            border: 2px solid var(--primary);
-            box-shadow: 0 0 30px var(--primary-glow);
-            border-radius: 20px;
-            overflow: hidden;
-            display: none; /* Hidden until game starts */
-            margin: 30px auto;
-            position: relative;
+            width: 100%; max-width: 900px; height: 600px; 
+            background: #000; border: 2px solid var(--primary);
+            box-shadow: 0 0 30px var(--primary-glow); border-radius: 20px;
+            overflow: hidden; display: none; margin: 30px auto; position: relative;
         }
+        ruffle-player, .jsdos-container { width: 100% !important; height: 100% !important; display: block; }
+        
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 20px; }
+        .game-card { text-align: center; cursor: pointer; padding: 50px !important; transition: 0.3s ease; }
+        .game-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 15px 35px var(--primary-glow); }
+        .game-card i { font-size: 4rem; color: var(--primary); margin-bottom: 20px; }
 
-        /* Ensure Ruffle fills the container perfectly */
-        ruffle-player {
-            width: 100% !important;
-            height: 100% !important;
-            display: block;
-        }
-
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
-        }
-
-        .game-card {
-            text-align: center;
-            cursor: pointer;
-            padding: 50px !important;
-            border-style: solid;
-        }
-
-        /* Hover lift effect matching the blog posts */
-        .game-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary);
-            box-shadow: 0 15px 35px var(--primary-glow);
-        }
-
-        .game-card i {
-            font-size: 4rem;
-            color: var(--primary);
-            margin-bottom: 20px;
-            transition: 0.3s ease;
-        }
-
-        .game-card:hover i {
-            transform: scale(1.1);
-            text-shadow: 0 0 15px var(--primary-glow);
-        }
-
-        .locked-card {
-            opacity: 0.4;
-            cursor: not-allowed;
-            border-style: dashed !important;
-        }
-
-        .locked-card:hover {
-            transform: none;
-            box-shadow: none;
-        }
+        .btn-terminate { background: #ff2d55; color: white; margin-top: 20px; display: none; }
     </style>
 </head>
 <body>
 
-    <!-- THEME TOGGLE -->
     <div class="theme-switch-wrapper">
         <span onclick="setTheme('miku')" style="cursor:pointer; font-size: 1.2rem;">🩵</span>
-        <label class="switch">
-            <input type="checkbox" id="theme-toggle" onclick="themeToggle()">
-            <span class="slider"></span>
-        </label>
+        <label class="switch"><input type="checkbox" id="theme-toggle" onclick="themeToggle()"><span class="slider"></span></label>
         <span onclick="setTheme('teto')" style="cursor:pointer; font-size: 1.2rem;">🥖</span>
     </div>
 
-    <!-- NAVIGATION -->
-   <nav>
-        <div class="links">
-            <a href="index.html">Home</a>
-            <a href="transit.html">Transit</a>
-            <a href="anime.html">Anime</a>
-            <!-- Der versteckte Admin-Link -->
-            <a href="islam.html" class="admin-hide" id="nav-islam">Islam</a>
-            <a href="games.html">Games</a>
-            <a href="credits.html">Credits</a>
-            <a href="login.html">Admin</a>
-        </div>
-    </nav>
+    <nav><div class="links">
+        <a href="index.html">Home</a>
+        <a href="transit.html">Transit</a>
+        <a href="anime.html">Anime</a>
+        <a href="islam.html" class="admin-hide" id="nav-islam">Islam</a>
+        <a href="games.html">Games</a>
+        <a href="credits.html">Credits</a>
+        <a href="login.html" id="admin-btn">Admin</a>
+    </div></nav>
 
     <div class="container">
-        <!-- HEADER -->
         <div class="hero" id="arcade-header" style="text-align: center; margin-bottom: 50px;">
-            <h1 style="color: var(--primary); font-size: 3.5rem; letter-spacing: 5px; text-transform: uppercase; font-weight: 700;">Arcade Terminal</h1>
-            <p style="opacity: 0.6; letter-spacing: 2px;">Select a simulation module to initialize</p>
-            <div style="width: 100px; height: 4px; background: var(--primary); margin: 20px auto; border-radius: 2px;"></div>
+            <h1 style="color: var(--primary); font-size: 3.5rem; letter-spacing: 5px; text-transform: uppercase;">Arcade Terminal</h1>
+            <p style="opacity: 0.6; letter-spacing: 2px;">Neural Link: Stable | Select Module</p>
         </div>
 
-        <!-- SELECTION MENU -->
+        <!-- GAME SELECTION -->
         <div class="game-grid" id="selection-area">
+            <!-- DOOM -->
+            <div class="card game-card" onclick="startDos('https://dos.zone/player/?bundleUrl=https%3A%2F%2Fcdn.dos.zone%2Fcustom%2Fdos%2Fdoom.jsdos?anonymous=1')">
+                <i class="fas fa-skull"></i>
+                <h3>DOOM (1993)</h3>
+                <p style="font-size: 0.85rem; opacity: 0.5; margin-top: 10px;">Simulation: Classic FPS</p>
+            </div>
+
             <!-- Mario Combat -->
-            <div class="card game-card" onclick="loadGame('assets/Mario_Combat.swf')">
+            <div class="card game-card" onclick="startFlash('assets/Mario_Combat.swf')">
                 <i class="fas fa-fist-raised"></i>
                 <h3>Mario Combat</h3>
                 <p style="font-size: 0.85rem; opacity: 0.5; margin-top: 10px;">Simulation: Alpha-01</p>
             </div>
-
-            <!-- Coming Soon Placeholder -->
-            <div class="card game-card locked-card">
-                <i class="fas fa-lock"></i>
-                <h3>Coming Soon</h3>
-                <p style="font-size: 0.85rem; opacity: 0.5; margin-top: 10px;">Pending decryption...</p>
-            </div>
         </div>
 
-        <!-- PLAYER AREA -->
+        <!-- THE PLAYERS -->
         <div id="player-wrapper" class="game-container">
+            <!-- Flash goes here -->
             <div id="ruffle-canvas" style="width:100%; height:100%;"></div>
+            <!-- DOS goes here -->
+            <iframe id="dos-frame" style="width:100%; height:100%; border:none; display:none;"></iframe>
         </div>
         
         <div style="text-align: center;">
-            <button id="closeBtn" class="btn" style="display:none; margin-top: 30px; background: #ff2d55; color: white;" onclick="location.reload()">
-                <i class="fas fa-times-circle"></i> TERMINATE SESSION
-            </button>
+            <button id="closeBtn" class="btn btn-terminate" onclick="location.reload()">TERMINATE SESSION</button>
         </div>
     </div>
 
     <script>
-        // --- THEME ENGINE ---
-        const toggle = document.getElementById('theme-toggle');
-        function themeToggle() { setTheme(toggle.checked ? 'teto' : 'miku'); }
+        // --- AUTH & THEME ---
+        let isMaster = false;
+        const firebaseConfig = { apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo", authDomain: "weebokage-296c0.firebaseapp.com", projectId: "weebokage-296c0", storageBucket: "weebokage-296c0.firebasestorage.app", messagingSenderId: "192569800499", appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046" };
+        firebase.initializeApp(firebaseConfig);
+        firebase.auth().onAuthStateChanged(user => {
+            const adminBtn = document.getElementById('admin-btn');
+            const islamNav = document.getElementById('nav-islam');
+            if (user) {
+                isMaster = true;
+                if(islamNav) islamNav.style.setProperty('display', 'inline-block', 'important');
+                if(adminBtn) adminBtn.innerText = "Logoff";
+            }
+        });
+
         function setTheme(t) {
             document.documentElement.setAttribute('data-theme', t);
             localStorage.setItem('theme', t);
-            if(toggle) toggle.checked = (t === 'teto');
+            document.getElementById('theme-toggle').checked = (t === 'teto');
         }
         setTheme(localStorage.getItem('theme') || 'miku');
+        function themeToggle() { setTheme(document.getElementById('theme-toggle').checked ? 'teto' : 'miku'); }
 
-        // --- BRAVE-FRIENDLY GAME LOADER ---
-        async function loadGame(swfPath) {
-            console.log("Loading module: " + swfPath);
-
-            // 1. Check for Brave/Shields
-            if (!window.RufflePlayer) {
-                alert("ACCESS DENIED: Emulator script blocked. If using Brave, turn Shields OFF for this site.");
-                return;
-            }
-
-            // 2. UI Swap
+        // --- GAME LOADERS ---
+        function prepareUI() {
             document.getElementById('selection-area').style.display = 'none';
             document.getElementById('arcade-header').style.display = 'none';
             document.getElementById('player-wrapper').style.display = 'block';
             document.getElementById('closeBtn').style.display = 'inline-block';
+        }
 
-            // 3. Initialize Ruffle
-            try {
-                const ruffle = window.RufflePlayer.newest();
-                const player = ruffle.createPlayer();
-                const container = document.getElementById('ruffle-canvas');
-                
-                container.innerHTML = ""; // Clear loader
-                container.appendChild(player);
+        // Loader for Flash Games
+        async function startFlash(swfPath) {
+            prepareUI();
+            const ruffle = window.RufflePlayer.newest();
+            const player = ruffle.createPlayer();
+            document.getElementById('ruffle-canvas').appendChild(player);
+            player.load({ url: swfPath, scale: "showAll", quality: "high" });
+        }
 
-                await player.load({
-                    url: swfPath,
-                    scale: "showAll",
-                    allowScriptAccess: true,
-                    quality: "high",
-                    letterbox: "on"
-                });
-                console.log("Simulation started successfully.");
-            } catch (err) {
-                console.error("Ruffle Error:", err);
-                alert("Critical Error: Module " + swfPath + " failed to load.");
-                location.reload();
-            }
+        // Loader for DOS Games (DOOM)
+        function startDos(iframeUrl) {
+            prepareUI();
+            const frame = document.getElementById('dos-frame');
+            frame.src = iframeUrl;
+            frame.style.display = 'block';
+            document.getElementById('ruffle-canvas').style.display = 'none';
         }
-        // --- ADMIN PERSISTENCE SCRIPT ---
-firebase.auth().onAuthStateChanged((user) => {
-    const islamTab = document.getElementById('nav-islam');
-    if (user) {
-        // If you are logged in, show the Islam tab
-        if(islamTab) {
-            islamTab.style.setProperty('display', 'inline-block', 'important');
-        }
-        console.log("Admin session active.");
-    } else {
-        // If not logged in, ensure it stays hidden
-        if(islamTab) {
-            islamTab.style.setProperty('display', 'none', 'important');
-        }
-    }
-});
     </script>
 </body>
 </html>
