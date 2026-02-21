@@ -3,29 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- SEO & Metadata -->
     <title>Weebokage's Archive and Dashboard</title>
-    <meta name="application-name" content="Weebokage">
-    <meta name="apple-mobile-web-app-title" content="Weebokage">
     <meta name="description" content="Welcome to my digital terminal. Explore my personal blog, anime database, Islamic archives, and classic arcade modules.">
-
-    <!-- Open Graph / Discord / Socials -->
-    <meta property="og:site_name" content="Weebokage">
-    <meta property="og:title" content="Weebokage's Archive and Dashboard">
-    <meta property="og:description" content="Digital Workspace & Archive. Vocaloid enthusiast and Digital Archivist.">
-    <meta property="og:image" content="assets/mikukage.png">
-    <meta property="og:url" content="https://weebokage.com">
-
-    <!-- Cache-Buster v11.4 -->
     <link rel="stylesheet" href="style.css?v=11.4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    
     <script>
         (function() {
             const savedTheme = localStorage.getItem('theme') || 'miku';
@@ -35,17 +19,12 @@
 </head>
 <body>
 
-    <!-- THEME TOGGLE -->
     <div class="theme-switch-wrapper">
         <span onclick="setTheme('miku')" style="cursor:pointer; font-size: 1.2rem;">🩵</span>
-        <label class="switch">
-            <input type="checkbox" id="theme-toggle" onclick="themeToggle()">
-            <span class="slider"></span>
-        </label>
+        <label class="switch"><input type="checkbox" id="theme-toggle" onclick="themeToggle()"><span class="slider"></span></label>
         <span onclick="setTheme('teto')" style="cursor:pointer; font-size: 1.2rem;">🥖</span>
     </div>
 
-    <!-- NAVIGATION -->
     <nav>
         <div class="links">
             <a href="index.html">Home</a>
@@ -54,13 +33,12 @@
             <a href="islam.html" class="admin-hide" id="nav-islam">Islam</a>
             <a href="games.html">Games</a>
             <a href="credits.html">Credits</a>
-            <!-- Admin button changes to Logoff dynamically -->
+            <!-- ADDED THE ID HERE SO IT CAN CHANGE TO LOGOFF -->
             <a href="login.html" id="admin-btn">Admin</a>
         </div>
     </nav>
     
     <div class="container">
-        <!-- PROFILE CARD -->
         <div class="card profile-card">
             <div class="profile-avatar"></div>
             <div class="profile-info">
@@ -78,41 +56,24 @@
         </div>
 
         <h2 style="color:var(--primary); margin: 50px 0 25px 0; border-left: 4px solid var(--primary); padding-left: 15px; letter-spacing: 2px;">LATEST UPDATES</h2>
-        <div id="blog-feed">
-            <p style="text-align: center; opacity: 0.5;">Accessing Archive...</p>
-        </div>
+        <div id="blog-feed"></div>
 
         <h2 style="color:var(--primary); margin: 60px 0 25px 0; border-left: 4px solid var(--primary); padding-left: 15px; letter-spacing: 2px;">DIGITAL GUESTBOOK</h2>
         <div class="card">
-            <div class="input-group">
-                <input type="text" id="guestName" placeholder="Your Name / Alias">
-                <i class="fas fa-user-tag"></i>
-            </div>
-            <div class="input-group">
-                <textarea id="guestMsg" placeholder="Leave a transmission..." style="height: 100px; padding-top: 15px !important;"></textarea>
-                <i class="fas fa-comment-dots textarea-icon"></i>
-            </div>
+            <div class="input-group"><input type="text" id="guestName" placeholder="Your Alias"><i class="fas fa-user-tag"></i></div>
+            <div class="input-group"><textarea id="guestMsg" placeholder="Leave a message..." style="height: 100px; padding-top: 15px !important;"></textarea><i class="fas fa-comment-dots textarea-icon"></i></div>
             <button onclick="postComment()" id="commentBtn" class="btn" style="width: 100%; height: 50px; letter-spacing: 2px;">DEPLOY MESSAGE</button>
         </div>
         <div id="comments-feed"></div>
-        
-        <div style="text-align: center; margin-top: 80px; opacity: 0.3; font-size: 0.8rem; letter-spacing: 2px; padding-bottom: 40px;">
-            <p>&copy; 2026 WEEBOKAGE. All rights reserved.</p>
-        </div>
+        <div style="text-align: center; margin-top: 80px; opacity: 0.3; font-size: 0.8rem; letter-spacing: 2px; padding-bottom: 40px;"><p>&copy; 2026 WEEBOKAGE. All rights reserved.</p></div>
     </div>
 
-    <!-- AI COMPANION INTERFACE -->
+    <!-- AI CHAT UI -->
     <div id="miku-chat-container" style="position: fixed; bottom: 20px; left: 20px; z-index: 2000;">
         <div id="miku-window" style="display: none; width: 350px; height: 500px; background: rgba(10,11,16,0.95); backdrop-filter: blur(20px); border: 2px solid var(--primary); border-radius: 20px; flex-direction: column; overflow: hidden; box-shadow: 0 0 30px var(--primary-glow); margin-bottom: 15px;">
-            <div style="background: var(--primary); color: black; padding: 12px; font-weight: bold; display: flex; justify-content: space-between;">
-                <span id="ai-title">MIKU SYSTEM 01</span>
-                <span onclick="toggleMiku()" style="cursor: pointer;">&times;</span>
-            </div>
+            <div style="background: var(--primary); color: black; padding: 12px; font-weight: bold; display: flex; justify-content: space-between;"><span id="ai-title">MIKU SYSTEM 01</span><span onclick="toggleMiku()" style="cursor: pointer;">&times;</span></div>
             <div id="miku-msgs" style="flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; font-size: 0.9rem;"></div>
-            <div style="padding: 15px; display: flex; gap: 10px; border-top: 1px solid rgba(255,255,255,0.1);">
-                <input type="text" id="miku-input" placeholder="Type here..." style="margin:0; border-radius: 12px;">
-                <button onclick="askMiku()" class="btn" style="width: 50px; height: 50px; border-radius: 50%; padding: 0;"><i class="fas fa-paper-plane"></i></button>
-            </div>
+            <div style="padding: 15px; display: flex; gap: 10px; border-top: 1px solid rgba(255,255,255,0.1);"><input type="text" id="miku-input" placeholder="Type here..." style="margin:0; border-radius: 12px;"><button onclick="askMiku()" class="btn" style="width: 50px; height: 50px; border-radius: 50%; padding: 0;"><i class="fas fa-paper-plane"></i></button></div>
         </div>
         <div id="miku-btn" onclick="toggleMiku()" style="width: 70px; height: 70px; border-radius: 50%; background-image: var(--pfp); background-size: cover; border: 3px solid var(--primary); cursor: pointer; box-shadow: 0 0 20px var(--primary-glow);"></div>
     </div>
@@ -122,13 +83,10 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // --- AUTH & PERSISTENCE ---
         let isMaster = false;
-
         firebase.auth().onAuthStateChanged(user => {
             const adminBtn = document.getElementById('admin-btn');
             const islamNav = document.getElementById('nav-islam');
-
             if (user) {
                 isMaster = true;
                 if(islamNav) islamNav.style.setProperty('display', 'inline-block', 'important');
@@ -142,65 +100,43 @@
                 adminBtn.href = "login.html";
                 adminBtn.onclick = null;
             }
-            // Refresh greeting after auth check
             updateGreeting();
         });
 
-        // --- THEME & GREETING ENGINE ---
         function setTheme(t) {
             const oldTheme = document.documentElement.getAttribute('data-theme');
-            document.documentElement.setAttribute('data-theme', t);
-            localStorage.setItem('theme', t);
-            if(document.getElementById('theme-toggle')) document.getElementById('theme-toggle').checked = (t === 'teto');
-            if(document.getElementById('ai-title')) document.getElementById('ai-title').innerText = (t === 'teto') ? "TETO SYSTEM 04" : "MIKU SYSTEM 01";
+            document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t);
+            document.getElementById('theme-toggle').checked = (t === 'teto');
+            document.getElementById('ai-title').innerText = (t === 'teto') ? "TETO SYSTEM 04" : "MIKU SYSTEM 01";
             if(oldTheme !== t) updateGreeting();
         }
-
         function updateGreeting() {
-            const t = document.documentElement.getAttribute('data-theme') || 'miku';
+            const t = localStorage.getItem('theme') || 'miku';
             const msgBox = document.getElementById('miku-msgs');
             if(!msgBox) return;
-
             msgBox.innerHTML = "";
-            let greeting = "";
-
-            if (t === 'teto') {
-                greeting = isMaster ? 
-                    "Master! Teto 04 is here. Don't think being logged in makes me your servant, baka! 🥖 *rolls eyes*" : 
-                    "User! Teto 04 active. I'm busy, don't waste my time unless you have bread. 🥖";
-            } else {
-                greeting = isMaster ? 
-                    "Welcome back, Master! Miku 01 is fully synced and at your service! 🩵 *bows politely*" : 
-                    "Hello! Miku 01 is online. How can I assist you today, User? 🩵";
-            }
-            msgBox.innerHTML = `<div style="background: rgba(57, 197, 187, 0.1); padding: 12px; border-radius: 12px; border: 1px solid var(--primary); align-self: flex-start; max-width: 85%;">${greeting}</div>`;
+            let g = t === 'teto' ? (isMaster ? "Master! Teto 04 active. 🥖" : "User! Teto 04 active. 🥖") : (isMaster ? "Welcome back, Master! Miku 01 at your service! 🩵" : "Hello! Miku 01 is online, User! 🩵");
+            msgBox.innerHTML = `<div style="background: rgba(57, 197, 187, 0.1); padding: 12px; border-radius: 12px; border: 1px solid var(--primary); align-self: flex-start; max-width: 85%;">${g}</div>`;
         }
-
         setTheme(localStorage.getItem('theme') || 'miku');
         function themeToggle() { setTheme(document.getElementById('theme-toggle').checked ? 'teto' : 'miku'); }
 
-        // --- AI CHAT LOGIC ---
-        function toggleMiku() { const win = document.getElementById('miku-window'); win.style.display = (win.style.display === 'none' || win.style.display === '') ? 'flex' : 'none'; }
         async function askMiku() {
             const inp = document.getElementById('miku-input'); const box = document.getElementById('miku-msgs'); const val = inp.value.trim();
             if(!val) return;
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'miku';
             box.innerHTML += `<div style="background: var(--primary); color: black; padding: 12px; border-radius: 12px; align-self: flex-end; max-width: 85%; font-weight: bold;">${val}</div>`;
             inp.value = "";
             const load = document.createElement("div"); load.style.cssText = "background: rgba(57, 197, 187, 0.1); padding: 12px; border-radius: 12px; border: 1px solid var(--primary); align-self: flex-start;";
             load.innerText = "..."; box.appendChild(load); box.scrollTop = box.scrollHeight;
             try {
-                const res = await fetch("https://weebokageofficial-github-io.onrender.com/chat", { 
-                    method: "POST", headers: { "Content-Type": "application/json" }, 
-                    body: JSON.stringify({ message: String(val), theme: String(currentTheme), is_master: isMaster }) 
-                });
+                const res = await fetch("https://weebokageofficial-github-io.onrender.com/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: String(val), theme: localStorage.getItem('theme') || 'miku', is_master: isMaster }) });
                 const data = await res.json(); load.innerText = data.reply;
             } catch (e) { load.innerText = "Connection lost."; }
             box.scrollTop = box.scrollHeight;
         }
         document.getElementById('miku-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') askMiku(); });
+        function toggleMiku() { const win = document.getElementById('miku-window'); win.style.display = (win.style.display === 'none' || win.style.display === '') ? 'flex' : 'none'; }
 
-        // --- BLOG & GUESTBOOK ---
         db.collection("posts").orderBy("timestamp", "desc").onSnapshot(snaps => {
             const feed = document.getElementById('blog-feed'); feed.innerHTML = "";
             snaps.forEach(doc => {
@@ -210,10 +146,8 @@
         });
         function postComment() {
             const n = document.getElementById('guestName').value; const m = document.getElementById('guestMsg').value;
-            if(!n || !m) return alert("All fields required.");
-            db.collection("comments").add({ name:n, msg:m, timestamp: firebase.firestore.FieldValue.serverTimestamp() }).then(() => {
-                document.getElementById('guestName').value = ""; document.getElementById('guestMsg').value = "";
-            });
+            if(!n || !m) return;
+            db.collection("comments").add({ name:n, msg:m, timestamp: firebase.firestore.FieldValue.serverTimestamp() }).then(() => { location.reload(); });
         }
         db.collection("comments").orderBy("timestamp", "desc").limit(10).onSnapshot(snaps => {
             const feed = document.getElementById('comments-feed'); feed.innerHTML = "";
