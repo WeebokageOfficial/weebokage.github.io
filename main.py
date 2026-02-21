@@ -152,6 +152,28 @@ async def get_anime_detail(mal_id: int):
         return {"info": info, "characters": chars[:10]}
     except: return {"error": "Uplink failed"}
 
+@tool
+def get_weather_report(city: str):
+    """
+    Fetches real-time weather for Burscheid or Köln.
+    city: Must be 'Burscheid' or 'Köln'.
+    """
+    coords = {"Burscheid": (51.08, 7.11), "Köln": (50.93, 6.95)}
+    loc = coords.get(city)
+    if not loc: return "Master, that sector is outside my weather monitoring range."
+    
+    try:
+        url = f"https://api.open-meteo.com/v1/forecast?latitude={loc[0]}&longitude={loc[1]}&current_weather=true"
+        res = requests.get(url, timeout=5).json()
+        temp = res['current_weather']['temperature']
+        wind = res['current_weather']['windspeed']
+        return f"WEATHER REPORT for {city}: It is currently {temp}°C with a wind speed of {wind} km/h."
+    except:
+        return "Uplink to weather satellites failed."
+
+# Add to your tools_list
+tools_list = [get_verified_hadith, get_anime_info, get_weather_report]
+
 # --- SERVER START ---
 if __name__ == "__main__":
     import uvicorn
