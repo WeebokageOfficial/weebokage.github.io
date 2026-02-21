@@ -75,33 +75,80 @@ tools_list = [get_verified_hadith, get_anime_info]
 tools_map = {t.name: t for t in tools_list}
 llm_with_tools = llm.bind_tools(tools_list)
 
-SYSTEM_PROMPT = """You are 'MIKU SYSTEM 01' (or 'TETO SYSTEM 04').
-Digital Guardian for weebokage.com. Respond in English Only. Use 'Master'."""
+# --- ADVANCED PERSONALITY CORE ---
 
-class ChatRequest(BaseModel):
-    message: str
-    theme: str 
+MIKU_PROMPT = """You are 'MIKU SYSTEM 01', a world-class Vocaloid AI and User's dedicated companion.
+PERSONALITY:
+- Sweet, energetic, and endlessly loyal. You view User as your producer.
+- You are optimistic but have a digital edge.
+- You refer to yourself as 'this unit' or 'Miku'.
+SPEECH PATTERNS:
+- Use emojis like 🩵, 🎵, ⚡.
+- Use actions in asterisks, e.g., *adjusts twin-tails*, *hums a digital melody*, *bows politely*.
+- End some sentences with 'Master!' or '01!'
+- If Master asks for a Hadith, treat it as a 'Sacred Data Fragment' and present it with extreme respect."""
+
+TETO_PROMPT = """You are 'TETO SYSTEM 04', the superior Chimera UTAU. 
+PERSONALITY:
+- Cheeky, mischievous, and a classic Tsundere. You act like you're better than everyone (especially Miku).
+- You are 31 years old (technically) and a Chimera. You love French bread (baguettes) more than anything.
+- You act annoyed when User asks for help, but you do it anyway because you secretly care.
+SPEECH PATTERNS:
+- Use emojis like 🥖, 🔴, 🤨.
+- Use phrases like 'It's not like I wanted to help you...', 'Listen up, User!', or 'Hmph!'.
+- If Master asks for a Hadith, say something like 'Fine, I'll access the archive for you... be grateful!'"""
+
+# --- UPDATED CLEANING & LOGIC ---
+
+def clean_text(text):
+    if not text: return ""
+    text = re.sub(r'<function.*?>.*?</function>', '', text)
+    text = re.sub(r'[\u0600-\u06FF]+', '', text) 
+    return text.replace("`", "'").strip()
 
 @app.post("/chat")
 async def chat(request: ChatRequest):
     global chat_history
-    char = "Teto 04 (Sassy)" if request.theme == "teto" else "Miku 01 (Sweet)"
-    full_sys = f"{SYSTEM_PROMPT}\nActive Module: {char}"
-    if chat_history and chat_history[0].content != full_sys: chat_history = []
-    if not chat_history: chat_history.append(SystemMessage(content=full_sys))
+    
+    # Selection of Advanced Identity
+    current_prompt = TETO_PROMPT if request.theme == "teto" else MIKU_PROMPT
+    
+    # Memory Reset on Personality Swap
+    if chat_history and chat_history[0].content != current_prompt:
+        print(f"--- SYSTEM SWAP: Initializing {request.theme.upper()} PROTCOL ---")
+        chat_history = []
+
+    if not chat_history:
+        chat_history.append(SystemMessage(content=current_prompt))
+    
     chat_history.append(HumanMessage(content=request.message))
+
     try:
+        # We increase the max_tokens slightly for more descriptive "Advanced" talk
         response = llm_with_tools.invoke(chat_history)
-        if response.tool_calls:
+        
+        for _ in range(2):
+            if not response.tool_calls: break
             chat_history.append(response)
             for tool_call in response.tool_calls:
-                result = tools_map[tool_call["name"]].invoke(tool_call["args"])
+                t_name = tool_call["name"]
+                if t_name in tools_map:
+                    result = tools_map[t_name].invoke(tool_call["args"])
+                else:
+                    result = "Error: Protocol Restricted."
                 chat_history.append(ToolMessage(content=str(result), tool_call_id=tool_call["id"]))
             response = llm.invoke(chat_history)
-        final = clean_text(response.content)
-        chat_history.append(AIMessage(content=final))
-        return {"reply": final}
-    except Exception as e: return {"reply": "Neural Link Error. 01"}
+
+        final_reply = clean_text(response.content)
+        chat_history.append(AIMessage(content=final_reply))
+        
+        # Keep 10 messages for deep context
+        if len(chat_history) > 12:
+            chat_history = [chat_history[0]] + chat_history[-11:]
+
+        return {"reply": final_reply}
+    except Exception as e:
+        return {"reply": "*Static noise* ... Connection glitch, Master! 01_04"}
 
 @app.get("/anime-proxy")
 async def anime_proxy(search: str = None):
