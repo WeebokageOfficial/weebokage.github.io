@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arcade Terminal | WEEBOKAGE</title>
-    <!-- Cache-Buster v12.0 -->
-    <link rel="stylesheet" href="style.css?v=12.0">
+    <!-- Cache-Buster v12.1 -->
+    <link rel="stylesheet" href="style.css?v=12.1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
-    <!-- ENGINE 1: Ruffle (Flash) -->
+    <!-- Game Engines -->
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
-    
-    <!-- ENGINE 2: JS-DOS (Classic PC Games) -->
     <script src="https://js-dos.com/v7/build/js-dos.js"></script>
     <link href="https://js-dos.com/v7/build/js-dos.css" rel="stylesheet">
 
@@ -29,14 +27,17 @@
             box-shadow: 0 0 30px var(--primary-glow); border-radius: 20px;
             overflow: hidden; display: none; margin: 30px auto; position: relative;
         }
-        ruffle-player, .jsdos-container { width: 100% !important; height: 100% !important; display: block; }
-        
+        .jsdos-container { width: 100%; height: 100%; }
         .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 20px; }
         .game-card { text-align: center; cursor: pointer; padding: 50px !important; transition: 0.3s ease; }
         .game-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 15px 35px var(--primary-glow); }
         .game-card i { font-size: 4rem; color: var(--primary); margin-bottom: 20px; }
-
-        .btn-terminate { background: #ff2d55; color: white; margin-top: 20px; display: none; }
+        
+        #loading-overlay {
+            position: absolute; inset: 0; background: #000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 10; color: var(--primary); font-weight: bold; letter-spacing: 2px;
+        }
     </style>
 </head>
 <body>
@@ -47,76 +48,85 @@
         <span onclick="setTheme('teto')" style="cursor:pointer; font-size: 1.2rem;">🥖</span>
     </div>
 
-    <nav><div class="links">
-        <a href="index.html">Home</a>
-        <a href="transit.html">Transit</a>
-        <a href="anime.html">Anime</a>
-        <a href="islam.html" class="admin-hide" id="nav-islam">Islam</a>
-        <a href="games.html">Games</a>
-        <a href="credits.html">Credits</a>
-        <a href="login.html" id="admin-btn">Admin</a>
-    </div></nav>
+    <nav>
+        <div class="links">
+            <a href="index.html">Home</a>
+            <a href="transit.html">Transit</a>
+            <a href="anime.html">Anime</a>
+            <a href="islam.html" class="admin-hide" id="nav-islam">Islam</a>
+            <a href="games.html">Games</a>
+            <a href="credits.html">Credits</a>
+            <a href="login.html" id="admin-btn">Admin</a>
+        </div>
+    </nav>
 
     <div class="container">
         <div class="hero" id="arcade-header" style="text-align: center; margin-bottom: 50px;">
             <h1 style="color: var(--primary); font-size: 3.5rem; letter-spacing: 5px; text-transform: uppercase;">Arcade Terminal</h1>
-            <p style="opacity: 0.6; letter-spacing: 2px;">Neural Link: Stable | Select Module</p>
+            <p style="opacity: 0.6; letter-spacing: 2px;">Simulation Uplink: Stable</p>
         </div>
 
-        <!-- GAME SELECTION -->
+        <!-- SELECTION MENU -->
         <div class="game-grid" id="selection-area">
-            <!-- DOOM -->
-            <div class="card game-card" onclick="startDos('https://dos.zone/player/?bundleUrl=https%3A%2F%2Fcdn.dos.zone%2Fcustom%2Fdos%2Fdoom.jsdos?anonymous=1')">
+            <!-- DOOM Card -->
+            <div class="card game-card" onclick="loadDoom()">
                 <i class="fas fa-skull"></i>
                 <h3>DOOM (1993)</h3>
-                <p style="font-size: 0.85rem; opacity: 0.5; margin-top: 10px;">Simulation: Classic FPS</p>
+                <p style="font-size: 0.85rem; opacity: 0.5; margin-top: 10px;">Engine: JS-DOS v7</p>
             </div>
 
-            <!-- Mario Combat -->
-            <div class="card game-card" onclick="startFlash('assets/Mario_Combat.swf')">
+            <!-- Mario Card -->
+            <div class="card game-card" onclick="loadFlash('assets/Mario_Combat.swf')">
                 <i class="fas fa-fist-raised"></i>
                 <h3>Mario Combat</h3>
-                <p style="font-size: 0.85rem; opacity: 0.5; margin-top: 10px;">Simulation: Alpha-01</p>
+                <p style="font-size: 0.85rem; opacity: 0.5; margin-top: 10px;">Engine: Ruffle Flash</p>
             </div>
         </div>
 
-        <!-- THE PLAYERS -->
+        <!-- PLAYER AREA -->
         <div id="player-wrapper" class="game-container">
-            <!-- Flash goes here -->
-            <div id="ruffle-canvas" style="width:100%; height:100%;"></div>
-            <!-- DOS goes here -->
-            <iframe id="dos-frame" style="width:100%; height:100%; border:none; display:none;"></iframe>
+            <div id="loading-overlay" style="display: none;">
+                <i class="fas fa-sync fa-spin" style="font-size: 2rem; margin-bottom: 15px;"></i>
+                <span>INITIALIZING DOOM.EXE...</span>
+            </div>
+            <div id="ruffle-canvas" style="width:100%; height:100%; display:none;"></div>
+            <div id="dos-canvas" class="jsdos-container" style="display:none;"></div>
         </div>
         
         <div style="text-align: center;">
-            <button id="closeBtn" class="btn btn-terminate" onclick="location.reload()">TERMINATE SESSION</button>
+            <button id="closeBtn" class="btn" style="display:none; margin-top: 20px; background: #ff2d55; color: white;" onclick="location.reload()">TERMINATE SESSION</button>
         </div>
     </div>
 
+    <!-- AI CHAT -->
+    <div id="miku-chat-container" style="position: fixed; bottom: 20px; left: 20px; z-index: 2000;">
+        <div id="miku-window" style="display: none; width: 350px; height: 500px; background: rgba(10,11,16,0.95); backdrop-filter: blur(20px); border: 2px solid var(--primary); border-radius: 20px; flex-direction: column; overflow: hidden; box-shadow: 0 0 30px var(--primary-glow); margin-bottom: 15px;">
+            <div style="background: var(--primary); color: black; padding: 12px; font-weight: bold; display: flex; justify-content: space-between;"><span id="ai-title">MIKU SYSTEM 01</span><span onclick="toggleMiku()" style="cursor: pointer;">&times;</span></div>
+            <div id="miku-msgs" style="flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; font-size: 0.9rem;"></div>
+            <div style="padding: 15px; display: flex; gap: 10px; border-top: 1px solid rgba(255,255,255,0.1);"><input type="text" id="miku-input" placeholder="Ask about games..." style="margin:0; border-radius: 12px;"><button onclick="askMiku()" class="btn" style="width: 50px; height: 50px; border-radius: 50%; padding: 0;"><i class="fas fa-paper-plane"></i></button></div>
+        </div>
+        <div id="miku-btn" onclick="toggleMiku()" style="width: 70px; height: 70px; border-radius: 50%; background-image: var(--pfp); background-size: cover; border: 3px solid var(--primary); cursor: pointer; box-shadow: 0 0 20px var(--primary-glow);"></div>
+    </div>
+
     <script>
-        // --- AUTH & THEME ---
-        let isMaster = false;
         const firebaseConfig = { apiKey: "AIzaSyAj4pBH0zjbCIbUHp0ldmW8eU8pJTZnquo", authDomain: "weebokage-296c0.firebaseapp.com", projectId: "weebokage-296c0", storageBucket: "weebokage-296c0.firebasestorage.app", messagingSenderId: "192569800499", appId: "1:192569800499:web:4c5ef67242b7fdd0b2b046" };
         firebase.initializeApp(firebaseConfig);
+        
+        let isMaster = false;
         firebase.auth().onAuthStateChanged(user => {
-            const adminBtn = document.getElementById('admin-btn');
-            const islamNav = document.getElementById('nav-islam');
-            if (user) {
-                isMaster = true;
-                if(islamNav) islamNav.style.setProperty('display', 'inline-block', 'important');
-                if(adminBtn) adminBtn.innerText = "Logoff";
-            }
+            if (user) { isMaster = true; document.getElementById('nav-islam')?.style.setProperty('display', 'inline-block', 'important'); document.getElementById('admin-btn').innerText = "Logoff"; }
+            updateGreeting();
         });
 
         function setTheme(t) {
-            document.documentElement.setAttribute('data-theme', t);
-            localStorage.setItem('theme', t);
+            document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t);
             document.getElementById('theme-toggle').checked = (t === 'teto');
+            document.getElementById('ai-title').innerText = (t === 'teto') ? "TETO SYSTEM 04" : "MIKU SYSTEM 01";
         }
         setTheme(localStorage.getItem('theme') || 'miku');
         function themeToggle() { setTheme(document.getElementById('theme-toggle').checked ? 'teto' : 'miku'); }
 
-        // --- GAME LOADERS ---
+        // --- GAME LOGIC ---
         function prepareUI() {
             document.getElementById('selection-area').style.display = 'none';
             document.getElementById('arcade-header').style.display = 'none';
@@ -124,23 +134,52 @@
             document.getElementById('closeBtn').style.display = 'inline-block';
         }
 
-        // Loader for Flash Games
-        async function startFlash(swfPath) {
+        // LOAD DOOM (JS-DOS)
+        function loadDoom() {
             prepareUI();
+            document.getElementById('dos-canvas').style.display = 'block';
+            document.getElementById('loading-overlay').style.display = 'flex';
+            
+            Dos(document.getElementById("dos-canvas"), {
+                wdboxUrl: "https://js-dos.com/v7/build/wdbox.js",
+            }).run("assets/doom.zip").then((ci) => {
+                document.getElementById('loading-overlay').style.display = 'none';
+                console.log("Doom simulation initialized.");
+            });
+        }
+
+        // LOAD MARIO (FLASH)
+        function loadFlash(path) {
+            prepareUI();
+            document.getElementById('ruffle-canvas').style.display = 'block';
             const ruffle = window.RufflePlayer.newest();
             const player = ruffle.createPlayer();
             document.getElementById('ruffle-canvas').appendChild(player);
-            player.load({ url: swfPath, scale: "showAll", quality: "high" });
+            player.load({ url: path, scale: "showAll" });
         }
 
-        // Loader for DOS Games (DOOM)
-        function startDos(iframeUrl) {
-            prepareUI();
-            const frame = document.getElementById('dos-frame');
-            frame.src = iframeUrl;
-            frame.style.display = 'block';
-            document.getElementById('ruffle-canvas').style.display = 'none';
+        // --- AI CHAT (Standard) ---
+        function toggleMiku() { const win = document.getElementById('miku-window'); win.style.display = (win.style.display === 'none' || win.style.display === '') ? 'flex' : 'none'; }
+        function updateGreeting() {
+            const t = localStorage.getItem('theme') || 'miku';
+            const msgBox = document.getElementById('miku-msgs');
+            let g = t === 'teto' ? "Master! Teto 04 active. Simulation ready. 🥖" : "Miku 01 online. Ready for arcade mode! 🩵";
+            msgBox.innerHTML = `<div style="background: rgba(57, 197, 187, 0.1); padding: 12px; border-radius: 12px; border: 1px solid var(--primary); align-self: flex-start; max-width: 85%;">${g}</div>`;
         }
+        async function askMiku() {
+            const inp = document.getElementById('miku-input'); const box = document.getElementById('miku-msgs'); const val = inp.value.trim();
+            if(!val) return;
+            box.innerHTML += `<div style="background: var(--primary); color: black; padding: 12px; border-radius: 12px; align-self: flex-end; max-width: 85%; font-weight: bold;">${val}</div>`;
+            inp.value = "";
+            const load = document.createElement("div"); load.style.cssText = "background: rgba(57, 197, 187, 0.1); padding: 12px; border-radius: 12px; border: 1px solid var(--primary); align-self: flex-start;";
+            load.innerText = "..."; box.appendChild(load); box.scrollTop = box.scrollHeight;
+            try {
+                const res = await fetch("https://weebokageofficial-github-io.onrender.com/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: String(val), theme: localStorage.getItem('theme') || 'miku', is_master: isMaster }) });
+                const data = await res.json(); load.innerText = data.reply;
+            } catch (e) { load.innerText = "Connection lost."; }
+            box.scrollTop = box.scrollHeight;
+        }
+        document.getElementById('miku-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') askMiku(); });
     </script>
 </body>
 </html>
