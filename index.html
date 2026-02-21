@@ -3,12 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WEEBOKAGE | Home</title>
+    
+    <!-- This is the "not-purple one" (The big clickable link) -->
+    <title>Weebokage's Archive and Dashboard</title>
+
+    <!-- This helps Google identify the "upper one" (The Site Name) -->
+    <meta name="application-name" content="Weebokage">
+    <meta name="apple-mobile-web-app-title" content="Weebokage">
+
+    <!-- This replaces the German text in the search snippet -->
+    <meta name="description" content="Welcome to my digital terminal. Explore my personal blog, anime database, Islamic archives, and classic arcade modules.">
+
+    <!-- Social Media / Discord Preview (Open Graph) -->
+    <meta property="og:site_name" content="Weebokage">
+    <meta property="og:title" content="Weebokage's Archive and Dashboard">
+    <meta property="og:description" content="Digital Workspace & Archive. Vocaloid enthusiast and Digital Archivist.">
+    <meta property="og:image" content="assets/mikukage.png">
+    <meta property="og:url" content="https://weebokage.com">
+
     <link rel="stylesheet" href="style.css?v=11.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
     <script>
         (function() {
             const savedTheme = localStorage.getItem('theme') || 'miku';
