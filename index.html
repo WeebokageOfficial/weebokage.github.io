@@ -123,20 +123,43 @@
         // AI CHAT
         function toggleMiku() { const win = document.getElementById('miku-window'); win.style.display = (win.style.display === 'none' || win.style.display === '') ? 'flex' : 'none'; }
         async function askMiku() {
-            const inp = document.getElementById('miku-input'); const box = document.getElementById('miku-msgs'); const val = inp.value.trim();
-            if(!val) return;
-            box.innerHTML += `<div style="background: var(--primary); color: black; padding: 12px; border-radius: 12px; align-self: flex-end; max-width: 85%; font-weight: bold;">${val}</div>`;
-            inp.value = "";
-            const load = document.createElement("div"); load.style.cssText = "background: rgba(57, 197, 187, 0.1); padding: 12px; border-radius: 12px; border: 1px solid var(--primary); align-self: flex-start;";
-            load.innerText = "..."; box.appendChild(load); box.scrollTop = box.scrollHeight;
-            try {
-                const res = await fetch("https://weebokageofficial-github-io.onrender.com/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: val, theme: localStorage.getItem('theme') || 'miku' }) });
-                const data = await res.json(); load.innerText = data.reply;
-            } catch (e) { load.innerText = "Connection lost."; }
-            box.scrollTop = box.scrollHeight;
-        }
-        document.getElementById('miku-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') askMiku(); });
+    const inp = document.getElementById('miku-input');
+    const box = document.getElementById('miku-msgs');
+    const val = inp.value.trim();
+    if(!val) return;
 
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'miku';
+
+    box.innerHTML += `<div style="background: var(--primary); color: black; padding: 12px; border-radius: 12px; align-self: flex-end; max-width: 85%; font-weight: bold;">${val}</div>`;
+    inp.value = "";
+    
+    const load = document.createElement("div"); 
+    load.style.cssText = "background: rgba(57, 197, 187, 0.1); padding: 12px; border-radius: 12px; border: 1px solid var(--primary); align-self: flex-start;";
+    load.innerText = "..."; 
+    box.appendChild(load); 
+    box.scrollTop = box.scrollHeight;
+
+    try {
+        const res = await fetch("https://weebokageofficial-github-io.onrender.com/chat", { 
+            method: "POST", 
+            headers: { "Content-Type": "application/json" }, 
+            body: JSON.stringify({ message: val, theme: currentTheme }) 
+        });
+
+        const data = await res.json(); 
+        
+        // CHECK IF REPLY EXISTS
+        if (data && data.reply) {
+            load.innerText = data.reply;
+        } else {
+            load.innerText = "Master, the data packet was corrupted. (Undefined response)";
+        }
+
+    } catch (e) { 
+        load.innerText = "Connection lost. Is the Render server awake?"; 
+    }
+    box.scrollTop = box.scrollHeight;
+}
         // LOAD DATA
         db.collection("posts").orderBy("timestamp", "desc").onSnapshot(snaps => {
             const feed = document.getElementById('blog-feed'); feed.innerHTML = "";
