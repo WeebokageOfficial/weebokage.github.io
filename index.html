@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WEEBOKAGE | Home</title>
-    <!-- Cache-Buster v11.0 -->
     <link rel="stylesheet" href="style.css?v=11.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -26,52 +24,42 @@
         <span onclick="setTheme('teto')" style="cursor:pointer; font-size: 1.2rem;">🥖</span>
     </div>
 
-   <nav>
-        <div class="links">
-            <a href="index.html">Home</a>
-            <a href="transit.html">Transit</a>
-            <a href="anime.html">Anime</a>
-            <!-- Der versteckte Admin-Link -->
-            <a href="islam.html" class="admin-hide" id="nav-islam">Islam</a>
-            <a href="games.html">Games</a>
-            <a href="credits.html">Credits</a>
-            <a href="login.html">Admin</a>
-        </div>
-    </nav>
+    <nav><div class="links">
+        <a href="index.html">Home</a>
+        <a href="transit.html">Transit</a>
+        <a href="anime.html">Anime</a>
+        <a href="islam.html" class="admin-hide" id="nav-islam">Islam</a>
+        <a href="games.html">Games</a>
+        <a href="credits.html">Credits</a>
+        <a href="login.html">Admin</a>
+    </div></nav>
     
     <div class="container">
-        <!-- PROFILE CARD -->
         <div class="card profile-card">
             <div class="profile-avatar"></div>
             <div class="profile-info">
                 <h1>Weebokage</h1>
-                <p>Digitaler Workspace & Archiv. Willkommen in meinem persönlichen Bereich.</p>
+                <p>Digital Workspace & Archive. Welcome to my personal digital sector.</p>
                 <div class="profile-tags" style="margin-top:15px;">
-                    <span class="tag">DEVELOPER</span>
-                    <span class="tag">VOCALOID</span>
-                    <span class="tag">ARCHIVIST</span>
+                    <span class="tag">DEVELOPER</span><span class="tag">VOCALOID</span><span class="tag">ARCHIVIST</span>
                 </div>
-                <a href="https://www.youtube.com/@Weebokage/featured" target="_blank" class="btn" style="background:#FF0000; color:white; margin-top:20px; border:none;">
-                    <i class="fab fa-youtube"></i> YouTube
-                </a>
+                <a href="https://www.youtube.com/@Weebokage/featured" target="_blank" class="btn" style="background:#FF0000; color:white; margin-top:20px;"><i class="fab fa-youtube"></i> YouTube</a>
             </div>
         </div>
 
         <h2 style="color:var(--primary); margin: 50px 0 25px 0; border-left: 4px solid var(--primary); padding-left: 15px; letter-spacing: 2px;">LATEST UPDATES</h2>
-        <div id="blog-feed">
-            <p style="text-align: center; opacity: 0.5;">Verbinde mit Core-Archiv...</p>
-        </div>
+        <div id="blog-feed"></div>
 
         <h2 style="color:var(--primary); margin: 60px 0 25px 0; border-left: 4px solid var(--primary); padding-left: 15px; letter-spacing: 2px;">GUESTBOOK</h2>
         <div class="card">
-            <div class="input-group"><input type="text" id="guestName" placeholder="Dein Name"><i class="fas fa-user-tag"></i></div>
-            <div class="input-group"><textarea id="guestMsg" placeholder="Nachricht..." style="height: 100px; padding-top:15px !important;"></textarea><i class="fas fa-comment-dots textarea-icon"></i></div>
-            <button onclick="postComment()" id="commentBtn" class="btn" style="width: 100%; height: 50px;">SEND MESSAGE</button>
+            <input type="text" id="guestName" placeholder="Your Name">
+            <textarea id="guestMsg" placeholder="Message..." style="height: 100px;"></textarea>
+            <button onclick="postComment()" class="btn" style="width: 100%;">DEPLOY</button>
         </div>
         <div id="comments-feed"></div>
     </div>
 
-    <!-- MIKU AI CHAT -->
+    <!-- AI CHAT UI -->
     <div id="miku-chat-container" style="position: fixed; bottom: 20px; left: 20px; z-index: 2000;">
         <div id="miku-window" style="display: none; width: 350px; height: 500px; background: rgba(10,11,16,0.95); backdrop-filter: blur(20px); border: 2px solid var(--primary); border-radius: 20px; flex-direction: column; overflow: hidden; box-shadow: 0 0 30px var(--primary-glow); margin-bottom: 15px;">
             <div style="background: var(--primary); color: black; padding: 12px; font-weight: bold; display: flex; justify-content: space-between;">
@@ -80,7 +68,7 @@
             </div>
             <div id="miku-msgs" style="flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; font-size: 0.9rem;"></div>
             <div style="padding: 15px; display: flex; gap: 10px; border-top: 1px solid rgba(255,255,255,0.1);">
-                <input type="text" id="miku-input" placeholder="Frag Miku..." style="margin:0; border-radius: 12px;">
+                <input type="text" id="miku-input" placeholder="Type here..." style="margin:0; border-radius: 12px;">
                 <button onclick="askMiku()" class="btn" style="width: 50px; height: 50px; border-radius: 50%; padding: 0;"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
@@ -92,12 +80,12 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Islam-Tab Check
+        // PERSISTENCE
         firebase.auth().onAuthStateChanged(user => {
             if (user) document.getElementById('nav-islam')?.style.setProperty('display', 'inline-block', 'important');
         });
 
-        // Theme Engine
+        // THEME
         function setTheme(t) {
             const oldTheme = document.documentElement.getAttribute('data-theme');
             document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t);
@@ -105,36 +93,14 @@
             document.getElementById('ai-title').innerText = (t === 'teto') ? "TETO SYSTEM 04" : "MIKU SYSTEM 01";
             if(oldTheme !== t || document.getElementById('miku-msgs').innerHTML === "") {
                 const box = document.getElementById('miku-msgs'); box.innerHTML = "";
-                const msg = (t === 'teto') ? "Master! Teto 04 ist bereit. 🥖" : "Master! Miku 01 hilft dir gerne! 🩵";
+                const msg = (t === 'teto') ? "Master! Teto 04 active. 🥖" : "Master! Miku 01 active. 🩵";
                 box.innerHTML = `<div style="background: rgba(57, 197, 187, 0.1); padding: 12px; border-radius: 12px; border: 1px solid var(--primary); align-self: flex-start; max-width: 85%;">${msg}</div>`;
             }
         }
         setTheme(localStorage.getItem('theme') || 'miku');
         function themeToggle() { setTheme(document.getElementById('theme-toggle').checked ? 'teto' : 'miku'); }
 
-        // Blog Loader
-        db.collection("posts").orderBy("timestamp", "desc").onSnapshot(snaps => {
-            const feed = document.getElementById('blog-feed'); feed.innerHTML = "";
-            snaps.forEach(doc => {
-                const p = doc.data(); const d = p.timestamp ? new Date(p.timestamp.seconds * 1000).toLocaleDateString() : "";
-                feed.innerHTML += `<div class="card"><span style="color:var(--accent); font-size:0.8rem; font-weight:bold;">${d}</span><h2 style="color:var(--primary)">${p.title}</h2>${p.image ? `<img src="${p.image}" class="miku-img">` : ''}<p style="margin-top:10px; line-height:1.6; white-space:pre-wrap;">${p.content}</p></div>`;
-            });
-        });
-
-        // Gästebuch
-        function postComment() {
-            const n = document.getElementById('guestName').value; const m = document.getElementById('guestMsg').value;
-            if(!n || !m) return alert("Felder ausfüllen!");
-            db.collection("comments").add({ name:n, msg:m, timestamp: firebase.firestore.FieldValue.serverTimestamp() }).then(() => {
-                document.getElementById('guestName').value = ""; document.getElementById('guestMsg').value = "";
-            });
-        }
-        db.collection("comments").orderBy("timestamp", "desc").limit(10).onSnapshot(snaps => {
-            const feed = document.getElementById('comments-feed'); feed.innerHTML = "";
-            snaps.forEach(doc => { const c = doc.data(); feed.innerHTML += `<div class="card" style="padding:20px; border-left:4px solid var(--primary); border-top:none; border-right:none; border-bottom:none; border-radius:0;"><strong>${c.name}</strong><p>${c.msg}</p></div>`; });
-        });
-
-        // AI Chat
+        // AI CHAT
         function toggleMiku() { const win = document.getElementById('miku-window'); win.style.display = (win.style.display === 'none' || win.style.display === '') ? 'flex' : 'none'; }
         async function askMiku() {
             const inp = document.getElementById('miku-input'); const box = document.getElementById('miku-msgs'); const val = inp.value.trim();
@@ -150,6 +116,24 @@
             box.scrollTop = box.scrollHeight;
         }
         document.getElementById('miku-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') askMiku(); });
+
+        // LOAD DATA
+        db.collection("posts").orderBy("timestamp", "desc").onSnapshot(snaps => {
+            const feed = document.getElementById('blog-feed'); feed.innerHTML = "";
+            snaps.forEach(doc => {
+                const p = doc.data(); const d = p.timestamp ? new Date(p.timestamp.seconds * 1000).toLocaleDateString() : "";
+                feed.innerHTML += `<div class="card"><span style="color:var(--accent); font-size:0.8rem; font-weight:bold;">${d}</span><h2 style="color:var(--primary)">${p.title}</h2>${p.image ? `<img src="${p.image}" class="miku-img">` : ''}<p style="margin-top:10px;">${p.content}</p></div>`;
+            });
+        });
+        function postComment() {
+            const n = document.getElementById('guestName').value; const m = document.getElementById('guestMsg').value;
+            if(!n || !m) return;
+            db.collection("comments").add({ name:n, msg:m, timestamp: firebase.firestore.FieldValue.serverTimestamp() }).then(() => { location.reload(); });
+        }
+        db.collection("comments").orderBy("timestamp", "desc").limit(10).onSnapshot(snaps => {
+            const feed = document.getElementById('comments-feed'); feed.innerHTML = "";
+            snaps.forEach(doc => { const c = doc.data(); feed.innerHTML += `<div class="card" style="padding:20px; border-left:4px solid var(--primary);"><strong>${c.name}</strong><p>${c.msg}</p></div>`; });
+        });
     </script>
 </body>
 </html>
